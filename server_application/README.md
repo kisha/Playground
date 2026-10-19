@@ -140,7 +140,36 @@ continuing anywhere, retention = staying at the institution) as the project brie
 example charts. They live in `routes/sandbox.py`, `schemas/sandbox.py` and
 `services/sandbox.py`; replace the service functions with real queries, or delete the three files.
 
-They are controlled by `SANDBOX_ENABLED` (default `true`). `.env.production` sets it to `false`, so a
+**Example:** one request and its response (rows trimmed to two of six).
+
+```bash
+curl http://localhost:8000/api/v1/sandbox/gateway-completion
+```
+
+```json
+{
+  "meta": {
+    "title": "Gateway course completion, term by term",
+    "description": "Share of students completing gateway English and math, last six terms.",
+    "takeaway": "Gateway math completion trails English by 15 to 19 points every term.",
+    "fields_used": ["Gateway course", "Course completion"],
+    "filters": [],
+    "definitions": {},
+    "source": "mock"
+  },
+  "rows": [
+    { "term": "Fall 23", "english": 74.0, "math": 58.0 },
+    { "term": "Spr 24", "english": 76.0, "math": 61.0 }
+  ]
+}
+```
+
+The client draws it as the **Gateway course completion** chart: `meta.title` is the heading,
+`meta.takeaway` the **Answer**, and each row one point on the English and math lines.
+
+![The same request and response in the sandbox's API explorer](../client_application/docs/sandbox-gateway-request.png)
+
+The sandbox endpoints are controlled by `SANDBOX_ENABLED` (default `true`). `.env.production` sets it to `false`, so a
 deployed API never serves mock data.
 
 Embeddings come from `HashingEmbedder` in `app/services/embeddings.py`: it needs no model or API

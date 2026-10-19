@@ -124,7 +124,7 @@ mise run db                          # PostgreSQL on localhost:5433
 mise run api:install && mise run api:dev       # API on http://localhost:8000
 
 # Terminal 2
-mise run web:install && mise run web:dev       # website on http://localhost:3000
+mise run web:install && mise run web:dev       # Client Application on http://localhost:3000
 ```
 
 The steps below explain each command and how to check it worked.
@@ -165,7 +165,7 @@ opens a SQL prompt (`\q` to exit). Your data persists until you run `mise run db
 A FastAPI API on Python 3.14 that validates requests, reads and writes PostgreSQL, and serves vector
 similarity search through pgvector.
 
-### Step 3: Install the server's dependencies
+### Step 3: Install the Server Application's dependencies
 
 **Intention:** Create the server's Python environment with every library it needs.
 
@@ -177,7 +177,7 @@ mise run api:install
 
 **Verification:** uv reports the packages it installed, and `server_application/.venv/` now exists.
 
-### Step 4: Start the API
+### Step 4: Start the Server Application (FastAPI)
 
 **Intention:** Run the API with auto-reload. It applies any pending database migrations first, so a
 fresh database gets its tables automatically.
@@ -208,7 +208,7 @@ http://localhost:8000/api/v1/health returns `"status": "ok"` with the database `
 
 ![Swagger UI showing the health, documents and sandbox endpoints](server_application/docs/swagger-endpoints.png)
 
-### Step 6: Run the server tests
+### Step 6: Run the Server Application tests
 
 **Intention:** Confirm the API, database and migrations all work together.
 
@@ -226,12 +226,12 @@ mise run api:test
 
 📁 [`client_application/`](client_application/) · [Full README](client_application/README.md)
 
-A Next.js website in TypeScript, styled in black and white with light and dark modes, that gets all of
+A Next.js web interface in TypeScript, styled in black and white with light and dark modes, that gets all of
 its data from the Server Application.
 
-### Step 7: Install the website's dependencies
+### Step 7: Install the Client Application's dependencies
 
-**Intention:** Install the website's packages with bun.
+**Intention:** Install the Client Application's packages with bun.
 
 **Implementation:** In a **second terminal** (the API keeps running in the first):
 
@@ -241,9 +241,10 @@ mise run web:install
 
 **Verification:** bun reports the packages it installed, and `client_application/node_modules/` exists.
 
-### Step 8: Start the website
+### Step 8: Start the Client Application (Next.js)
 
-**Intention:** Run the website with hot reload and confirm it can reach the API and the database.
+**Intention:** Run the Client Application with hot reload and confirm it can reach the Server
+Application and the database.
 
 **Implementation:**
 
@@ -255,10 +256,10 @@ mise run web:dev
 **Client Application → Server Application → Data** diagram updates every 5 seconds (see the animation
 at the top). If something is down, the page says which part. See [Troubleshooting](#troubleshooting).
 
-### Step 9: Try the API from the website
+### Step 9: Try the API from the Client Application
 
-**Intention:** Watch the website send requests to the Server Application and show exactly what comes
-back, including how errors look.
+**Intention:** Watch the Client Application send requests to the Server Application and show exactly
+what comes back, including how errors look.
 
 **Implementation:** Click **See example charts** on the landing page (or **Sandbox** in the header),
 or open **http://localhost:3000/sandbox#api**. Pick a request: Health, KPIs, a chart's data, vector
@@ -272,13 +273,24 @@ readable error shape.
 
 ![Try the API: request and live JSON response](client_application/docs/sandbox-api-explorer.png)
 
-### Step 10: See the example charts
+### Step 10: Example Implementation of Charts
 
 **Intention:** See dashboard-style charts drawn from API responses, modeled on PDP Analysis-Ready (AR)
 data. Use them as starting points for your own dashboards.
 
 **Implementation:** Scroll to **Example charts** on http://localhost:3000/sandbox. Each chart loads its
 own `/api/v1/sandbox/...` endpoint. All data is mock data.
+
+Every chart endpoint answers in the same shape: **`meta`** (title, description, the one-sentence
+answer as `takeaway`, the AR `fields_used`, filters and definitions) and **`rows`** (one per point or
+bar). For example, the **Gateway course completion** chart draws this response, which you can send
+yourself under **Try the API → Gateway completion**:
+
+![Gateway completion request and its JSON response: meta plus one row per term](client_application/docs/sandbox-gateway-request.png)
+
+`meta.title` becomes the chart's title, `meta.takeaway` its **Answer**, and each row in `rows` one
+point per line (`english` solid, `math` dashed). See
+[Sandbox in the Server Application README](server_application/README.md#sandbox) for every endpoint.
 
 **Verification:** Eight KPI cards and seven charts load, each with an **Answer** and the **Fields used**:
 
@@ -288,9 +300,9 @@ own `/api/v1/sandbox/...` endpoint. All data is mock data.
 
 ![Bar charts: completion by student group, persistence by age, time to complete](client_application/docs/sandbox-bar-charts.png)
 
-### Step 11: Check the code
+### Step 11: Check the Client Application code
 
-**Intention:** Confirm the website passes linting, type checking and a production build.
+**Intention:** Confirm the Client Application passes linting, type checking and a production build.
 
 **Implementation:**
 
@@ -303,8 +315,8 @@ mise run web:build
 
 ### When you're done
 
-Press `Ctrl+C` in each terminal to stop the API and the website, then `mise run db:down` to stop the
-database. Your data is kept for next time.
+Press `Ctrl+C` in each terminal to stop the Server Application and the Client Application, then
+`mise run db:down` to stop the database. Your data is kept for next time.
 
 ---
 
@@ -323,7 +335,7 @@ Where your own code goes. Each folder has one job, so changes stay small and eas
 | 5 | `api/v1/router.py` | Include the new router |
 | 6 | `tests/test_<topic>.py` | Tests, run with `mise run api:test` |
 
-**Show it on the website** in `client_application/src/`:
+**Show it in the Client Application** in `client_application/src/`:
 
 | Step | File | What goes there |
 |---|---|---|
