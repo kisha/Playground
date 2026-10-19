@@ -1,8 +1,7 @@
-# client_application
+# Client Application
 
-Next.js front end for Playground: TypeScript, Tailwind CSS, shadcn/ui Charts, Inter, light and dark
-modes. It gets all of its data from `server_application` over HTTP.
-Deployable on its own: it needs only this folder and the API's URL.
+The Next.js front end for Playground; it gets all of its data from the
+[Server Application](../server_application/README.md) and deploys on its own.
 
 ## Layout
 
@@ -39,65 +38,38 @@ it can be reused and tested without a page.
 
 ## Run locally
 
-Start the database and API first (see the root README), then from the repo root:
+Start the database and Server Application first ([root README](../README.md#run-it-locally)), then:
 
 ```bash
-mise run web:install   # first time only: install dependencies
-mise run web:dev       # start on http://localhost:3000 with hot reload
+mise run web:install && mise run web:dev     # http://localhost:3000
 ```
 
-Or with bun directly, from this folder:
+### Landing page: http://localhost:3000
 
-```bash
-bun install
-bun run dev
-```
+A live check of the Server Application and database every 5 seconds, in light or dark mode.
 
-### What you should see
+<p>
+  <img src="docs/landing-light.png" alt="Landing page in light mode, all systems connected" width="49%">
+  <img src="docs/landing-dark.png" alt="Landing page in dark mode" width="49%">
+</p>
 
-Open http://localhost:3000. With the API and database running, the landing page shows
-**All systems connected**, a live Client Application → Server Application → Data diagram, and a tracker that fills in every
-5 seconds:
+### When something is down
 
-![Landing page in light mode, all systems connected](docs/landing-light.png)
+The page says which part, and recovers on its own once it answers again.
 
-It follows your system's light or dark setting; the moon/sun button switches it:
-
-![Landing page in dark mode](docs/landing-dark.png)
-
-If something is down, the page says so. Here the database is stopped: its box turns dashed and the
-tracker blocks turn striped:
-
-![Landing page with the database stopped](docs/landing-degraded.png)
-
-And here the Server Application is stopped. The page keeps checking every 5 seconds: each failed
-check adds an outlined block, the latency line breaks off, and everything returns to solid once
-the API answers again:
-
-![Landing page with the Server Application stopped](docs/landing-offline.png)
-
-| Status | Meaning | Looks like |
-|---|---|---|
-| All systems connected | API and database answering | Solid, pulsing dots and blocks |
-| Server application up, database unreachable | Start the database: `mise run db` | Striped blocks, dashed Data box |
-| Server application unreachable | Start the API: `mise run api:dev` | Outlined blocks, dashed server box |
+| Database stopped (`mise run db`) | Server Application stopped (`mise run api:dev`) |
+|---|---|
+| ![Landing page with the database stopped](docs/landing-degraded.png) | ![Landing page with the Server Application stopped](docs/landing-offline.png) |
 
 ### Sandbox: http://localhost:3000/sandbox
 
-The **See example charts** button on the landing page (or **Sandbox** in the header) opens a page that
-shows the client and server working together:
+Live API requests and example charts drawn from mock PDP AR data; hidden in production
+(override with `NEXT_PUBLIC_SANDBOX_ENABLED`).
 
-- **Try the API:** pick a preset request (health, KPIs, a chart's data, vector search, an unknown
-  endpoint, an invalid request) and see the exact request, status, timing and JSON response.
-- **Example charts:** eight KPI cards and seven charts modeled on the PDP AR dashboards in the project
-  briefs. Each chart loads its own `/api/v1/sandbox/...` endpoint from the browser and shows the
-  **Answer** (one-sentence takeaway) and the **Fields used**. All data is mock data.
-
-![Sandbox page with the API explorer and example charts](docs/sandbox.png)
-
-On a phone, everything stacks into one column:
-
-<img src="docs/sandbox-phone.png" alt="Sandbox page on a phone in dark mode" width="300">
+<p>
+  <img src="docs/sandbox.png" alt="Sandbox page with the API explorer and example charts" width="72%">
+  <img src="docs/sandbox-phone.png" alt="Sandbox page on a phone in dark mode" width="24%">
+</p>
 
 | Chart | Type | Endpoint |
 |---|---|---|
@@ -110,43 +82,24 @@ On a phone, everything stacks into one column:
 | Persistence by age group | Grouped bars, solid vs striped | `/sandbox/persistence-by-age` |
 | Time to complete | Horizontal bars | `/sandbox/time-to-complete` |
 
-The sandbox is on in development and staging and hidden in production (the API turns its endpoints
-off there too). Override with `NEXT_PUBLIC_SANDBOX_ENABLED=true|false`. To remove it entirely, delete
-`src/app/sandbox/`, `src/components/sandbox/`, `src/services/sandbox.ts` and
-`src/content/sandbox-requests.ts`.
+### 404 and error pages
 
-### When something goes wrong
+Unknown addresses and unexpected errors get designed pages ([`not-found.tsx`](src/app/not-found.tsx),
+[`error.tsx`](src/app/error.tsx)).
 
-Addresses that don't exist get a designed 404 page (`src/app/not-found.tsx`); unexpected errors get a
-matching page with **Try again** (`src/app/error.tsx`). API errors arrive as readable messages, because
-`lib/api-client.ts` reads the API's `{"error": {"message": ...}}` shape.
-
-![404 page in dark mode](docs/not-found.png)
-
-### Mobile
-
-Every page is responsive down to 375px phones: the connection diagram stacks vertically, cards go
-single-column, and the 404 diagram shrinks to fit.
+<img src="docs/not-found.png" alt="404 page in dark mode" width="60%">
 
 ## Environments
 
-Next.js only knows `development` and `production`, so the app reads its own `NEXT_PUBLIC_APP_ENV`
-(the same idea as `APP_ENV` on the server). Defaults for each environment live in `src/lib/env.ts`:
+Next.js only knows development and production, so the app reads its own `NEXT_PUBLIC_APP_ENV`; defaults
+live in [`src/lib/env.ts`](src/lib/env.ts) and overrides in a git-ignored `.env.local`
+(copy [`.env.example`](.env.example)).
 
 | Command | Environment | API base URL |
 |---|---|---|
 | `bun run dev` | `development` | `http://localhost:8000/api/v1` |
 | `bun run build:staging` | `staging` | placeholder: `https://api.staging.example.com/api/v1` |
 | `bun run build` | `production` | placeholder: `https://api.example.com/api/v1` |
-
-To override a value on your machine, copy `.env.example` to `.env.local` (git-ignored):
-
-```bash
-NEXT_PUBLIC_API_BASE_URL=http://localhost:8001/api/v1
-```
-
-`NEXT_PUBLIC_` values are built into the browser bundle, so restart `bun run dev` or rebuild after
-changing them. Anything in them is public: never put secrets there.
 
 ## Commands (from the repo root)
 
@@ -158,8 +111,7 @@ changing them. Anything in them is public: never put secrets there.
 | `mise run web:build-staging` | Staging build |
 | `mise run web:start` | Serve the last build |
 | `mise run web:lint` | ESLint + TypeScript type check |
-
-Add more shadcn/ui components with `bunx shadcn@latest add <name>`.
+| `bunx shadcn@latest add <name>` | Add a shadcn/ui component |
 
 ## Libraries Included
 
