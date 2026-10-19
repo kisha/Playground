@@ -8,25 +8,34 @@ Deployable on its own: it needs only this folder and the API's URL.
 
 ```
 src/
-├── app/            # Routes only: layout.tsx, page.tsx, globals.css. Rendering, no logic.
-├── components/
-│   ├── landing/    # Landing page sections: live status, system diagram, tracker, sparkline, stack cards
-│   └── ui/         # shadcn/ui components (button, card, chart)
-├── content/        # Text shown on pages: stack.ts (what's inside), brand.ts (header name + logo)
-├── hooks/          # React hooks, e.g. use-health-monitor.ts (polls /health every 5s)
-├── lib/
-│   ├── env.ts            # Which environment we're in + its settings
-│   ├── api-client.ts     # The single place that calls the API
-│   ├── system-status.ts  # Turns a health check into Website / API / Database states
-│   └── utils.ts          # cn() for merging Tailwind classes
-└── services/       # One file per API resource, e.g. health.ts
+├── app/            # Pages: layout.tsx, page.tsx, sandbox/, not-found.tsx, error.tsx, globals.css
+├── components/     # Render only. Shared: site header/footer, external link, section heading, load error
+│   ├── landing/    # Live status, system diagram, tracker, sparkline, stack cards
+│   ├── sandbox/    # API explorer, chart card, trend / bar / grouped-bar charts, KPI grid
+│   └── ui/         # shadcn/ui components (button, card, chart, skeleton)
+├── content/        # Words and settings shown on pages
+│   ├── brand.ts            # Name, tagline, logo, footer credit
+│   ├── stack.ts            # "What's inside" cards
+│   ├── sandbox-charts.ts   # Which fields each example chart draws, and their labels
+│   └── sandbox-requests.ts # The API explorer's preset requests
+├── hooks/          # Browser state: use-health-monitor, use-api-resource, use-api-explorer
+├── lib/            # Logic, with no markup
+│   ├── env.ts                # Which environment we're in + its settings
+│   ├── api-client.ts         # The single place that calls the API
+│   ├── system-status.ts      # Turns health checks into states, diagram boxes, sparkline points
+│   ├── connection-styles.ts  # Classes for each state (solid, striped, outlined)
+│   ├── charts.ts             # Chart config, formatting (percent, KPI), bar widths
+│   ├── api-explorer.ts       # Sends a preset request and describes the result
+│   ├── routes.ts, links.ts   # Page addresses and repository links
+│   └── errors.ts, timing.ts, theme.ts, utils.ts
+└── services/       # One file per API resource: health.ts, sandbox.ts
 public/brand/       # Logo files (swap the logo in src/content/brand.ts, or set it to null)
 docs/               # Screenshots used in the READMEs
 ```
 
-**Rule of thumb:** files in `app/` decide *what to show*. Fetching data, calling the API, reading the
-environment and any other logic lives in `lib/`, `services/` and `hooks/`, so it can be reused and
-tested without a page.
+**Rule of thumb:** `.tsx` files render. Calling the API, reading the environment, formatting, mapping
+data and every other decision lives in `.ts` files in `lib/`, `services/`, `hooks/` and `content/`, so
+it can be reused and tested without a page.
 
 ## Run locally
 
@@ -61,11 +70,50 @@ tracker blocks turn striped:
 
 ![Landing page with the database stopped](docs/landing-degraded.png)
 
+And here the Server Application is stopped. The page keeps checking every 5 seconds: each failed
+check adds an outlined block, the latency line breaks off, and everything returns to solid once
+the API answers again:
+
+![Landing page with the Server Application stopped](docs/landing-offline.png)
+
 | Status | Meaning | Looks like |
 |---|---|---|
 | All systems connected | API and database answering | Solid, pulsing dots and blocks |
 | Server application up, database unreachable | Start the database: `mise run db` | Striped blocks, dashed Data box |
 | Server application unreachable | Start the API: `mise run api:dev` | Outlined blocks, dashed server box |
+
+### Sandbox: http://localhost:3000/sandbox
+
+The **See example charts** button on the landing page (or **Sandbox** in the header) opens a page that
+shows the client and server working together:
+
+- **Try the API:** pick a preset request (health, KPIs, a chart's data, vector search, an unknown
+  endpoint, an invalid request) and see the exact request, status, timing and JSON response.
+- **Example charts:** eight KPI cards and seven charts modeled on the PDP AR dashboards in the project
+  briefs. Each chart loads its own `/api/v1/sandbox/...` endpoint from the browser and shows the
+  **Answer** (one-sentence takeaway) and the **Fields used**. All data is mock data.
+
+![Sandbox page with the API explorer and example charts](docs/sandbox.png)
+
+On a phone, everything stacks into one column:
+
+<img src="docs/sandbox-phone.png" alt="Sandbox page on a phone in dark mode" width="300">
+
+| Chart | Type | Endpoint |
+|---|---|---|
+| Student progress | KPI cards (percent, split, terms) | `/sandbox/kpis` |
+| Gateway course completion | Two lines, six terms | `/sandbox/gateway-completion` |
+| Students who stayed enrolled | One line, fall terms filled | `/sandbox/term-enrollment` |
+| First-year credit completion | Two lines, fall cohorts | `/sandbox/credit-completion` |
+| Persistence and retention | Two lines + definitions | `/sandbox/persistence-retention` |
+| Completion by student group | Horizontal bars | `/sandbox/completion-by-group` |
+| Persistence by age group | Grouped bars, solid vs striped | `/sandbox/persistence-by-age` |
+| Time to complete | Horizontal bars | `/sandbox/time-to-complete` |
+
+The sandbox is on in development and staging and hidden in production (the API turns its endpoints
+off there too). Override with `NEXT_PUBLIC_SANDBOX_ENABLED=true|false`. To remove it entirely, delete
+`src/app/sandbox/`, `src/components/sandbox/`, `src/services/sandbox.ts` and
+`src/content/sandbox-requests.ts`.
 
 ### When something goes wrong
 

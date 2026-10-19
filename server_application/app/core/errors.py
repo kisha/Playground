@@ -35,14 +35,15 @@ class ErrorResponse(BaseModel):
     error: ErrorBody
 
 
-def _code(status: int) -> str:
+def _error_code_for_status(status: int) -> str:
+    """404 -> "not_found", 503 -> "service_unavailable"."""
     try:
         return HTTPStatus(status).phrase.lower().replace(" ", "_").replace("-", "_")
     except ValueError:
         return "error"
 
 
-def _response(request: Request, body: ErrorBody, headers: dict[str, str] | None = None):
+def _error_response(body: ErrorBody, headers: dict[str, str] | None = None) -> JSONResponse:
     return JSONResponse(
         status_code=body.status,
         content=jsonable_encoder(ErrorResponse(error=body), exclude_none=True),
@@ -50,25 +51,25 @@ def _response(request: Request, body: ErrorBody, headers: dict[str, str] | None 
     )
 
 
-async def _http_error(request: Request, exc: StarletteHTTPException) -> JSONResponse:
-    route_missing = exc.status_code == 404 and exc.detail == "Not Found"
+async def _handle_http_exception(request: Request, exc: StarletteHTTPException) -> JSONResponse:
+    # Starlette raises 404 "Not Found" when no route matches; routes raise their own messages.
+    no_route_matched = exc.status_code == 404 and exc.detail == "Not Found"
     message = (
         f"No endpoint matches {request.method} {request.url.path}."
-        if route_missing
+        if no_route_matched
         else str(exc.detail)
     )
-    docs = "/docs" if route_missing and not settings.is_production else None
     body = ErrorBody(
         status=exc.status_code,
-        code=_code(exc.status_code),
+        code=_error_code_for_status(exc.status_code),
         message=message,
         path=request.url.path,
-        docs=docs,
+        docs=settings.docs_path if no_route_matched else None,
     )
-    return _response(request, body, headers=getattr(exc, "headers", None))
+    return _error_response(body, headers=getattr(exc, "headers", None))
 
 
-async def _validation_error(request: Request, exc: RequestValidationError) -> JSONResponse:
+async def _handle_validation_error(request: Request, exc: RequestValidationError) -> JSONResponse:
     body = ErrorBody(
         status=422,
         code="validation_error",
@@ -76,10 +77,10 @@ async def _validation_error(request: Request, exc: RequestValidationError) -> JS
         path=request.url.path,
         details=list(exc.errors()),
     )
-    return _response(request, body)
+    return _error_response(body)
 
 
-async def _unhandled_error(request: Request, exc: Exception) -> JSONResponse:
+async def _handle_unexpected_error(request: Request, exc: Exception) -> JSONResponse:
     logger.exception("Unhandled error on %s %s", request.method, request.url.path)
     body = ErrorBody(
         status=500,
@@ -87,10 +88,10 @@ async def _unhandled_error(request: Request, exc: Exception) -> JSONResponse:
         message="Something went wrong on our side. Please try again.",
         path=request.url.path,
     )
-    return _response(request, body)
+    return _error_response(body)
 
 
 def register_exception_handlers(app: FastAPI) -> None:
-    app.add_exception_handler(StarletteHTTPException, _http_error)
-    app.add_exception_handler(RequestValidationError, _validation_error)
-    app.add_exception_handler(Exception, _unhandled_error)
+    app.add_exception_handler(StarletteHTTPException, _handle_http_exception)
+    app.add_exception_handler(RequestValidationError, _handle_validation_error)
+    app.add_exception_handler(Exception, _handle_unexpected_error)

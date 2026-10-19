@@ -5,7 +5,7 @@ import { brand } from "@/content/brand";
 export function SiteFooter() {
   return (
     <footer className="px-6 py-8 text-center text-xs text-muted-foreground sm:px-10">
-      {brand.name} · a reusable starter client and server application
+      {brand.name} · {brand.summary}
       {brand.madeBy && (
         <>
           {" "}

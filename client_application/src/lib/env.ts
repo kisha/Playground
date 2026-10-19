@@ -55,6 +55,10 @@ export const env = {
   apiBaseUrl,
   /** Swagger UI. The API disables it in production, so there is nothing to link to there. */
   apiDocsUrl: appEnv === "production" ? null : new URL("/docs", apiBaseUrl).toString(),
+  /** The /sandbox page and its mock-data API. Off in production, like SANDBOX_ENABLED on the API. */
+  sandboxEnabled: process.env.NEXT_PUBLIC_SANDBOX_ENABLED
+    ? process.env.NEXT_PUBLIC_SANDBOX_ENABLED === "true"
+    : appEnv !== "production",
   /** Source repository, linked from the landing page. Copies of Playground override this. */
   repositoryUrl: process.env.NEXT_PUBLIC_REPOSITORY_URL || "https://github.com/kisha/Playground",
 } as const;

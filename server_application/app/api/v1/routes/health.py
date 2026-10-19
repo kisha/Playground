@@ -1,9 +1,6 @@
-from typing import Annotated
+from fastapi import APIRouter, Response, status
 
-from fastapi import APIRouter, Depends, Response, status
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from app.db.session import get_session
+from app.api.dependencies import SessionDep
 from app.schemas.health import HealthResponse
 from app.services.health import get_health
 
@@ -16,7 +13,7 @@ router = APIRouter(tags=["health"])
 )
 async def health(
     response: Response,
-    session: Annotated[AsyncSession, Depends(get_session)],
+    session: SessionDep,
 ) -> HealthResponse:
     """Report the environment and whether the API can reach the database."""
     result = await get_health(session)

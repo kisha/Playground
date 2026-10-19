@@ -1,13 +1,20 @@
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
+import { ExternalLink } from "@/components/external-link";
 import { LiveStatus } from "@/components/landing/live-status";
 import { StackOverview } from "@/components/landing/stack-overview";
+import { SectionHeading } from "@/components/section-heading";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { buttonVariants } from "@/components/ui/button";
 import { brand } from "@/content/brand";
+import { languagesLine } from "@/content/stack";
 import { env } from "@/lib/env";
+import { routes } from "@/lib/routes";
+import { cn } from "@/lib/utils";
 
-export default function Home() {
+export default function HomePage() {
   return (
     <div className="flex min-h-svh flex-col">
       <SiteHeader />
@@ -18,23 +25,23 @@ export default function Home() {
             {brand.name}
           </h1>
           <p className="max-w-2xl text-lg text-balance text-muted-foreground motion-safe:animate-fade-up motion-safe:[animation-delay:150ms]">
-            A Next.js client application and a FastAPI server application, preconfigured with core
-            libraries and connected end to end, out of the box.
+            {brand.tagline}
           </p>
           <p className="font-mono text-xs tracking-wide text-balance text-muted-foreground motion-safe:animate-fade-up motion-safe:[animation-delay:300ms]">
-            TypeScript · Python · PostgreSQL 18 · pgvector
+            {languagesLine}
           </p>
-          {env.apiDocsUrl && (
-            <a
-              href={env.apiDocsUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-2 inline-flex items-center gap-1 text-sm font-medium underline-offset-4 hover:underline motion-safe:animate-fade-up motion-safe:[animation-delay:450ms]"
-            >
-              API docs
-              <ArrowUpRight className="size-3.5" aria-hidden />
-            </a>
-          )}
+          <div className="mt-2 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm motion-safe:animate-fade-up motion-safe:[animation-delay:450ms]">
+            {env.sandboxEnabled && (
+              <Link
+                href={routes.sandboxCharts}
+                className={cn(buttonVariants({ size: "lg" }), "motion-safe:animate-pulse-ring hover:animate-none")}
+              >
+                See example charts
+                <ArrowRight aria-hidden className="motion-safe:animate-nudge-x" />
+              </Link>
+            )}
+            {env.apiDocsUrl && <ExternalLink href={env.apiDocsUrl}>API docs</ExternalLink>}
+          </div>
         </section>
 
         <section
@@ -48,14 +55,9 @@ export default function Home() {
         </section>
 
         <section aria-labelledby="inside-heading" className="mx-auto flex w-full max-w-5xl flex-col gap-8">
-          <div className="flex flex-col gap-2">
-            <h2 id="inside-heading" className="text-3xl font-semibold tracking-tight">
-              What&apos;s inside
-            </h2>
-            <p className="text-muted-foreground">
-              Two applications that deploy on their own and talk only over HTTP.
-            </p>
-          </div>
+          <SectionHeading id="inside-heading" title="What's inside">
+            <p className="text-muted-foreground">Two applications that deploy on their own and talk only over HTTP.</p>
+          </SectionHeading>
           <StackOverview />
         </section>
       </main>

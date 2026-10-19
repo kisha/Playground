@@ -1,10 +1,15 @@
 /** What Playground includes, shown on the landing page. Edit here, not in the components. */
 
+import { env } from "@/lib/env";
+import { repositoryFolderUrl } from "@/lib/links";
+
 export type Library = {
   name: string;
   /** Installed, but needs configuration (keys, tables, flows) before it does anything. */
   needsSetup?: boolean;
 };
+
+export type CardLink = { label: string; href: string };
 
 export type Application = {
   name: string;
@@ -12,7 +17,16 @@ export type Application = {
   summary: string;
   folder: string;
   includes: Library[];
+  links: CardLink[];
 };
+
+/** Shown under the landing page tagline. */
+export const languagesLine = "TypeScript · Python · PostgreSQL 18 · pgvector";
+
+/** Marks a library that needs setup, with this hint on hover. */
+export const SETUP_MARK = "*";
+export const SETUP_HINT = "Installed, needs setup before use";
+export const setupNote = `${SETUP_HINT}: authentication (signing keys, a users table, login) is not wired up yet.`;
 
 export const applications: Application[] = [
   {
@@ -31,6 +45,7 @@ export const applications: Application[] = [
       { name: "pele" },
       { name: "jose", needsSetup: true },
     ],
+    links: [{ label: "README", href: repositoryFolderUrl("client_application") }],
   },
   {
     name: "Server Application",
@@ -49,6 +64,11 @@ export const applications: Application[] = [
       { name: "PyJWT", needsSetup: true },
       { name: "bcrypt", needsSetup: true },
     ],
+    links: [
+      { label: "README", href: repositoryFolderUrl("server_application") },
+      // Swagger is turned off in production, so the link only appears where it works.
+      ...(env.apiDocsUrl ? [{ label: "API docs", href: env.apiDocsUrl }] : []),
+    ],
   },
 ];
 
@@ -56,6 +76,3 @@ export const sharedFoundation: { label: string; items: Library[] }[] = [
   { label: "Data Store", items: [{ name: "PostgreSQL 18" }, { name: "pgvector" }] },
   { label: "Tooling", items: [{ name: "mise" }, { name: "bun" }, { name: "Docker" }] },
 ];
-
-export const setupNote =
-  "Installed, needs setup before use: authentication (signing keys, a users table, login) is not wired up yet.";

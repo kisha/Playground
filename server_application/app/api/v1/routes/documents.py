@@ -2,9 +2,8 @@ import uuid
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.session import get_session
+from app.api.dependencies import EmbedderDep, SessionDep
 from app.models.document import Document
 from app.schemas.document import (
     DocumentCreate,
@@ -14,22 +13,19 @@ from app.schemas.document import (
     DocumentSearchResults,
 )
 from app.services import documents as service
-from app.services.embeddings import Embedder, get_embedder
 
 router = APIRouter(prefix="/documents", tags=["documents"])
 
-SessionDep = Annotated[AsyncSession, Depends(get_session)]
-EmbedderDep = Annotated[Embedder, Depends(get_embedder)]
 
-
-async def _get_or_404(session: SessionDep, document_id: uuid.UUID) -> Document:
+async def _document_or_404(session: SessionDep, document_id: uuid.UUID) -> Document:
+    """Load the document named in the path, or answer 404."""
     document = await service.get_document(session, document_id)
     if document is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Document not found")
     return document
 
 
-DocumentDep = Annotated[Document, Depends(_get_or_404)]
+DocumentDep = Annotated[Document, Depends(_document_or_404)]
 
 
 @router.post("", status_code=status.HTTP_201_CREATED)
@@ -49,7 +45,9 @@ async def list_documents(
 ) -> DocumentList:
     """List documents, newest first."""
     items, total = await service.list_documents(session, limit, offset)
-    return DocumentList(items=[DocumentRead.model_validate(d) for d in items], total=total)
+    return DocumentList(
+        items=[DocumentRead.model_validate(document) for document in items], total=total
+    )
 
 
 @router.post("/search")

@@ -2,16 +2,17 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
 type StatusPageProps = {
-  code: string;
+  /** Small line above the title, e.g. "404". */
+  eyebrow: string;
   title: string;
   description: React.ReactNode;
   /** Label for the unreachable box in the broken-connection diagram. */
-  missing: string;
+  unreachableLabel: string;
   actions: React.ReactNode;
 };
 
 /** Shared layout for the 404 and error pages: a broken version of the landing page's diagram. */
-export function StatusPage({ code, title, description, missing, actions }: StatusPageProps) {
+export function StatusPage({ eyebrow, title, description, unreachableLabel, actions }: StatusPageProps) {
   return (
     <div className="flex min-h-svh flex-col">
       <SiteHeader />
@@ -28,13 +29,13 @@ export function StatusPage({ code, title, description, missing, actions }: Statu
           </div>
           <div className="flex w-28 flex-col items-center gap-1.5 rounded-xl border border-dashed border-foreground/30 px-3 py-4 text-muted-foreground sm:w-36">
             <span className="size-2 rounded-full border border-foreground/60" />
-            <span className="text-xs font-medium">{missing}</span>
+            <span className="text-xs font-medium">{unreachableLabel}</span>
           </div>
         </div>
 
         <div className="flex max-w-lg flex-col items-center gap-4">
           <p className="font-mono text-sm tracking-widest text-muted-foreground motion-safe:animate-fade-up motion-safe:[animation-delay:100ms]">
-            {code}
+            {eyebrow}
           </p>
           <h1 className="text-4xl font-semibold tracking-tight text-balance motion-safe:animate-fade-up motion-safe:[animation-delay:200ms] sm:text-5xl">
             {title}

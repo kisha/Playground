@@ -31,15 +31,21 @@ class KpiResponse(BaseModel):
     items: list[Kpi]
 
 
+class ChartResponse[RowT: BaseModel](BaseModel):
+    """Every chart endpoint answers with its meta plus one row per point or bar."""
+
+    meta: ChartMeta
+    rows: list[RowT]
+
+
 class GatewayCompletionRow(BaseModel):
     term: str
     english: float
     math: float
 
 
-class GatewayCompletionResponse(BaseModel):
-    meta: ChartMeta
-    rows: list[GatewayCompletionRow]
+class GatewayCompletionResponse(ChartResponse[GatewayCompletionRow]):
+    pass
 
 
 class TermEnrollmentRow(BaseModel):
@@ -48,9 +54,8 @@ class TermEnrollmentRow(BaseModel):
     into_fall: bool = Field(description="True when the term measures continuing into fall.")
 
 
-class TermEnrollmentResponse(BaseModel):
-    meta: ChartMeta
-    rows: list[TermEnrollmentRow]
+class TermEnrollmentResponse(ChartResponse[TermEnrollmentRow]):
+    pass
 
 
 class CreditCompletionRow(BaseModel):
@@ -59,9 +64,8 @@ class CreditCompletionRow(BaseModel):
     transfer: float
 
 
-class CreditCompletionResponse(BaseModel):
-    meta: ChartMeta
-    rows: list[CreditCompletionRow]
+class CreditCompletionResponse(ChartResponse[CreditCompletionRow]):
+    pass
 
 
 class PersistenceRetentionRow(BaseModel):
@@ -70,19 +74,17 @@ class PersistenceRetentionRow(BaseModel):
     retention: float
 
 
-class PersistenceRetentionResponse(BaseModel):
-    meta: ChartMeta
-    rows: list[PersistenceRetentionRow]
+class PersistenceRetentionResponse(ChartResponse[PersistenceRetentionRow]):
+    pass
 
 
-class GroupRateRow(BaseModel):
+class CompletionByGroupRow(BaseModel):
     group: str
     rate: float
 
 
-class CompletionByGroupResponse(BaseModel):
-    meta: ChartMeta
-    rows: list[GroupRateRow]
+class CompletionByGroupResponse(ChartResponse[CompletionByGroupRow]):
+    pass
 
 
 class PersistenceByAgeRow(BaseModel):
@@ -91,9 +93,8 @@ class PersistenceByAgeRow(BaseModel):
     gateway_completion: float
 
 
-class PersistenceByAgeResponse(BaseModel):
-    meta: ChartMeta
-    rows: list[PersistenceByAgeRow]
+class PersistenceByAgeResponse(ChartResponse[PersistenceByAgeRow]):
+    pass
 
 
 class TimeToCompleteRow(BaseModel):
@@ -101,6 +102,5 @@ class TimeToCompleteRow(BaseModel):
     average_terms: float
 
 
-class TimeToCompleteResponse(BaseModel):
-    meta: ChartMeta
-    rows: list[TimeToCompleteRow]
+class TimeToCompleteResponse(ChartResponse[TimeToCompleteRow]):
+    pass

@@ -12,7 +12,7 @@ from app.db.session import engine
 
 
 @asynccontextmanager
-async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
     # Schema changes belong to Alembic; startup never creates tables.
     yield
     await engine.dispose()
@@ -23,8 +23,7 @@ def create_app() -> FastAPI:
         title=settings.PROJECT_NAME,
         version=settings.VERSION,
         openapi_url=f"{settings.API_V1_PREFIX}/openapi.json",
-        # Interactive docs are hidden in production.
-        docs_url=None if settings.is_production else "/docs",
+        docs_url=settings.docs_path,
         redoc_url=None,
         lifespan=lifespan,
     )

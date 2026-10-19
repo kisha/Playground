@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import { ThemeProvider } from "@/components/theme-provider";
+import { brand } from "@/content/brand";
 import { cn } from "@/lib/utils";
 
 import "./globals.css";
@@ -9,9 +10,9 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "Playground",
-  description:
-    "A Next.js client application and a FastAPI server application, preconfigured with core libraries and connected end to end, out of the box.",
+  // Pages set only their own title, e.g. "Sandbox", which becomes "Sandbox · Playground".
+  title: { default: brand.name, template: `%s · ${brand.name}` },
+  description: brand.tagline,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

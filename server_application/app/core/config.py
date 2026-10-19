@@ -20,6 +20,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 SERVER_ROOT = Path(__file__).resolve().parents[2]
 
+# Swagger UI. Hidden in production; error responses point here otherwise.
+DOCS_PATH = "/docs"
+
 
 class Environment(StrEnum):
     DEVELOPMENT = "development"
@@ -67,6 +70,11 @@ class Settings(BaseSettings):
     @property
     def is_production(self) -> bool:
         return self.APP_ENV is Environment.PRODUCTION
+
+    @property
+    def docs_path(self) -> str | None:
+        """Where Swagger UI is served, or None in production, where it is turned off."""
+        return None if self.is_production else DOCS_PATH
 
     @property
     def async_database_url(self) -> str:

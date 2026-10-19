@@ -18,22 +18,25 @@ from alembic import command  # noqa: E402
 from app.core.config import SERVER_ROOT  # noqa: E402
 from app.main import app  # noqa: E402
 
-_PLAIN_URL = TEST_DATABASE_URL.replace("postgresql+asyncpg://", "postgresql://")
+# asyncpg itself takes a plain postgresql:// URL, without SQLAlchemy's driver suffix.
+_ASYNCPG_URL = TEST_DATABASE_URL.replace("postgresql+asyncpg://", "postgresql://")
 
 
-async def _ensure_database() -> None:
-    server_url, database = _PLAIN_URL.rsplit("/", 1)
+async def _create_test_database_if_missing() -> None:
+    server_url, database_name = _ASYNCPG_URL.rsplit("/", 1)
     connection = await asyncpg.connect(f"{server_url}/postgres")
     try:
-        exists = await connection.fetchval("SELECT 1 FROM pg_database WHERE datname = $1", database)
+        exists = await connection.fetchval(
+            "SELECT 1 FROM pg_database WHERE datname = $1", database_name
+        )
         if not exists:
-            await connection.execute(f'CREATE DATABASE "{database}"')
+            await connection.execute(f'CREATE DATABASE "{database_name}"')
     finally:
         await connection.close()
 
 
-async def _truncate() -> None:
-    connection = await asyncpg.connect(_PLAIN_URL)
+async def _empty_tables() -> None:
+    connection = await asyncpg.connect(_ASYNCPG_URL)
     try:
         await connection.execute("TRUNCATE documents")
     finally:
@@ -42,13 +45,13 @@ async def _truncate() -> None:
 
 @pytest.fixture(scope="session", autouse=True)
 def migrated_database() -> None:
-    asyncio.run(_ensure_database())
+    asyncio.run(_create_test_database_if_missing())
     command.upgrade(Config(toml_file=str(SERVER_ROOT / "pyproject.toml")), "head")
 
 
 @pytest.fixture(autouse=True)
 def clean_tables() -> None:
-    asyncio.run(_truncate())
+    asyncio.run(_empty_tables())
 
 
 @pytest.fixture

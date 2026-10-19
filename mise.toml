@@ -46,7 +46,7 @@ run = "uv sync"
 [tasks."api:dev"]
 # Applies pending migrations first so a fresh checkout just works. Local development only:
 # staging and production run migrations as a deliberate deploy step.
-# Turn off with AUTO_MIGRATE=false (see "Database migrations" in the README).
+# Turn off with AUTO_MIGRATE=false (see "Database migrations" in server_application/README.md).
 description = "Apply pending migrations, then run the API with auto-reload on http://localhost:8000"
 dir = "server_application"
 run = """

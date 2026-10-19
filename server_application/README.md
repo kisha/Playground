@@ -9,11 +9,13 @@ Deployable on its own: it needs only this folder and a `DATABASE_URL`.
 app/
 ├── main.py            # create_app(): middleware, routers, lifespan
 ├── core/config.py     # Settings, resolved from APP_ENV
+├── core/errors.py     # One JSON shape for every error
 ├── db/base.py         # Base (naming convention), UUIDv7 + timestamp mixins
 ├── db/session.py      # Async engine, get_session dependency
 ├── models/            # SQLAlchemy models (import each in models/__init__.py)
 ├── schemas/           # Pydantic request/response models
 ├── services/          # Business logic; routes stay thin
+├── api/dependencies.py  # SessionDep, EmbedderDep: shared by every route module
 └── api/v1/routes/     # HTTP endpoints
 alembic/               # Migrations (config in pyproject.toml [tool.alembic])
 tests/

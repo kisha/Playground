@@ -11,14 +11,15 @@ logger = logging.getLogger(__name__)
 
 
 async def check_database(session: AsyncSession) -> DatabaseHealth:
-    started = time.perf_counter()
+    """Run a trivial query and time it."""
+    started_at = time.perf_counter()
     try:
         await session.execute(text("SELECT 1"))
     except Exception:
         # Details go to the server log, never to the client.
         logger.exception("Database health check failed")
         return DatabaseHealth(status="disconnected")
-    latency_ms = round((time.perf_counter() - started) * 1000, 2)
+    latency_ms = round((time.perf_counter() - started_at) * 1000, 2)
     return DatabaseHealth(status="connected", latency_ms=latency_ms)
 
 

@@ -8,11 +8,11 @@ queries when an instance has AR data of its own.
 from app.schemas.sandbox import (
     ChartMeta,
     CompletionByGroupResponse,
+    CompletionByGroupRow,
     CreditCompletionResponse,
     CreditCompletionRow,
     GatewayCompletionResponse,
     GatewayCompletionRow,
-    GroupRateRow,
     Kpi,
     KpiResponse,
     PersistenceByAgeResponse,
@@ -107,8 +107,8 @@ def get_kpis() -> KpiResponse:
 
 
 def get_gateway_completion() -> GatewayCompletionResponse:
-    english = [74, 76, 75, 78, 77, 79]
-    math = [58, 61, 57, 62, 59, 60]
+    english_rates = [74, 76, 75, 78, 77, 79]
+    math_rates = [58, 61, 57, 62, 59, 60]
     return GatewayCompletionResponse(
         meta=ChartMeta(
             title="Gateway course completion, term by term",
@@ -117,14 +117,14 @@ def get_gateway_completion() -> GatewayCompletionResponse:
             fields_used=["Gateway course", "Course completion"],
         ),
         rows=[
-            GatewayCompletionRow(term=term, english=e, math=m)
-            for term, e, m in zip(TERMS, english, math, strict=True)
+            GatewayCompletionRow(term=term, english=english_rate, math=math_rate)
+            for term, english_rate, math_rate in zip(TERMS, english_rates, math_rates, strict=True)
         ],
     )
 
 
 def get_term_enrollment() -> TermEnrollmentResponse:
-    enrolled = [66, 79, 63, 80, 62, 81]
+    enrolled_rates = [66, 79, 63, 80, 62, 81]
     return TermEnrollmentResponse(
         meta=ChartMeta(
             title="Students who stayed enrolled, term to term",
@@ -134,16 +134,16 @@ def get_term_enrollment() -> TermEnrollmentResponse:
         ),
         rows=[
             TermEnrollmentRow(
-                term=term, enrolled_next_term=value, into_fall=term.startswith("Fall")
+                term=term, enrolled_next_term=enrolled_rate, into_fall=term.startswith("Fall")
             )
-            for term, value in zip(TERMS, enrolled, strict=True)
+            for term, enrolled_rate in zip(TERMS, enrolled_rates, strict=True)
         ],
     )
 
 
 def get_credit_completion() -> CreditCompletionResponse:
-    new = [71, 72, 71, 73, 74, 75]
-    transfer = [63, 65, 66, 65, 67, 68]
+    new_student_rates = [71, 72, 71, 73, 74, 75]
+    transfer_student_rates = [63, 65, 66, 65, 67, 68]
     return CreditCompletionResponse(
         meta=ChartMeta(
             title="First-year credit completion rate",
@@ -153,15 +153,17 @@ def get_credit_completion() -> CreditCompletionResponse:
             filters=COHORT_FILTERS,
         ),
         rows=[
-            CreditCompletionRow(cohort_year=year, new=n, transfer=t)
-            for year, n, t in zip(COHORT_YEARS, new, transfer, strict=True)
+            CreditCompletionRow(cohort_year=year, new=new_rate, transfer=transfer_rate)
+            for year, new_rate, transfer_rate in zip(
+                COHORT_YEARS, new_student_rates, transfer_student_rates, strict=True
+            )
         ],
     )
 
 
 def get_persistence_retention() -> PersistenceRetentionResponse:
-    persistence = [80, 81, 83, 82, 84, 84]
-    retention = [65, 67, 68, 67, 70, 72]
+    persistence_rates = [80, 81, 83, 82, 84, 84]
+    retention_rates = [65, 67, 68, 67, 70, 72]
     return PersistenceRetentionResponse(
         meta=ChartMeta(
             title="Persistence and retention, fall cohorts",
@@ -172,14 +174,18 @@ def get_persistence_retention() -> PersistenceRetentionResponse:
             definitions=DEFINITIONS,
         ),
         rows=[
-            PersistenceRetentionRow(cohort_year=year, persistence=p, retention=r)
-            for year, p, r in zip(COHORT_YEARS, persistence, retention, strict=True)
+            PersistenceRetentionRow(
+                cohort_year=year, persistence=persistence_rate, retention=retention_rate
+            )
+            for year, persistence_rate, retention_rate in zip(
+                COHORT_YEARS, persistence_rates, retention_rates, strict=True
+            )
         ],
     )
 
 
 def get_completion_by_group() -> CompletionByGroupResponse:
-    rows = [
+    rate_by_group = [
         ("Female", 78),
         ("Male", 72),
         ("First-gen", 70),
@@ -194,12 +200,17 @@ def get_completion_by_group() -> CompletionByGroupResponse:
             fields_used=["Gender", "First gen", "Course modality", "Credits earned"],
             filters=COHORT_FILTERS,
         ),
-        rows=[GroupRateRow(group=group, rate=rate) for group, rate in rows],
+        rows=[CompletionByGroupRow(group=group, rate=rate) for group, rate in rate_by_group],
     )
 
 
 def get_persistence_by_age() -> PersistenceByAgeResponse:
-    rows = [("Ages 18 to 24", 78, 74), ("Ages 25 to 34", 71, 66), ("Ages 35 and over", 64, 58)]
+    # (age group, persistence rate, gateway completion rate)
+    rates_by_age = [
+        ("Ages 18 to 24", 78, 74),
+        ("Ages 25 to 34", 71, 66),
+        ("Ages 35 and over", 64, 58),
+    ]
     return PersistenceByAgeResponse(
         meta=ChartMeta(
             title="Persistence and gateway course completion by age group",
@@ -208,14 +219,18 @@ def get_persistence_by_age() -> PersistenceByAgeResponse:
             fields_used=["Gateway, persistence (PDP)", "Age (campus)"],
         ),
         rows=[
-            PersistenceByAgeRow(age_group=age, persistence=p, gateway_completion=g)
-            for age, p, g in rows
+            PersistenceByAgeRow(
+                age_group=age_group,
+                persistence=persistence_rate,
+                gateway_completion=gateway_rate,
+            )
+            for age_group, persistence_rate, gateway_rate in rates_by_age
         ],
     )
 
 
 def get_time_to_complete() -> TimeToCompleteResponse:
-    rows = [("Fall start", 5.1), ("Spring start", 5.8), ("Summer start", 6.3)]
+    average_terms_by_entry = [("Fall start", 5.1), ("Spring start", 5.8), ("Summer start", 6.3)]
     return TimeToCompleteResponse(
         meta=ChartMeta(
             title="Time to complete by entry term",
@@ -223,5 +238,8 @@ def get_time_to_complete() -> TimeToCompleteResponse:
             takeaway="Students who start in summer take over a term longer than fall starters.",
             fields_used=["Entry term (campus)", "Completion (PDP)"],
         ),
-        rows=[TimeToCompleteRow(entry_term=term, average_terms=terms) for term, terms in rows],
+        rows=[
+            TimeToCompleteRow(entry_term=entry_term, average_terms=average_terms)
+            for entry_term, average_terms in average_terms_by_entry
+        ],
     )

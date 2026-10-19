@@ -134,6 +134,8 @@
   --animate-fade-up: fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-travel-x: travel-x 1.2s cubic-bezier(0.65, 0, 0.35, 1) both;
   --animate-travel-y: travel-y 1.2s cubic-bezier(0.65, 0, 0.35, 1) both;
+  --animate-pulse-ring: pulse-ring 2.4s cubic-bezier(0.4, 0, 0.2, 1) 1.4s infinite;
+  --animate-nudge-x: nudge-x 2.4s cubic-bezier(0.4, 0, 0.2, 1) 1.4s infinite;
 
   @keyframes fade-up {
     from { opacity: 0; transform: translateY(12px); filter: blur(4px); }
@@ -148,6 +150,16 @@
     0% { top: 0%; opacity: 0; }
     15%, 85% { opacity: 1; }
     100% { top: 100%; opacity: 0; }
+  }
+  /* A soft ring that grows out of a call-to-action and fades, like a heartbeat. */
+  @keyframes pulse-ring {
+    0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--foreground) 35%, transparent); }
+    70%, 100% { box-shadow: 0 0 0 12px color-mix(in oklab, var(--foreground) 0%, transparent); }
+  }
+  /* Arrow steps forward once per pulse. */
+  @keyframes nudge-x {
+    0%, 30%, 100% { transform: translateX(0); }
+    15% { transform: translateX(3px); }
   }
 }
 

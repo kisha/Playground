@@ -1,39 +1,29 @@
-import { ArrowUpRight } from "lucide-react";
-
-import { applications, type Library, setupNote, sharedFoundation } from "@/content/stack";
-import { env } from "@/lib/env";
+import { ExternalLink } from "@/components/external-link";
+import {
+  type Application,
+  applications,
+  type Library,
+  SETUP_HINT,
+  SETUP_MARK,
+  setupNote,
+  sharedFoundation,
+} from "@/content/stack";
 import { cn } from "@/lib/utils";
 
-function ExternalLink({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      className="inline-flex items-center gap-0.5 text-sm font-medium underline-offset-4 hover:underline"
-    >
-      {children}
-      <ArrowUpRight className="size-3.5" aria-hidden />
-    </a>
-  );
-}
-
-const SETUP_MARK = "*";
-
-function Chips({ items }: { items: Library[] }) {
+function LibraryChips({ libraries }: { libraries: Library[] }) {
   return (
     <ul className="flex flex-wrap gap-1.5">
-      {items.map((item) => (
+      {libraries.map((library) => (
         <li
-          key={item.name}
-          title={item.needsSetup ? "Installed, needs setup before use" : undefined}
+          key={library.name}
+          title={library.needsSetup ? SETUP_HINT : undefined}
           className={cn(
             "rounded-full border px-2.5 py-0.5 text-xs text-muted-foreground",
-            item.needsSetup && "border-dashed border-foreground/40",
+            library.needsSetup && "border-dashed border-foreground/40",
           )}
         >
-          {item.name}
-          {item.needsSetup && (
+          {library.name}
+          {library.needsSetup && (
             <>
               <span aria-hidden> {SETUP_MARK}</span>
               <span className="sr-only"> (needs setup)</span>
@@ -45,34 +35,41 @@ function Chips({ items }: { items: Library[] }) {
   );
 }
 
+function ApplicationCard({ application }: { application: Application }) {
+  return (
+    <article className="flex flex-col gap-5 rounded-2xl border p-6 transition-[border-color,box-shadow,transform] duration-300 hover:border-foreground/25 hover:shadow-[0_8px_30px_-12px_color-mix(in_oklab,var(--foreground)_25%,transparent)] motion-safe:hover:-translate-y-0.5 sm:p-8">
+      <div className="flex flex-col gap-1">
+        <p className="text-xs tracking-widest text-muted-foreground uppercase">{application.role}</p>
+        <h3 className="text-2xl font-semibold tracking-tight">{application.name}</h3>
+        <p className="font-mono text-xs text-muted-foreground">{application.folder}/</p>
+      </div>
+      <p className="text-sm leading-relaxed text-muted-foreground">{application.summary}</p>
+      <LibraryChips libraries={application.includes} />
+      <div className="mt-auto flex flex-wrap gap-x-5 gap-y-2 pt-2 text-sm">
+        {application.links.map((link) => (
+          <ExternalLink key={link.label} href={link.href}>
+            {link.label}
+          </ExternalLink>
+        ))}
+      </div>
+    </article>
+  );
+}
+
 /** "What's inside": one card per application plus the shared foundation. */
 export function StackOverview() {
   return (
     <div className="flex flex-col gap-4">
       <div className="grid gap-4 md:grid-cols-2">
-        {applications.map((app) => (
-          <article key={app.folder} className="flex flex-col gap-5 rounded-2xl border p-6 sm:p-8">
-            <div className="flex flex-col gap-1">
-              <p className="text-xs tracking-widest text-muted-foreground uppercase">{app.role}</p>
-              <h3 className="text-2xl font-semibold tracking-tight">{app.name}</h3>
-              <p className="font-mono text-xs text-muted-foreground">{app.folder}/</p>
-            </div>
-            <p className="text-sm leading-relaxed text-muted-foreground">{app.summary}</p>
-            <Chips items={app.includes} />
-            <div className="mt-auto flex flex-wrap gap-x-5 gap-y-2 pt-2">
-              <ExternalLink href={`${env.repositoryUrl}/tree/main/${app.folder}`}>README</ExternalLink>
-              {app.folder === "server_application" && env.apiDocsUrl && (
-                <ExternalLink href={env.apiDocsUrl}>API docs</ExternalLink>
-              )}
-            </div>
-          </article>
+        {applications.map((application) => (
+          <ApplicationCard key={application.folder} application={application} />
         ))}
       </div>
       <div className="grid gap-4 rounded-2xl border p-6 sm:grid-cols-2 sm:p-8">
         {sharedFoundation.map((group) => (
           <div key={group.label} className="flex flex-col gap-3">
             <p className="text-xs tracking-widest text-muted-foreground uppercase">{group.label}</p>
-            <Chips items={group.items} />
+            <LibraryChips libraries={group.items} />
           </div>
         ))}
       </div>
