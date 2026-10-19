@@ -93,10 +93,11 @@ Change these values (examples use `YourInstitution`):
 ## Run it locally
 
 **Prerequisites:** Git, [Docker](https://www.docker.com/) or [OrbStack](https://orbstack.dev/) (open and
-running), and [mise](https://mise.jdx.dev). mise installs everything else.
+running), [mise](https://mise.jdx.dev) and [bun](https://bun.sh). mise installs everything else.
 
 ```bash
 brew install mise
+brew install oven-sh/bun/bun
 ```
 
 **Quick start** (two terminals, from the repository folder):
