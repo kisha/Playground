@@ -127,3 +127,35 @@
     @apply font-sans;
     }
 }
+/* --- Playground motion & patterns ------------------------------------------------------
+   Used with Tailwind's motion-safe: variant, so nothing moves for visitors who ask their
+   system for reduced motion. */
+@theme {
+  --animate-fade-up: fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-travel-x: travel-x 1.2s cubic-bezier(0.65, 0, 0.35, 1) both;
+  --animate-travel-y: travel-y 1.2s cubic-bezier(0.65, 0, 0.35, 1) both;
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(12px); filter: blur(4px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+  }
+  @keyframes travel-x {
+    0% { left: 0%; opacity: 0; }
+    15%, 85% { opacity: 1; }
+    100% { left: 100%; opacity: 0; }
+  }
+  @keyframes travel-y {
+    0% { top: 0%; opacity: 0; }
+    15%, 85% { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+  }
+}
+
+/* Diagonal stripes in the current text color: "degraded" without needing a second color. */
+@utility stripes {
+  background-image: repeating-linear-gradient(
+    135deg,
+    currentColor 0 1.5px,
+    transparent 1.5px 4px
+  );
+}

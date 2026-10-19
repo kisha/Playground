@@ -61,7 +61,13 @@ mise run web:install   # first time only: install dependencies
 mise run web:dev       # start on http://localhost:3000 with hot reload
 ```
 
-Open http://localhost:3000. The landing page and the connection indicator arrive in Step 4.
+Open http://localhost:3000. With the database and API running, you should see **All systems connected**
+and a live Website → API → Database diagram that checks the API every 5 seconds:
+
+![Landing page showing all systems connected](client_application/docs/landing-light.png)
+
+If the database or API is down, the page shows which one. See the
+[client README](client_application/README.md#what-you-should-see) for each state.
 
 ---
 
@@ -144,7 +150,7 @@ Both applications know which environment they are running in: `APP_ENV` on the s
 
 ## Core Languages and Libraries
 
-Items marked *available* are installed and ready to import but not yet wired into a feature.
+Items marked *available* are installed and ready to import but not yet wired into a feature. Items marked *needs setup* (jose, PyJWT, bcrypt) also need configuration first: authentication (signing keys, a users table, login) is intentionally not built yet.
 
 ### Front End: TypeScript
 
@@ -154,7 +160,7 @@ Items marked *available* are installed and ready to import but not yet wired int
 - [Recharts](https://recharts.org/): The SVG charting engine driving shadcn/ui Charts, responsible for smooth in-chart path drawing and slice growth animations.
 - [next-themes](https://github.com/pacocoursey/next-themes): Light and dark mode that follows the operating system until the user chooses, with no flash on load.
 - [pele](https://pele.run): *Available.* A small, dependency-free renderer that turns Mermaid diagram text into SVG, themed with CSS variables so diagrams follow light and dark mode without re-rendering.
-- [jose](https://github.com/panva/jose): *Available.* A lightweight JavaScript security library for verifying login tokens in the Next.js proxy on the edge before protected pages load.
+- [jose](https://github.com/panva/jose): *Available, needs setup:* verifying tokens needs the API's signing key (or public key) and a Next.js `proxy.ts`. A lightweight JavaScript security library for verifying login tokens in the Next.js proxy on the edge before protected pages load.
 
 ### Back End: Python
 
@@ -163,8 +169,8 @@ Items marked *available* are installed and ready to import but not yet wired int
 - [SQLAlchemy 2.x](https://www.sqlalchemy.org/): Typed, async ORM used to define database models and run queries from FastAPI.
 - [Alembic](https://alembic.sqlalchemy.org/): Database migration tool for SQLAlchemy that records every schema change as a versioned script, so every environment's database can be upgraded or rolled back the same way.
 - [Pydantic](https://docs.pydantic.dev/): Validates incoming request data and serializes responses to JSON; FastAPI is built on it.
-- [PyJWT](https://pyjwt.readthedocs.io/): *Available.* Issues and verifies signed JWT tokens containing user roles.
-- [bcrypt](https://github.com/pyca/bcrypt): *Available.* Hashes passwords with a deliberately slow, salted algorithm so stored passwords can't be reversed or cheaply guessed.
+- [PyJWT](https://pyjwt.readthedocs.io/): *Available, needs setup:* issuing tokens needs a signing key in settings and login endpoints. Issues and verifies signed JWT tokens containing user roles.
+- [bcrypt](https://github.com/pyca/bcrypt): *Available, needs setup:* needs a users table and sign-up/login endpoints to hash and check passwords. Hashes passwords with a deliberately slow, salted algorithm so stored passwords can't be reversed or cheaply guessed.
 
 ### Data Processing
 

@@ -9,18 +9,24 @@ Deployable on its own: it needs only this folder and the API's URL.
 ```
 src/
 ├── app/            # Routes only: layout.tsx, page.tsx, globals.css. Rendering, no logic.
-├── components/     # UI pieces (theme provider, theme toggle)
+├── components/
+│   ├── landing/    # Landing page sections: live status, system diagram, tracker, sparkline, stack cards
 │   └── ui/         # shadcn/ui components (button, card, chart)
+├── content/        # Text shown on pages: stack.ts (what's inside), brand.ts (header name + logo)
+├── hooks/          # React hooks, e.g. use-health-monitor.ts (polls /health every 5s)
 ├── lib/
-│   ├── env.ts         # Which environment we're in + its settings
-│   ├── api-client.ts  # The single place that calls the API
-│   └── utils.ts       # cn() for merging Tailwind classes
+│   ├── env.ts            # Which environment we're in + its settings
+│   ├── api-client.ts     # The single place that calls the API
+│   ├── system-status.ts  # Turns a health check into Website / API / Database states
+│   └── utils.ts          # cn() for merging Tailwind classes
 └── services/       # One file per API resource, e.g. health.ts
+public/brand/       # Logo files (swap the logo in src/content/brand.ts, or set it to null)
+docs/               # Screenshots used in the READMEs
 ```
 
 **Rule of thumb:** files in `app/` decide *what to show*. Fetching data, calling the API, reading the
-environment and any other logic lives in `lib/`, `services/` (and later `hooks/`), so it can be reused
-and tested without a page.
+environment and any other logic lives in `lib/`, `services/` and `hooks/`, so it can be reused and
+tested without a page.
 
 ## Run locally
 
@@ -37,6 +43,29 @@ Or with bun directly, from this folder:
 bun install
 bun run dev
 ```
+
+### What you should see
+
+Open http://localhost:3000. With the API and database running, the landing page shows
+**All systems connected**, a live Website → API → Database diagram, and a tracker that fills in every
+5 seconds:
+
+![Landing page in light mode, all systems connected](docs/landing-light.png)
+
+It follows your system's light or dark setting; the moon/sun button switches it:
+
+![Landing page in dark mode](docs/landing-dark.png)
+
+If something is down, the page says so. Here the database is stopped: its box turns dashed and the
+tracker blocks turn striped:
+
+![Landing page with the database stopped](docs/landing-degraded.png)
+
+| Status | Meaning | Looks like |
+|---|---|---|
+| All systems connected | API and database answering | Solid, pulsing dots and blocks |
+| API up, database unreachable | Start the database: `mise run db` | Striped blocks, dashed database box |
+| API unreachable | Start the API: `mise run api:dev` | Outlined blocks, dashed API box |
 
 ## Environments
 
@@ -73,7 +102,7 @@ Add more shadcn/ui components with `bunx shadcn@latest add <name>`.
 
 ## Libraries Included
 
-Items marked *available* are installed and ready to import but not yet wired into a feature.
+Items marked *available* are installed and ready to import but not yet wired into a feature. Items marked *needs setup* (jose, PyJWT, bcrypt) also need configuration first: authentication (signing keys, a users table, login) is intentionally not built yet.
 
 ### Front End: TypeScript
 
@@ -81,9 +110,10 @@ Items marked *available* are installed and ready to import but not yet wired int
 - [Tailwind CSS](https://tailwindcss.com/): Utility-first CSS framework used to build modern, responsive, dark-mode user interfaces with high design consistency.
 - [shadcn/ui Charts](https://ui.shadcn.com/charts): A collection of customizable React chart components built on Recharts and styled with Tailwind CSS variables for custom EdTech donut rings, line trends, and bar graphs.
 - [Recharts](https://recharts.org/): The SVG charting engine driving shadcn/ui Charts, responsible for smooth in-chart path drawing and slice growth animations.
+- [lucide-react](https://lucide.dev/): The icon set used by shadcn/ui (sun, moon, arrows).
 - [next-themes](https://github.com/pacocoursey/next-themes): Light and dark mode that follows the operating system until the user chooses, with no flash on load.
 - [pele](https://pele.run): *Available.* A small, dependency-free renderer that turns Mermaid diagram text into SVG, themed with CSS variables so diagrams follow light and dark mode without re-rendering.
-- [jose](https://github.com/panva/jose): *Available.* A lightweight JavaScript security library for verifying login tokens in the Next.js proxy on the edge before protected pages load.
+- [jose](https://github.com/panva/jose): *Available, needs setup:* verifying tokens needs the API's signing key (or public key) and a Next.js `proxy.ts`. A lightweight JavaScript security library for verifying login tokens in the Next.js proxy on the edge before protected pages load.
 
 ### Tooling
 

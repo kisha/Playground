@@ -111,7 +111,7 @@ never touch development data.
 
 ## Libraries Included
 
-Items marked *available* are installed and ready to import but not yet wired into a feature.
+Items marked *available* are installed and ready to import but not yet wired into a feature. Items marked *needs setup* (jose, PyJWT, bcrypt) also need configuration first: authentication (signing keys, a users table, login) is intentionally not built yet.
 
 ### Back End: Python
 
@@ -120,8 +120,8 @@ Items marked *available* are installed and ready to import but not yet wired int
 - [SQLAlchemy 2.x](https://www.sqlalchemy.org/): Typed, async ORM used to define database models and run queries from FastAPI.
 - [Alembic](https://alembic.sqlalchemy.org/): Database migration tool for SQLAlchemy that records every schema change as a versioned script, so every environment's database can be upgraded or rolled back the same way.
 - [Pydantic](https://docs.pydantic.dev/): Validates incoming request data and serializes responses to JSON; FastAPI is built on it.
-- [PyJWT](https://pyjwt.readthedocs.io/): *Available.* Issues and verifies signed JWT tokens containing user roles (`import jwt`).
-- [bcrypt](https://github.com/pyca/bcrypt): *Available.* Hashes passwords with a deliberately slow, salted algorithm so stored passwords can't be reversed or cheaply guessed (`bcrypt.hashpw` / `bcrypt.checkpw`).
+- [PyJWT](https://pyjwt.readthedocs.io/): *Available, needs setup:* issuing tokens needs a signing key in settings and login endpoints. Issues and verifies signed JWT tokens containing user roles (`import jwt`).
+- [bcrypt](https://github.com/pyca/bcrypt): *Available, needs setup:* needs a users table and sign-up/login endpoints to hash and check passwords. Hashes passwords with a deliberately slow, salted algorithm so stored passwords can't be reversed or cheaply guessed (`bcrypt.hashpw` / `bcrypt.checkpw`).
 
 ### Data Processing
 

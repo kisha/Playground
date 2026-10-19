@@ -10,7 +10,8 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: "Playground",
-  description: "A Next.js client and FastAPI server, talking to each other out of the box.",
+  description:
+    "A Next.js client application and a FastAPI server application, preconfigured with core libraries and connected end to end, out of the box.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

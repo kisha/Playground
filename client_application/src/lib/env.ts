@@ -46,10 +46,15 @@ function resolveEnvironment(): Environment {
 }
 
 const appEnv = resolveEnvironment();
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || SETTINGS[appEnv].apiBaseUrl;
 
 export const env = {
   appEnv,
   isDevelopment: appEnv === "development",
   isProduction: appEnv === "production",
-  apiBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || SETTINGS[appEnv].apiBaseUrl,
+  apiBaseUrl,
+  /** Swagger UI. The API disables it in production, so there is nothing to link to there. */
+  apiDocsUrl: appEnv === "production" ? null : new URL("/docs", apiBaseUrl).toString(),
+  /** Source repository, linked from the landing page. Copies of Playground override this. */
+  repositoryUrl: process.env.NEXT_PUBLIC_REPOSITORY_URL || "https://github.com/kisha/Playground",
 } as const;
