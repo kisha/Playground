@@ -15,6 +15,7 @@ but run and deploy independently, and talk to each other only over HTTP.
 |---|---|---|
 | **Front End** | TypeScript · Next.js · Tailwind CSS · shadcn/ui Charts · jose | Fast, server-rendered pages, consistent light and dark styling, ready-made charts, and token checks at the edge |
 | **Back End** | Python · FastAPI · SQLAlchemy · Alembic · uv | A typed, documented JSON API with versioned database changes |
+| **Data Processing** | Python · Polars · Pandas | Fast reading, cleaning and aggregating of large data files |
 | **Data Store** | PostgreSQL 18 · pgvector | Reliable relational storage plus similarity search over embeddings, in one database |
 | **Tooling** | mise · bun · Docker | One command installs the exact tool versions; one command runs each piece |
 
@@ -122,6 +123,9 @@ Items marked *available* are installed and ready to import but not yet wired int
 - [Pydantic](https://docs.pydantic.dev/): Validates incoming request data and serializes responses to JSON; FastAPI is built on it.
 - [PyJWT](https://pyjwt.readthedocs.io/): *Available.* Issues and verifies signed JWT tokens containing user roles.
 - [bcrypt](https://github.com/pyca/bcrypt): *Available.* Hashes passwords with a deliberately slow, salted algorithm so stored passwords can't be reversed or cheaply guessed.
+
+### Data Processing
+
 - [Pandas](https://pandas.pydata.org/) / [Polars](https://pola.rs/): *Available.* High-speed Python data processing libraries used to parse, clean, and aggregate multi-column PDP AR files in seconds. Polars does the heavy lifting; Pandas covers libraries that expect it; [pyarrow](https://arrow.apache.org/docs/python/) converts between them.
 
 ### Data Store
