@@ -1,8 +1,8 @@
+![Playground landing page in dark mode: live health checks travel from the Client Application to the Server Application and Data](client_application/docs/landing-live.gif)
+
 # dev/color Playground
 
 dev/color Playground is a reusable, lightly pre-configured starter kit for applications.
-
-![Playground landing page in dark mode: live health checks travel from the Client Application to the Server Application and Data](client_application/docs/landing-live.gif)
 
 The architecture consists of a **Client Application** built with Next.js, Tailwind CSS, and
 shadcn/charts, paired with a **Server Application** powered by FastAPI and PostgreSQL with native
