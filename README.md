@@ -72,7 +72,10 @@ mise run api:dev       # start on http://localhost:8000 with auto-reload
 
 **Check it works:**
 
-- http://localhost:8000/api/v1/health returns `"status": "ok"` and `"database": {"status": "connected"}`.
+- http://localhost:8000/api/v1/health should show something like this (your `latency_ms` will differ):
+
+![Health check response showing status ok, environment development and database connected](server_application/docs/health-response.png)
+
 - http://localhost:8000/docs opens the interactive API docs (Swagger UI):
 
 ![Swagger UI showing the health and documents endpoints](server_application/docs/swagger-endpoints.png)

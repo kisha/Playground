@@ -41,6 +41,11 @@ uv run alembic upgrade head      # apply migrations
 uv run fastapi dev app/main.py   # start with auto-reload on http://localhost:8000
 ```
 
+Open http://localhost:8000/api/v1/health to confirm the API and database are connected. You should see
+something like this (your `latency_ms` will differ):
+
+![Health check response showing status ok, environment development and database connected](docs/health-response.png)
+
 Open http://localhost:8000/docs to see and try every endpoint:
 
 ![Swagger UI showing the health and documents endpoints](docs/swagger-endpoints.png)
