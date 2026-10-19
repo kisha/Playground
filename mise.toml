@@ -88,3 +88,35 @@ run = ["uv run ruff check .", "uv run ruff format --check ."]
 description = "Auto-fix lint issues and format backend code"
 dir = "server_application"
 run = ["uv run ruff check --fix .", "uv run ruff format ."]
+
+# --- client_application ---------------------------------------------------------------
+
+[tasks."web:install"]
+description = "Install frontend dependencies with bun"
+dir = "client_application"
+run = "bun install"
+
+[tasks."web:dev"]
+description = "Run the web app with hot reload on http://localhost:3000"
+dir = "client_application"
+run = "bun run dev"
+
+[tasks."web:build"]
+description = "Production build (use web:build-staging for staging)"
+dir = "client_application"
+run = "bun run build"
+
+[tasks."web:build-staging"]
+description = "Staging build (NEXT_PUBLIC_APP_ENV=staging)"
+dir = "client_application"
+run = "bun run build:staging"
+
+[tasks."web:start"]
+description = "Serve the last build on http://localhost:3000"
+dir = "client_application"
+run = "bun run start"
+
+[tasks."web:lint"]
+description = "Lint and type-check frontend code"
+dir = "client_application"
+run = ["bun run lint", "bun run typecheck"]

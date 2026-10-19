@@ -23,7 +23,7 @@ but run and deploy independently, and talk to each other only over HTTP.
 
 ```
 Playground/
-├── client_application/   # Front End: Next.js (coming in Step 3)
+├── client_application/   # Front End: Next.js
 ├── server_application/   # Back End: FastAPI
 ├── docker-compose.yml    # Local PostgreSQL 18 + pgvector
 └── mise.toml             # Pinned tool versions + every day-to-day command (`mise tasks`)
@@ -41,18 +41,27 @@ mise install     # first time only: bun, Node, Python 3.14, uv
 mise run db      # start PostgreSQL 18 + pgvector on localhost:5433
 ```
 
-Then start the Server Application, and the Client Application once it lands, as described below.
+Then start the Server Application, then the Client Application, as described below.
 Stop the database with `mise run db:down`; your data is kept.
 
 ---
 
 ## Client Application (Front End)
 
-📁 [`client_application/`](client_application/) · **Coming in Step 3**
+📁 [`client_application/`](client_application/) · [Full README](client_application/README.md)
 
 The web interface people use: a Next.js app written in TypeScript, styled with Tailwind CSS in black and
-white with light and dark modes, using shadcn/ui Charts for data visualizations. It calls the Server
-Application for all data and shows whether the front end, back end and database are connected.
+white with light and dark modes (Inter font), using shadcn/ui Charts for data visualizations. It calls the
+Server Application for all of its data.
+
+**Run it** (with the Server Application already running, in a second terminal):
+
+```bash
+mise run web:install   # first time only: install dependencies
+mise run web:dev       # start on http://localhost:3000 with hot reload
+```
+
+Open http://localhost:3000. The landing page and the connection indicator arrive in Step 4.
 
 ---
 
@@ -117,7 +126,8 @@ To try pgvector, open **POST /api/v1/documents**, click **Try it out**, add a fe
 
 ## Environments
 
-Both applications know which environment they are running in through `APP_ENV`:
+Both applications know which environment they are running in: `APP_ENV` on the server,
+`NEXT_PUBLIC_APP_ENV` on the client.
 
 | `APP_ENV`     | Purpose                         |
 |---------------|---------------------------------|
@@ -127,8 +137,10 @@ Both applications know which environment they are running in through `APP_ENV`:
 
 `NODE_ENV` is not used for this because it only distinguishes development from production.
 
-- `.env.example` / `.env.<environment>`: committed templates and non-secret defaults.
-- `.env` / `.env.<environment>.local`: real values and secrets, never committed.
+- **Server:** `server_application/.env.<environment>` holds committed, non-secret defaults; secrets go in
+  git-ignored `.env.<environment>.local` files or the host's environment variables.
+- **Client:** defaults for each environment live in `client_application/src/lib/env.ts`; override them
+  in a git-ignored `.env.local`. Client values ship to the browser, so they are never secret.
 
 ## Core Languages and Libraries
 
@@ -140,7 +152,8 @@ Items marked *available* are installed and ready to import but not yet wired int
 - [Tailwind CSS](https://tailwindcss.com/): Utility-first CSS framework used to build modern, responsive, dark-mode user interfaces with high design consistency.
 - [shadcn/ui Charts](https://ui.shadcn.com/charts): A collection of customizable React chart components built on Recharts and styled with Tailwind CSS variables for custom EdTech donut rings, line trends, and bar graphs.
 - [Recharts](https://recharts.org/): The SVG charting engine driving shadcn/ui Charts, responsible for smooth in-chart path drawing and slice growth animations.
-- [pele](https://pele.run): A small, dependency-free renderer that turns Mermaid diagram text into SVG, themed with CSS variables so diagrams follow light and dark mode without re-rendering.
+- [next-themes](https://github.com/pacocoursey/next-themes): Light and dark mode that follows the operating system until the user chooses, with no flash on load.
+- [pele](https://pele.run): *Available.* A small, dependency-free renderer that turns Mermaid diagram text into SVG, themed with CSS variables so diagrams follow light and dark mode without re-rendering.
 - [jose](https://github.com/panva/jose): *Available.* A lightweight JavaScript security library for verifying login tokens in the Next.js proxy on the edge before protected pages load.
 
 ### Back End: Python
