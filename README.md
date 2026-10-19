@@ -52,7 +52,7 @@ Our foundational monorepo aims to accelerate project kickoff, allowing teams to 
 Each institution gets its own copy named **`[YourInstitution]_Playground`** (for example,
 `UTTC_Playground`).
 
-### 1. Create your copy
+### 1. Create a Playground for Your Institution
 
 Create an empty **private** repository on GitHub (no README, .gitignore or license), then clone
 Playground into it. Set your two names on the first lines:
