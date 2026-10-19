@@ -1,5 +1,5 @@
 # Local infrastructure for Playground.
-# Only Postgres runs here; client_playground and server_playground run natively for fast reloads.
+# Only Postgres runs here; client_application and server_application run natively for fast reloads.
 name: playground
 
 services:

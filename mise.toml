@@ -1,0 +1,80 @@
+# Toolchain and day-to-day commands for Playground.
+#   mise install      install the pinned tools below
+#   mise tasks        list every command
+#   mise run <task>   run one, e.g. `mise run db`
+
+[tools]
+bun = "1.4.3"      # client_application: package manager and script runner
+node = "24"        # client_application: runtime Next.js tooling expects alongside bun
+python = "3.14"    # server_application: matches server_application/.python-version
+uv = "0.13"        # server_application: dependencies, virtualenv, lockfile
+
+# --- Database (docker-compose.yml) ----------------------------------------------------
+
+[tasks.setup]
+description = "Create local .env from the template (safe to re-run)"
+run = "test -f .env || (cp .env.example .env && echo 'Created .env from .env.example')"
+
+[tasks.db]
+description = "Start Postgres 18 + pgvector and wait until it is healthy"
+depends = ["setup"]
+run = "docker compose up -d --wait db"
+
+[tasks."db:down"]
+description = "Stop Postgres (data is kept)"
+run = "docker compose down"
+
+[tasks."db:logs"]
+description = "Follow Postgres logs"
+run = "docker compose logs -f db"
+
+[tasks."db:shell"]
+description = "Open psql inside the database container"
+run = "docker compose exec db sh -c 'psql -U \"$POSTGRES_USER\" -d \"$POSTGRES_DB\"'"
+
+[tasks."db:reset"]
+description = "Destroy the database volume and start fresh"
+run = ["docker compose down -v", "docker compose up -d --wait db"]
+
+# --- server_application ----------------------------------------------------------------
+
+[tasks."api:install"]
+description = "Install backend dependencies with uv"
+dir = "server_application"
+run = "uv sync"
+
+[tasks."api:dev"]
+description = "Run the API with auto-reload on http://localhost:8000"
+dir = "server_application"
+run = "uv run fastapi dev app/main.py"
+
+[tasks."api:migrate"]
+description = "Apply all pending migrations"
+dir = "server_application"
+run = "uv run alembic upgrade head"
+
+[tasks."api:migrate-down"]
+description = "Roll back the most recent migration"
+dir = "server_application"
+run = "uv run alembic downgrade -1"
+
+[tasks."api:migration"]
+description = "Autogenerate a migration from model changes: mise run api:migration \"add documents table\""
+dir = "server_application"
+usage = 'arg "<message>" help="Short description of the schema change"'
+run = 'uv run alembic revision --autogenerate -m "$usage_message"'
+
+[tasks."api:test"]
+description = "Run backend tests"
+dir = "server_application"
+run = "uv run pytest"
+
+[tasks."api:lint"]
+description = "Lint and check formatting of backend code"
+dir = "server_application"
+run = ["uv run ruff check .", "uv run ruff format --check ."]
+
+[tasks."api:format"]
+description = "Auto-fix lint issues and format backend code"
+dir = "server_application"
+run = ["uv run ruff check --fix .", "uv run ruff format ."]

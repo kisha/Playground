@@ -8,14 +8,14 @@
 .env
 .env*.local
 
-# Node / Next.js (client_playground)
+# Node / Next.js (client_application)
 node_modules/
 .next/
 out/
 *.tsbuildinfo
 next-env.d.ts
 
-# Python (server_playground)
+# Python (server_application)
 .venv/
 __pycache__/
 *.py[cod]
