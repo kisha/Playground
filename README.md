@@ -66,10 +66,39 @@ vector similarity search through pgvector.
 **Run it** (with the database already started):
 
 ```bash
-mise run api:install   # install dependencies
-mise run api:migrate   # create or upgrade the database schema
-mise run api:dev       # start on http://localhost:8000 with auto-reload
+mise run api:install   # first time only: install dependencies
+mise run api:dev       # apply any pending migrations, then start on http://localhost:8000
 ```
+
+Leave this terminal open. The API is ready when it prints `Server started at http://127.0.0.1:8000`.
+
+**Database migrations: automatic locally**
+
+Migrations build and update the database tables. `mise run api:dev` applies any pending ones before
+starting, so a fresh checkout (or a `git pull` that brings new migrations) just works. When the database
+is already up to date, this step does nothing.
+
+To turn it off for one run:
+
+```bash
+AUTO_MIGRATE=false mise run api:dev
+```
+
+To turn it off on your machine, create `Playground/mise.local.toml` (git-ignored, so it only affects you):
+
+```toml
+[env]
+AUTO_MIGRATE = "false"
+```
+
+Then run migrations yourself when needed:
+
+```bash
+mise run api:migrate        # apply pending migrations
+mise run api:migrate-down   # undo the most recent one
+```
+
+This is for local development only. Staging and production run migrations as a deliberate deploy step.
 
 **Check it works:**
 

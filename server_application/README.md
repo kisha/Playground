@@ -32,14 +32,41 @@ providers are converted to the asyncpg driver automatically.
 
 ## Run locally
 
-Start the database first from the repo root (`mise run db`), then either use the mise tasks
-below or run uv directly from this folder:
+Start the database first from the repo root (`mise run db`), then:
+
+```bash
+mise run api:install   # first time only: install dependencies
+mise run api:dev       # apply any pending migrations, then start on http://localhost:8000
+```
+
+Or with uv directly, from this folder (no automatic migrations):
 
 ```bash
 uv sync                          # install dependencies into .venv
 uv run alembic upgrade head      # apply migrations
 uv run fastapi dev app/main.py   # start with auto-reload on http://localhost:8000
 ```
+
+### Database migrations
+
+`mise run api:dev` applies pending migrations before starting, so a fresh checkout just works. It's
+controlled by `AUTO_MIGRATE` (default `true`), which is local development only: staging and production run
+migrations as a deliberate deploy step.
+
+```bash
+AUTO_MIGRATE=false mise run api:dev   # skip for one run
+```
+
+To skip it permanently on your machine, add this to `Playground/mise.local.toml` (git-ignored):
+
+```toml
+[env]
+AUTO_MIGRATE = "false"
+```
+
+The behaviour itself lives in the `api:dev` task in `Playground/mise.toml`.
+
+### Check it works
 
 Open http://localhost:8000/api/v1/health to confirm the API and database are connected. You should see
 something like this (your `latency_ms` will differ):
@@ -55,7 +82,7 @@ Open http://localhost:8000/docs to see and try every endpoint:
 | Command | What it does |
 |---|---|
 | `mise run api:install` | Install dependencies (`uv sync`) |
-| `mise run api:dev` | Run with reload on http://localhost:8000 (docs at `/docs`) |
+| `mise run api:dev` | Apply pending migrations, then run with reload on http://localhost:8000 (docs at `/docs`) |
 | `mise run api:migrate` | Apply migrations |
 | `mise run api:migration "..."` | Autogenerate a migration from model changes |
 | `mise run api:migrate-down` | Roll back one migration |
