@@ -1,15 +1,13 @@
-# Playground
+# dev/color Playground
+![Playground landing page in dark mode: live health checks travel from the Client Application to the Server Application and Data](client_application/docs/landing-live.gif)
 
 dev/color Playground is a reusable, lightly pre-configured starter kit for applications.
-
-![Playground landing page in dark mode: live health checks travel from the Client Application to the Server Application and Data](client_application/docs/landing-live.gif)
 
 The architecture consists of a **Client Application** built with Next.js, Tailwind CSS, and
 shadcn/charts, paired with a **Server Application** powered by FastAPI and PostgreSQL with native
 vector search.
 
-This foundational monorepo aims to accelerate project kickoff, allowing engineering teams to focus on
-building high-value core features.
+Our foundational monorepo aims to accelerate project kickoff, allowing teams to focus on building core features.
 
 **Contents:** [Why Playground](#why-playground) · [Use this template](#use-this-template) ·
 [Run it locally](#run-it-locally) · [Server Application](#server-application-back-end) ·
@@ -51,26 +49,43 @@ building high-value core features.
 
 ## Use this template
 
-Each project gets its own copy, named `[institution_name]_Playground` (for example
-`UTTC_Playground`).
+Each institution gets its own copy of Playground, named **`[YourInstitution]_Playground`**. Replace
+`YourInstitution` with your institution's short name; for example, UTTC's copy is `UTTC_Playground`.
 
 ### 1. Create your copy
 
-**Intention:** Start your project from Playground while keeping a link back to it, so you can pull in
-template improvements later.
+**Intention:** Start your project from Playground under your own name, while keeping a link back to
+Playground so you can pull in template improvements later.
 
-**Implementation:** Fork the repository on GitHub, or create an **empty** repository named
-`UTTC_Playground` (no README or license), then clone Playground under that name and point it there:
+**Implementation:**
 
-```bash
-git clone git@github.com:kisha/Playground.git UTTC_Playground
-cd UTTC_Playground
-git remote rename origin template                                 # keep a link to Playground
-git remote add origin git@github.com:<your-account>/UTTC_Playground.git
-git push -u origin main
-```
+1. **Name your copy.** In a terminal, set these two values (they're used by the commands below):
 
-**Verification:** `git remote -v` lists `origin` as your repository and `template` as Playground. Later,
+   ```bash
+   INSTITUTION=YourInstitution     # your institution's short name, e.g. UTTC
+   GITHUB_ACCOUNT=your-account     # the GitHub user or organization that will own the copy
+   ```
+
+2. **Create an empty repository on GitHub** named `[YourInstitution]_Playground`. On GitHub, choose
+   **New repository**, enter the name, choose **Private**, and leave **Add a README**, **.gitignore**
+   and **license** unchecked. Or, with the GitHub CLI:
+
+   ```bash
+   gh repo create "${GITHUB_ACCOUNT}/${INSTITUTION}_Playground" --private
+   ```
+
+3. **Clone Playground under your name, and point it at your new repository:**
+
+   ```bash
+   git clone git@github.com:kisha/Playground.git "${INSTITUTION}_Playground"
+   cd "${INSTITUTION}_Playground"
+   git remote rename origin template      # keep a link back to Playground
+   git remote add origin "git@github.com:${GITHUB_ACCOUNT}/${INSTITUTION}_Playground.git"
+   git push -u origin main
+   ```
+
+**Verification:** Your new repository on GitHub shows Playground's files. In the folder, `git remote -v`
+lists `origin` as `[YourInstitution]_Playground` and `template` as `Playground`. Later,
 `git pull template main` brings in template updates.
 
 ### 2. Make it yours
@@ -78,16 +93,16 @@ git push -u origin main
 **Intention:** Replace Playground's name and branding, and give the local database its own identity so
 several copies can run on one machine.
 
-**Implementation:** Update these values:
+**Implementation:** Update these values (examples use `YourInstitution`; use your short name):
 
 | What | Where | Example |
 |---|---|---|
-| Name, logo, footer credit | `client_application/src/content/brand.ts` | `name: "UTTC Playground"` |
+| Name, logo, footer credit | `client_application/src/content/brand.ts` | `name: "YourInstitution Playground"` |
 | Logo image | `client_application/public/brand/` | your logo file |
-| Repository link on the landing page | `client_application/.env.local` (copy `.env.example`) | `NEXT_PUBLIC_REPOSITORY_URL=https://github.com/<you>/UTTC_Playground` |
-| API title in the docs | `server_application/.env.development` | `PROJECT_NAME="UTTC Playground API"` |
-| Docker project name | `docker-compose.yml` (`name:`) | `uttc_playground` |
-| Database name and port | `.env` (created by `mise run db`) **and** `DATABASE_URL` in `server_application/.env.development`; for a new port also set `TEST_DATABASE_URL` | `POSTGRES_DB=uttc_dev`, `POSTGRES_PORT=5434` |
+| Repository link on the landing page | `client_application/.env.local` (copy `.env.example`) | `NEXT_PUBLIC_REPOSITORY_URL=https://github.com/<your-account>/YourInstitution_Playground` |
+| API title in the docs | `server_application/.env.development` | `PROJECT_NAME="YourInstitution Playground API"` |
+| Docker project name | `docker-compose.yml` (`name:`) | `yourinstitution_playground` |
+| Database name and port | `.env` (created by `mise run db`) **and** `DATABASE_URL` in `server_application/.env.development`; for a new port also set `TEST_DATABASE_URL` | `POSTGRES_DB=yourinstitution_dev`, `POSTGRES_PORT=5434` |
 
 **Verification:** After [Run it locally](#run-it-locally), the landing page shows your name and logo,
 and `docker compose ls` lists your project name.
