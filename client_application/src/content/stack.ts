@@ -55,7 +55,7 @@ export const applications: Application[] = [
     folder: "server_application",
     includes: [
       { name: "FastAPI" },
-      { name: "SQLAlchemy 2" },
+      { name: "SQLAlchemy 2.1.5" },
       { name: "Alembic" },
       { name: "Pydantic" },
       { name: "uv" },

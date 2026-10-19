@@ -40,7 +40,7 @@ Our foundational monorepo aims to accelerate project kickoff, allowing teams to 
 | Layer | Built with | What it gives you |
 |---|---|---|
 | **Front End** | TypeScript · Next.js · Tailwind CSS · shadcn/ui Charts | Server-rendered pages, light and dark modes, ready-made charts |
-| **Back End** | Python · FastAPI · SQLAlchemy · Alembic · uv | A typed, documented JSON API with versioned database changes |
+| **Back End** | Python · FastAPI · SQLAlchemy 2.1.5 · Alembic · uv | A typed, documented JSON API with versioned database changes |
 | **Data Processing** | Polars · Pandas | Fast reading, cleaning and aggregating of large data files |
 | **Data Store** | PostgreSQL 18 · pgvector | Relational storage plus similarity search, in one database |
 | **Tooling** | mise · bun · Docker | Pinned tool versions and one command for every task |
@@ -356,7 +356,7 @@ login) is intentionally not built.
 
 - [FastAPI](https://fastapi.tiangolo.com/): High-performance Python web framework used for API routing, background PDP file upload processing and query translation.
 - [uv](https://github.com/astral-sh/uv): Extremely fast Python package installer and dependency resolver, written in Rust.
-- [SQLAlchemy 2.x](https://www.sqlalchemy.org/): Typed, async ORM used to define database models and run queries.
+- [SQLAlchemy 2.1.5](https://www.sqlalchemy.org/): Typed, async ORM used to define database models and run queries.
 - [Alembic](https://alembic.sqlalchemy.org/): Records every schema change as a versioned migration, so every environment's database can be upgraded or rolled back the same way.
 - [Pydantic](https://docs.pydantic.dev/): Validates incoming request data and serializes responses to JSON; FastAPI is built on it.
 - [PyJWT](https://pyjwt.readthedocs.io/): *Available, needs setup:* issues and verifies signed JWT tokens containing user roles; needs a signing key in settings and login endpoints.
