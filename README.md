@@ -86,7 +86,7 @@ Change these values (examples use `YourInstitution`):
 | Repository link on the landing page | `client_application/.env.local` (copy `.env.example`) | `NEXT_PUBLIC_REPOSITORY_URL=https://github.com/<your-account>/YourInstitution_Playground` |
 | API title in the docs | `server_application/.env.development` | `PROJECT_NAME="YourInstitution Playground API"` |
 | Docker project name | `docker-compose.yml` (`name:`) | `yourinstitution_playground` |
-| Database name and port | `.env` (created by `mise run db`) **and** `DATABASE_URL` in `server_application/.env.development`; for a new port also set `TEST_DATABASE_URL` | `POSTGRES_DB=yourinstitution_dev`, `POSTGRES_PORT=5434` |
+| Database name and port | `.env` and `DATABASE_URL` in `server_application/.env.development` (and `TEST_DATABASE_URL` for a new port) | `POSTGRES_DB=yourinstitution_dev`, `POSTGRES_PORT=5434` |
 
 ---
 
@@ -98,18 +98,6 @@ running), [mise](https://mise.jdx.dev) and [bun](https://bun.sh). mise installs 
 ```bash
 brew install mise
 brew install oven-sh/bun/bun
-```
-
-**Quick start** (two terminals, from the repository folder):
-
-```bash
-# Terminal 1
-mise trust && mise install                      # first time only
-mise run db                                     # PostgreSQL on localhost:5433
-mise run api:install && mise run api:dev        # Server Application on http://localhost:8000
-
-# Terminal 2
-mise run web:install && mise run web:dev        # Client Application on http://localhost:3000
 ```
 
 ### Step 1: Install the toolchain
@@ -139,18 +127,12 @@ mise run db:reset     # delete all data and start fresh
 A FastAPI API on Python 3.14 that reads and writes PostgreSQL and serves vector search.
 📁 [`server_application/`](server_application/) · [README](server_application/README.md)
 
-### Step 3: Install its dependencies
+### Step 3: Start the Server Application (FastAPI)
+
+Installs dependencies, applies any pending migrations, then starts with auto-reload.
 
 ```bash
-mise run api:install
-```
-
-### Step 4: Start the Server Application (FastAPI)
-
-Applies any pending migrations, then starts with auto-reload.
-
-```bash
-mise run api:dev
+mise run api:install && mise run api:dev
 
 # Optional: start without applying migrations
 AUTO_MIGRATE=false mise run api:dev
@@ -160,14 +142,14 @@ Check it: http://localhost:8000/api/v1/health
 
 ![Health check response: status ok, database connected](server_application/docs/health-response.png)
 
-### Step 5: Explore the endpoints
+### Step 4: Explore the endpoints
 
 Every endpoint, ready to try in the browser: http://localhost:8000/docs ·
 [code](server_application/app/api/v1/routes/)
 
 ![Swagger UI showing the health, documents and sandbox endpoints](server_application/docs/swagger-endpoints.png)
 
-### Step 6: Run the tests
+### Step 5: Run the tests
 
 Expect `24 passed`; tests use their own `playground_test` database.
 
@@ -183,25 +165,19 @@ A Next.js web interface in TypeScript, black and white with light and dark modes
 its data from the Server Application.
 📁 [`client_application/`](client_application/) · [README](client_application/README.md)
 
-### Step 7: Install its dependencies
+### Step 6: Start the Client Application (Next.js)
 
 In a second terminal (the Server Application keeps running in the first):
 
 ```bash
-mise run web:install
-```
-
-### Step 8: Start the Client Application (Next.js)
-
-```bash
-mise run web:dev
+mise run web:install && mise run web:dev
 ```
 
 Open http://localhost:3000. It should say **All systems connected**:
 
 ![Landing page: all systems connected](client_application/docs/landing-light.png)
 
-### Step 9: Try the API from the Client Application
+### Step 7: Try the API from the Client Application
 
 Send real requests to the Server Application and see the responses: http://localhost:3000/sandbox#api
 
@@ -209,7 +185,7 @@ Endpoints: [Swagger](http://localhost:8000/docs) · [code](server_application/ap
 
 ![Gateway completion request and its JSON response: meta plus one row per term](client_application/docs/sandbox-gateway-request.png)
 
-### Step 10: Examples from `/sandbox`
+### Step 8: Examples from `/sandbox`
 
 Example charts on http://localhost:3000/sandbox. Each chart loads its own `/api/v1/sandbox/...` endpoint.
 All data is mock data.
@@ -219,14 +195,6 @@ All data is mock data.
 ![Trend charts: gateway completion, term-to-term enrollment, credit completion, persistence and retention](client_application/docs/sandbox-trend-charts.png)
 
 ![Bar charts: completion by student group, persistence by age, time to complete](client_application/docs/sandbox-bar-charts.png)
-
-### Step 11: Check the code
-
-Lint, type-check and build; the build lists `/`, `/sandbox` and `/_not-found`.
-
-```bash
-mise run web:lint && mise run web:build
-```
 
 ### When you're done
 
@@ -291,9 +259,7 @@ mise tasks
 | **Server application up, database unreachable** | The database is stopped | `mise run db` |
 | `port is already allocated` / `address already in use` | Something else uses 5433, 8000 or 3000 | Stop it, or change `POSTGRES_PORT` in `.env` and the port in `DATABASE_URL` |
 | `Cannot connect to the Docker daemon` | Docker or OrbStack isn't open | Open it, then `mise run db` |
-| `/documents` returns `500` after pulling changes | Migrations not applied | `mise run api:migrate` |
-| Styles look stale after pulling changes | The dev server cached old CSS | Restart `mise run web:dev` |
-| `mise` asks to trust the config | First run in this folder | `mise trust` |
+| `500` errors after pulling changes | Migrations not applied | `mise run api:migrate` |
 
 **Server application unreachable** looks like this; start the API and it recovers within 5 seconds:
 
