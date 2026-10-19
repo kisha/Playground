@@ -1,7 +1,8 @@
 # dev/color Playground
-![Playground landing page in dark mode: live health checks travel from the Client Application to the Server Application and Data](client_application/docs/landing-live.gif)
 
 dev/color Playground is a reusable, lightly pre-configured starter kit for applications.
+
+![Playground landing page in dark mode: live health checks travel from the Client Application to the Server Application and Data](client_application/docs/landing-live.gif)
 
 The architecture consists of a **Client Application** built with Next.js, Tailwind CSS, and
 shadcn/charts, paired with a **Server Application** powered by FastAPI and PostgreSQL with native
@@ -9,23 +10,19 @@ vector search.
 
 Our foundational monorepo aims to accelerate project kickoff, allowing teams to focus on building core features.
 
-**Contents:** [Why Playground](#why-playground) · [Use this template](#use-this-template) ·
+**Contents:** [Benefits](#benefits-of-playground) · [Tech Stack](#tech-stack-summary) · [Use this template](#use-this-template) ·
 [Run it locally](#run-it-locally) · [Server Application](#server-application-back-end) ·
 [Client Application](#client-application-front-end) · [Commands](#commands) ·
 [Troubleshooting](#troubleshooting) · [Reference](#reference)
 
 ---
 
-## Why Playground
-
-### The Monorepo Advantage
+## Benefits of Playground
 
 - **Centralized Code, Independent Scaling:** The Client Application and Server Application live in a
   single repository for easy management, but they run, scale, and deploy completely independently.
 - **Accelerated Feature Delivery:** Skips infrastructure setup so teams can immediately build platform
   features, learning analytics, or content delivery systems using a modern tech stack.
-- **AI-Ready Infrastructure:** The Server Application features native vector search and semantic
-  search, with a Python-based FastAPI setup ready to integrate deep learning libraries like PyTorch.
 - **Decoupled Performance:** Independent deployment allows the Client Application interface to remain
   highly responsive while the Server Application backend scales separately to process heavy assessment
   data.
@@ -35,11 +32,11 @@ Our foundational monorepo aims to accelerate project kickoff, allowing teams to 
 - **Native Ecosystem Integration:** The Server Application was built on Python to provide direct,
   seamless access to the vast majority of open-source AI and machine learning libraries.
 
-### Stack at a glance
+## Tech Stack Summary
 
 | Layer | Built with | What it gives you |
 |---|---|---|
-| **Front End** | TypeScript · Next.js · Tailwind CSS · shadcn/ui Charts | Server-rendered pages, light and dark modes, ready-made charts |
+| **Front End** | TypeScript · Next.js · Tailwind CSS · shadcn/ui Charts | Server-rendered pages, light and dark modes, ready-made chart examples |
 | **Back End** | Python · FastAPI · SQLAlchemy 2.1.5 · Alembic · uv | A typed, documented JSON API with versioned database changes |
 | **Data Processing** | Polars · Pandas | Fast reading, cleaning and aggregating of large data files |
 | **Data Store** | PostgreSQL 18 · pgvector | Relational storage plus similarity search, in one database |
