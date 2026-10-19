@@ -5,7 +5,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1.router import api_router
+from app.api.v1.routes import sandbox
 from app.core.config import settings
+from app.core.errors import register_exception_handlers
 from app.db.session import engine
 
 
@@ -27,6 +29,8 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
 
+    register_exception_handlers(app)
+
     if settings.CORS_ORIGINS:
         app.add_middleware(
             CORSMiddleware,
@@ -37,6 +41,8 @@ def create_app() -> FastAPI:
         )
 
     app.include_router(api_router, prefix=settings.API_V1_PREFIX)
+    if settings.SANDBOX_ENABLED:
+        app.include_router(sandbox.router, prefix=settings.API_V1_PREFIX)
     return app
 
 

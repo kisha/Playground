@@ -21,8 +21,8 @@ export type SystemStatus = {
 
 const LABELS: Record<LinkState, string> = {
   healthy: "All systems connected",
-  degraded: "API up, database unreachable",
-  offline: "API unreachable",
+  degraded: "Server application up, database unreachable",
+  offline: "Server application unreachable",
   pending: "Checking connection…",
 };
 

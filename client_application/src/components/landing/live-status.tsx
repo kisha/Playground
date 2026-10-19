@@ -23,9 +23,14 @@ function describeNodes(latest: CheckResult | undefined): [DiagramNode, DiagramNo
       : "disconnected";
 
   return [
-    { name: "Website", detail: env.appEnv, state: status.website },
-    { name: "API", detail: apiDetail, state: status.api },
-    { name: "Database", detail: databaseDetail, state: status.database },
+    { name: "Client Application", technology: "Next.js", detail: env.appEnv, state: status.website },
+    { name: "Server Application", technology: "FastAPI", detail: apiDetail, state: status.api },
+    {
+      name: "Data",
+      technology: "PostgreSQL · pgvector",
+      detail: databaseDetail,
+      state: status.database,
+    },
   ];
 }
 

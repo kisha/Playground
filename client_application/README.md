@@ -47,7 +47,7 @@ bun run dev
 ### What you should see
 
 Open http://localhost:3000. With the API and database running, the landing page shows
-**All systems connected**, a live Website → API → Database diagram, and a tracker that fills in every
+**All systems connected**, a live Client Application → Server Application → Data diagram, and a tracker that fills in every
 5 seconds:
 
 ![Landing page in light mode, all systems connected](docs/landing-light.png)
@@ -64,8 +64,21 @@ tracker blocks turn striped:
 | Status | Meaning | Looks like |
 |---|---|---|
 | All systems connected | API and database answering | Solid, pulsing dots and blocks |
-| API up, database unreachable | Start the database: `mise run db` | Striped blocks, dashed database box |
-| API unreachable | Start the API: `mise run api:dev` | Outlined blocks, dashed API box |
+| Server application up, database unreachable | Start the database: `mise run db` | Striped blocks, dashed Data box |
+| Server application unreachable | Start the API: `mise run api:dev` | Outlined blocks, dashed server box |
+
+### When something goes wrong
+
+Addresses that don't exist get a designed 404 page (`src/app/not-found.tsx`); unexpected errors get a
+matching page with **Try again** (`src/app/error.tsx`). API errors arrive as readable messages, because
+`lib/api-client.ts` reads the API's `{"error": {"message": ...}}` shape.
+
+![404 page in dark mode](docs/not-found.png)
+
+### Mobile
+
+Every page is responsive down to 375px phones: the connection diagram stacks vertically, cards go
+single-column, and the 404 diagram shrinks to fit.
 
 ## Environments
 

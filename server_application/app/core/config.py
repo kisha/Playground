@@ -57,6 +57,9 @@ class Settings(BaseSettings):
 
     CORS_ORIGINS: list[str] = []
 
+    # Mock-data endpoints behind the client's example charts. Off in production.
+    SANDBOX_ENABLED: bool = True
+
     @property
     def is_development(self) -> bool:
         return self.APP_ENV is Environment.DEVELOPMENT

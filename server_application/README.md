@@ -75,7 +75,7 @@ something like this (your `latency_ms` will differ):
 
 Open http://localhost:8000/docs to see and try every endpoint:
 
-![Swagger UI showing the health and documents endpoints](docs/swagger-endpoints.png)
+![Swagger UI showing the health, documents and sandbox endpoints](docs/swagger-endpoints.png)
 
 ## Commands (from the repo root)
 
@@ -101,6 +101,45 @@ All under `/api/v1`. Try them at http://localhost:8000/docs.
 | `GET` | `/documents/{id}` | Fetch one document |
 | `DELETE` | `/documents/{id}` | Delete a document |
 | `POST` | `/documents/search` | Most similar documents to a query, via pgvector cosine distance |
+| `GET` | `/sandbox/kpis` | Headline measures, including splits like Female / Male 64 / 36 |
+| `GET` | `/sandbox/gateway-completion` | Gateway English vs math, last six terms |
+| `GET` | `/sandbox/term-enrollment` | Term-to-term enrollment, last six terms |
+| `GET` | `/sandbox/credit-completion` | First-year credit completion, new vs transfer, fall cohorts 2020 to 2025 |
+| `GET` | `/sandbox/persistence-retention` | Persistence vs retention, fall cohorts, with definitions |
+| `GET` | `/sandbox/completion-by-group` | First-year credit completion per student group |
+| `GET` | `/sandbox/persistence-by-age` | Persistence and gateway completion per age group |
+| `GET` | `/sandbox/time-to-complete` | Average terms to completion per entry term |
+
+### Errors
+
+Every error uses the same JSON shape, so clients can always show a readable message:
+
+```json
+{"error": {"status": 404, "code": "not_found", "message": "No endpoint matches GET /api/v1/nope.",
+           "path": "/api/v1/nope", "docs": "/docs"}}
+```
+
+| Situation | Status | `code` |
+|---|---|---|
+| Unknown endpoint (points to `/docs` outside production) | 404 | `not_found` |
+| Missing resource, e.g. a deleted document | 404 | `not_found` |
+| Wrong HTTP method | 405 | `method_not_allowed` |
+| Invalid request body or query (lists each field in `details`) | 422 | `validation_error` |
+| Unexpected server error (details stay in the server log) | 500 | `internal_error` |
+
+The handlers live in `app/core/errors.py`.
+
+### Sandbox
+
+The `/sandbox` endpoints return **mock** data shaped like PDP Analysis-Ready (AR) file outputs: the same
+measures, labels, cohort filters ("Fall entry", "New + Transfer") and definitions (persistence =
+continuing anywhere, retention = staying at the institution) as the project briefs. Every response has
+`meta` (title, takeaway, fields used, `"source": "mock"`) and `rows` or `items`. They power the client's
+example charts. They live in `routes/sandbox.py`, `schemas/sandbox.py` and
+`services/sandbox.py`; replace the service functions with real queries, or delete the three files.
+
+They are controlled by `SANDBOX_ENABLED` (default `true`). `.env.production` sets it to `false`, so a
+deployed API never serves mock data.
 
 Embeddings come from `HashingEmbedder` in `app/services/embeddings.py`: it needs no model or API
 key, and matches shared words rather than meaning. For semantic search, implement the `Embedder`

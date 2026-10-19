@@ -45,7 +45,18 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
   const body: unknown = response.status === 204 ? undefined : await response.json().catch(() => undefined);
 
   if (!response.ok) {
-    throw new ApiError(`${init.method ?? "GET"} ${path} failed with ${response.status}`, response.status, body);
+    const message =
+      errorMessage(body) ?? `${init.method ?? "GET"} ${path} failed with ${response.status}`;
+    throw new ApiError(message, response.status, body);
   }
   return body as T;
+}
+
+/** The API sends every error as {"error": {"message": ...}}; pull out the readable message. */
+function errorMessage(body: unknown): string | undefined {
+  if (typeof body !== "object" || body === null || !("error" in body)) return undefined;
+  const error = (body as { error: unknown }).error;
+  if (typeof error !== "object" || error === null || !("message" in error)) return undefined;
+  const message = (error as { message: unknown }).message;
+  return typeof message === "string" ? message : undefined;
 }

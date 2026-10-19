@@ -62,7 +62,7 @@ mise run web:dev       # start on http://localhost:3000 with hot reload
 ```
 
 Open http://localhost:3000. With the database and API running, you should see **All systems connected**
-and a live Website → API → Database diagram that checks the API every 5 seconds:
+and a live Client Application → Server Application → Data diagram that checks the API every 5 seconds:
 
 ![Landing page showing all systems connected](client_application/docs/landing-light.png)
 
@@ -123,7 +123,7 @@ This is for local development only. Staging and production run migrations as a d
 
 - http://localhost:8000/docs opens the interactive API docs (Swagger UI):
 
-![Swagger UI showing the health and documents endpoints](server_application/docs/swagger-endpoints.png)
+![Swagger UI showing the health, documents and sandbox endpoints](server_application/docs/swagger-endpoints.png)
 
 To try pgvector, open **POST /api/v1/documents**, click **Try it out**, add a few documents, then use
 **POST /api/v1/documents/search** to find the most similar ones. Press `Ctrl+C` to stop the API.
