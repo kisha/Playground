@@ -32,8 +32,8 @@ FastAPI + PostgreSQL **Server Application**, so teams skip setup and start build
 
 ### Core languages and libraries
 
-Click a layer to see the libraries. *Available* = installed, not yet used. *Needs setup* =
-authentication pieces, intentionally not built.
+Click a layer to see the libraries. *Available* = installed, not yet used.\
+*Needs setup* = authentication pieces, intentionally not built.
 
 <details open>
 <summary><strong>Front End: TypeScript</strong></summary>
