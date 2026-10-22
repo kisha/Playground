@@ -2,8 +2,8 @@
 
 # dev/color Playground
 
-dev/color Playground is a ready-to-use monorepo starter kit, so teams skip setup and start building
-features. It pairs a Next.js **Client Application** with a FastAPI + PostgreSQL **Server Application**.
+dev/color Playground is a ready-to-use monorepo starter kit, so engineering crews skip foundational setup
+and start building features. It pairs a Next.js **Client Application** with a FastAPI + PostgreSQL **Server Application**.
 
 **Contents:** [Why Playground](#why-playground) · [Tech Stack](#tech-stack-summary) ·
 [How to use this template](#how-to-use-this-template) · [How to run it locally](#how-to-run-it-locally) ·
@@ -15,8 +15,8 @@ features. It pairs a Next.js **Client Application** with a FastAPI + PostgreSQL 
 
 - **One repo, independent apps:** The Client and Server Applications live together but run, scale and
   deploy separately.
-- **Features, not setup:** Infrastructure is done, so teams build analytics and content delivery from
-  day one.
+- **Features, not setup:** Infrastructure is done, so crews focus on building features and analytics
+  from day one.
 
 ## Tech Stack Summary
 
