@@ -289,9 +289,17 @@ Open http://localhost:3000/sandbox to:
 <details open>
 <summary>📊 <strong>See the example charts</strong> (KPI cards, trend lines and bar charts)</summary>
 
+**KPI cards:** `/sandbox/kpis`
+
 ![KPI cards](client_application/docs/sandbox-kpis.png)
 
+**Trend lines:** `/sandbox/gateway-completion` · `/sandbox/term-enrollment` ·
+`/sandbox/credit-completion` · `/sandbox/persistence-retention`
+
 ![Trend charts: gateway completion, term-to-term enrollment, credit completion, persistence and retention](client_application/docs/sandbox-trend-charts.png)
+
+**Bar charts:** `/sandbox/completion-by-group` · `/sandbox/persistence-by-age` ·
+`/sandbox/time-to-complete`
 
 ![Bar charts: completion by student group, persistence by age, time to complete](client_application/docs/sandbox-bar-charts.png)
 
