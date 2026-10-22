@@ -150,7 +150,7 @@ Put your logo in `client_application/public/brand/`, then set the name:
 name: "YourInstitution Playground"
 ```
 
-Link the landing page to your repository (copy `.env.example` to `.env.local` first):
+Link the landing page to your repository (copy `client_application/.env.example` to `.env.local` first):
 
 ```bash
 # client_application/.env.local
@@ -213,7 +213,7 @@ mise trust && mise install
 
 ### Step 2: Start the database
 
-Run PostgreSQL 18 with pgvector in Docker; it ends with `Container playground-db-1 Healthy`.
+Run PostgreSQL 18 with pgvector in Docker; it ends with `Healthy`.
 
 ```bash
 mise run db
