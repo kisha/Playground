@@ -17,8 +17,6 @@ FastAPI + PostgreSQL **Server Application**, so teams skip setup and start build
   deploy separately.
 - **Features, not setup:** Infrastructure is done, so teams build analytics and content delivery from
   day one.
-- **Python for AI/ML:** The Server Application has direct access to open-source AI and machine learning
-  libraries.
 
 ## Tech Stack Summary
 
