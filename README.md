@@ -81,7 +81,7 @@ Click a layer to see the libraries.
 
 - [mise](https://mise.jdx.dev): Installs and pins versions of almost any language or tool (e.g., Node,
   Python, Rust, Ruby, Go, Java and more). Here it pins bun, Node, Python and uv, and runs every command
-  (see [Commands](#commands)).
+  (see 👉🏾 [Commands](#commands)).
 - [bun](https://bun.sh): JavaScript runtime and package manager.
 - [Docker](https://www.docker.com/): Runs PostgreSQL locally.
 
