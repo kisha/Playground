@@ -30,8 +30,10 @@ FastAPI + PostgreSQL **Server Application**, so teams skip setup and start build
 
 ### Core languages and libraries
 
-Click a layer to see the libraries. *Available* = installed, not yet used.\
-*Needs setup* = authentication pieces, intentionally not built.
+Click a layer to see the libraries.
+
+📦 *Available* = installed, not yet used.\
+🔐 *Needs setup* = authentication pieces, intentionally not built.
 
 <details open>
 <summary><strong>Front End: TypeScript</strong></summary>
@@ -41,8 +43,8 @@ Click a layer to see the libraries. *Available* = installed, not yet used.\
 - [shadcn/ui Charts](https://ui.shadcn.com/charts): Donut, line and bar chart components.
 - [Recharts](https://recharts.org/): SVG engine behind shadcn/ui Charts.
 - [next-themes](https://github.com/pacocoursey/next-themes): Light/dark mode that follows the OS, no flash on load.
-- [pele](https://pele.run): *Available.* Renders Mermaid diagrams as themed SVG.
-- [jose](https://github.com/panva/jose): *Available, needs setup.* Verifies login tokens in the proxy.
+- [pele](https://pele.run): 📦 Renders Mermaid diagrams as themed SVG.
+- [jose](https://github.com/panva/jose): 📦 🔐 Verifies login tokens in the proxy.
 
 </details>
 
@@ -54,15 +56,15 @@ Click a layer to see the libraries. *Available* = installed, not yet used.\
 - [SQLAlchemy 2.1.5](https://www.sqlalchemy.org/): Typed, async ORM for models and queries.
 - [Alembic](https://alembic.sqlalchemy.org/): Versioned database migrations, upgrade or roll back.
 - [Pydantic](https://docs.pydantic.dev/): Validates requests and serializes responses.
-- [PyJWT](https://pyjwt.readthedocs.io/): *Available, needs setup.* Issues and verifies JWT tokens.
-- [bcrypt](https://github.com/pyca/bcrypt): *Available, needs setup.* Salted password hashing.
+- [PyJWT](https://pyjwt.readthedocs.io/): 📦 🔐 Issues and verifies JWT tokens.
+- [bcrypt](https://github.com/pyca/bcrypt): 📦 🔐 Salted password hashing.
 
 </details>
 
 <details>
 <summary><strong>Data Processing</strong></summary>
 
-- [Polars](https://pola.rs/) / [Pandas](https://pandas.pydata.org/): *Available.* Parse, clean and aggregate PDP AR files; Polars does the heavy lifting, [pyarrow](https://arrow.apache.org/docs/python/) converts between them.
+- [Polars](https://pola.rs/) / [Pandas](https://pandas.pydata.org/): 📦 Parse, clean and aggregate PDP AR files; Polars does the heavy lifting, [pyarrow](https://arrow.apache.org/docs/python/) converts between them.
 
 </details>
 
