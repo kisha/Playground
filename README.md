@@ -286,8 +286,8 @@ Open http://localhost:3000/sandbox to:
 
 ![Gateway completion request and its JSON response: meta plus one row per term](client_application/docs/sandbox-gateway-request.png)
 
-<details>
-<summary><strong>See the example charts</strong></summary>
+<details open>
+<summary>📊 <strong>See the example charts</strong> (KPI cards, trend lines and bar charts)</summary>
 
 ![KPI cards](client_application/docs/sandbox-kpis.png)
 
