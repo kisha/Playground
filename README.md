@@ -6,8 +6,8 @@ dev/color Playground is a ready-to-use monorepo starter kit: a Next.js **Client 
 FastAPI + PostgreSQL **Server Application**, so teams skip setup and start building features.
 
 **Contents:** [Why Playground](#why-playground) · [Tech Stack](#tech-stack-summary) ·
-[How to use this template](#how-to-use-this-template) · [How to run it locally](#how-to-run-it-locally) · [Commands](#commands) ·
-[Troubleshooting](#troubleshooting) · [Reference](#reference)
+[How to use this template](#how-to-use-this-template) · [How to run it locally](#how-to-run-it-locally) ·
+[Commands](#commands) · [Troubleshooting](#troubleshooting) · [Reference](#reference)
 
 ---
 
@@ -93,6 +93,8 @@ Click a layer to see the libraries.
 
 Each institution gets its own copy of this monorepo, named **`[YourInstitution]_Playground`** (for
 example, `UTTC_Playground`).
+
+Just trying Playground? Skip to [How to run it locally](#how-to-run-it-locally).
 
 ### Setup 1: Create a Playground for your institution
 
@@ -182,7 +184,12 @@ Then match the database name and port in the Server Application:
 DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5434/yourinstitution_dev
 ```
 
-If you changed the port, also set `TEST_DATABASE_URL` so the tests can find the database.
+If you changed the port, point the tests at it in a git-ignored `mise.local.toml` at the repo root:
+
+```toml
+[env]
+TEST_DATABASE_URL = "postgresql+asyncpg://postgres:postgres@localhost:5434/playground_test"
+```
 
 ---
 
@@ -375,22 +382,19 @@ mise tasks
 
 ### Environment Configuration
 
-Both the Client Application and the Server Application dynamically identify their environment
-(`development`, `staging` or `production`) via `APP_ENV` (server) and `NEXT_PUBLIC_APP_ENV` (client).
-
-The production environment automatically disables the API documentation and the sandbox.
+Both applications know which environment they're in (`development`, `staging` or `production`) from
+`APP_ENV` (server) and `NEXT_PUBLIC_APP_ENV` (client). Production turns off the API docs and the sandbox.
 
 **Server Application**
 
-- **Defaults:** Public, non-secret defaults are stored in `server_application/.env.<environment>`.
-- **Secrets:** Sensitive credentials must reside in git-ignored `.env.<environment>.local` files or host
-  environment variables.
+- **Defaults:** Public, non-secret values go in `server_application/.env.<environment>`.
+- **Secrets:** Go in git-ignored `.env.<environment>.local` files or host environment variables.
 
 **Client Application**
 
-- **Defaults:** Default configurations live in `client_application/src/lib/env.ts`.
-- **Overrides:** Local changes go in a git-ignored `.env.local` file.
-- **Security:** All client-side values are exposed to the browser and must never contain secrets.
+- **Defaults:** Live in `client_application/src/lib/env.ts`.
+- **Overrides:** Go in a git-ignored `.env.local` file.
+- **No secrets:** Every client value is visible in the browser.
 
 ### Repository layout
 
