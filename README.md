@@ -280,10 +280,10 @@ they go into the real app. All data is mock data, and the sandbox is turned off 
 
 In the sandbox (http://localhost:3000/sandbox) you can:
 
-- **Try the API:** send real requests to the Server Application and see the responses
+- **Try the API:** Send real requests to the Server Application and see the responses
   ([`/sandbox#api`](http://localhost:3000/sandbox#api)).
-- **Preview charts:** each chart loads its own `/api/v1/sandbox/...` endpoint.
-- ✨ **Add your own:** new sandbox endpoints can show how other charts, trends and features could work.
+- **Preview charts:** Each chart loads its own `/api/v1/sandbox/...` endpoint.
+- ✨ **Add your own:** New sandbox endpoints can show how other charts, trends and features could work.
   Copy an existing one ([Server Application README](server_application/README.md#sandbox)).
 
 ![Gateway completion request and its JSON response: meta plus one row per term](client_application/docs/sandbox-gateway-request.png)
