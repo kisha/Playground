@@ -6,7 +6,7 @@ dev/color Playground is a ready-to-use monorepo starter kit, so engineering crew
 and start building features. It pairs a Next.js **Client Application** with a FastAPI + PostgreSQL **Server Application**.
 
 **Contents:** [Why Playground](#why-playground) · [Tech Stack](#tech-stack-summary) ·
-[How to use this template](#how-to-use-this-template) · [How to run it locally](#how-to-run-it-locally) ·
+[How to set up your institution's Playground](#how-to-set-up-your-institutions-playground) · [How to run it locally](#how-to-run-it-locally) ·
 [Commands](#commands) · [Troubleshooting](#troubleshooting) · [Reference](#reference)
 
 ---
@@ -88,7 +88,7 @@ Click a layer to see the libraries.
 
 ---
 
-## How to use this template
+## How to set up your institution's Playground
 
 Each institution creates its own copy of this monorepo, named **`[YourInstitution]_Playground`** (for
 example, `UTTC_Playground`).
@@ -124,16 +124,16 @@ cd "${INSTITUTION}_Playground"
 
 ```bash
 # Keep a link back to Playground
-git remote rename origin template
+git remote rename origin playground
 
 git remote add origin "git@github.com:${GITHUB_ACCOUNT}/${INSTITUTION}_Playground.git"
 git push -u origin main
 ```
 
-Your repository now has Playground's files. Later, to bring in template updates:
+Your repository now has Playground's files. Later, to bring in Playground updates:
 
 ```bash
-git pull template main
+git pull playground main
 ```
 
 ### Setup 2: Make it yours
