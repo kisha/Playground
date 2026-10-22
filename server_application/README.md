@@ -21,7 +21,7 @@ alembic/                  # Migrations (config in pyproject.toml [tool.alembic])
 tests/
 ```
 
-## Run locally
+## How to run it locally
 
 From the repo root:
 
@@ -112,8 +112,10 @@ Every error has the same JSON shape ([`core/errors.py`](app/core/errors.py)):
 
 ### Sandbox
 
-Mock data shaped like PDP Analysis-Ready files, answering with `meta` (title, takeaway, fields used) and
-`rows`; off in production via `SANDBOX_ENABLED`. Code: [route](app/api/v1/routes/sandbox.py) ·
+The **sandbox** is where you test new features and preview how charts and graphs will look before
+they go into the real app. These endpoints serve mock data shaped like PDP Analysis-Ready files,
+answering with `meta` (title, takeaway, fields used) and `rows`, and are turned off in production via
+`SANDBOX_ENABLED`. Code: [route](app/api/v1/routes/sandbox.py) ·
 [schemas](app/schemas/sandbox.py) · [data](app/services/sandbox.py).
 
 ```bash
@@ -142,26 +144,42 @@ curl http://localhost:8000/api/v1/sandbox/gateway-completion
 
 ## Libraries Included
 
-Items marked *available* are installed and ready to import but not yet wired into a feature. Items marked *needs setup* (jose, PyJWT, bcrypt) also need configuration first: authentication (signing keys, a users table, login) is intentionally not built yet.
+Click a layer to see the libraries.
 
-### Back End: Python
+📦 *Available* = installed, not yet used.\
+🔐 *Needs setup* = authentication pieces, intentionally not built.
 
-- [FastAPI](https://fastapi.tiangolo.com/): A high-performance Python web framework used for API routing, background PDP file upload processing, and query translation.
-- [uv](https://github.com/astral-sh/uv): An extremely fast Python package installer and dependency resolver written in Rust that speeds up project setup and builds.
-- [SQLAlchemy 2.1.5](https://www.sqlalchemy.org/): Typed, async ORM used to define database models and run queries from FastAPI.
-- [Alembic](https://alembic.sqlalchemy.org/): Database migration tool for SQLAlchemy that records every schema change as a versioned script, so every environment's database can be upgraded or rolled back the same way.
-- [Pydantic](https://docs.pydantic.dev/): Validates incoming request data and serializes responses to JSON; FastAPI is built on it.
-- [PyJWT](https://pyjwt.readthedocs.io/): *Available, needs setup:* issuing tokens needs a signing key in settings and login endpoints. Issues and verifies signed JWT tokens containing user roles (`import jwt`).
-- [bcrypt](https://github.com/pyca/bcrypt): *Available, needs setup:* needs a users table and sign-up/login endpoints to hash and check passwords. Hashes passwords with a deliberately slow, salted algorithm so stored passwords can't be reversed or cheaply guessed (`bcrypt.hashpw` / `bcrypt.checkpw`).
+<details open>
+<summary><strong>Back End: Python</strong></summary>
 
-### Data Processing
+- [FastAPI](https://fastapi.tiangolo.com/): Fast Python API framework.
+- [uv](https://github.com/astral-sh/uv): Fast package installer, written in Rust.
+- [SQLAlchemy 2.1.5](https://www.sqlalchemy.org/): Typed, async ORM for models and queries.
+- [Alembic](https://alembic.sqlalchemy.org/): Versioned database migrations, upgrade or roll back.
+- [Pydantic](https://docs.pydantic.dev/): Validates requests and serializes responses.
+- [PyJWT](https://pyjwt.readthedocs.io/): 📦 🔐 Issues and verifies JWT tokens (`import jwt`); needs a
+  signing key and login endpoints.
+- [bcrypt](https://github.com/pyca/bcrypt): 📦 🔐 Salted password hashing (`bcrypt.hashpw` /
+  `bcrypt.checkpw`); needs a users table and sign-up/login endpoints.
 
-- [Pandas](https://pandas.pydata.org/) / [Polars](https://pola.rs/): *Available.* High-speed Python data processing libraries used to parse, clean, and aggregate multi-column PDP AR files in seconds. Polars does the heavy lifting; Pandas covers libraries that expect it; [pyarrow](https://arrow.apache.org/docs/python/) converts between them (`df.to_pandas()`, `pl.from_pandas(df)`).
+</details>
 
-### Data Store
+<details>
+<summary><strong>Data Processing</strong></summary>
 
-- [PostgreSQL 18](https://www.postgresql.org/): An enterprise-grade open-source relational database used for secure storage of student records using standard tables and binary JSONB fields.
-- [pgvector](https://github.com/pgvector/pgvector): Postgres extension that stores embeddings as vector columns and finds the most similar rows with fast, indexed similarity search.
+- [Polars](https://pola.rs/) / [Pandas](https://pandas.pydata.org/): 📦 Parse, clean and aggregate PDP AR
+  files; Polars does the heavy lifting, [pyarrow](https://arrow.apache.org/docs/python/) converts between
+  them (`df.to_pandas()`, `pl.from_pandas(df)`).
+
+</details>
+
+<details>
+<summary><strong>Data Store</strong></summary>
+
+- [PostgreSQL 18](https://www.postgresql.org/): Relational database with JSONB support.
+- [pgvector](https://github.com/pgvector/pgvector): Stores embeddings and finds similar rows fast.
+
+</details>
 
 ## Conventions
 

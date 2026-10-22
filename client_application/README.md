@@ -36,9 +36,9 @@ docs/               # Screenshots used in the READMEs
 data and every other decision lives in `.ts` files in `lib/`, `services/`, `hooks/` and `content/`, so
 it can be reused and tested without a page.
 
-## Run locally
+## How to run it locally
 
-Start the database and Server Application first ([root README](../README.md#run-it-locally)), then:
+Start the database and Server Application first ([root README](../README.md#how-to-run-it-locally)), then:
 
 ```bash
 mise run web:install && mise run web:dev     # http://localhost:3000
@@ -63,8 +63,9 @@ The page says which part, and recovers on its own once it answers again.
 
 ### Sandbox: http://localhost:3000/sandbox
 
-Live API requests and example charts drawn from mock PDP AR data; hidden in production
-(override with `NEXT_PUBLIC_SANDBOX_ENABLED`).
+The **sandbox** is where you test new features and preview how charts and graphs will look before
+they go into the real app. It has live API requests and example charts drawn from mock PDP AR data, and
+is turned off in production (override with `NEXT_PUBLIC_SANDBOX_ENABLED`).
 
 <p>
   <img src="docs/sandbox.png" alt="Sandbox page with the API explorer and example charts" width="72%">
@@ -115,20 +116,32 @@ live in [`src/lib/env.ts`](src/lib/env.ts) and overrides in a git-ignored `.env.
 
 ## Libraries Included
 
-Items marked *available* are installed and ready to import but not yet wired into a feature. Items marked *needs setup* (jose, PyJWT, bcrypt) also need configuration first: authentication (signing keys, a users table, login) is intentionally not built yet.
+Click a layer to see the libraries.
 
-### Front End: TypeScript
+📦 *Available* = installed, not yet used.\
+🔐 *Needs setup* = authentication pieces, intentionally not built.
 
-- [Next.js](https://nextjs.org/): React framework used to build fast, server-rendered web applications, with request-level route protection through its proxy (formerly middleware) and client state management.
-- [Tailwind CSS](https://tailwindcss.com/): Utility-first CSS framework used to build modern, responsive, dark-mode user interfaces with high design consistency.
-- [shadcn/ui Charts](https://ui.shadcn.com/charts): A collection of customizable React chart components built on Recharts and styled with Tailwind CSS variables for custom EdTech donut rings, line trends, and bar graphs.
-- [Recharts](https://recharts.org/): The SVG charting engine driving shadcn/ui Charts, responsible for smooth in-chart path drawing and slice growth animations.
-- [lucide-react](https://lucide.dev/): The icon set used by shadcn/ui (sun, moon, arrows).
-- [next-themes](https://github.com/pacocoursey/next-themes): Light and dark mode that follows the operating system until the user chooses, with no flash on load.
-- [pele](https://pele.run): *Available.* A small, dependency-free renderer that turns Mermaid diagram text into SVG, themed with CSS variables so diagrams follow light and dark mode without re-rendering.
-- [jose](https://github.com/panva/jose): *Available, needs setup:* verifying tokens needs the API's signing key (or public key) and a Next.js `proxy.ts`. A lightweight JavaScript security library for verifying login tokens in the Next.js proxy on the edge before protected pages load.
+<details open>
+<summary><strong>Front End: TypeScript</strong></summary>
 
-### Tooling
+- [Next.js](https://nextjs.org/): Server-rendered React framework with route protection via its proxy.
+- [Tailwind CSS](https://tailwindcss.com/): Utility-first styling with dark mode.
+- [shadcn/ui Charts](https://ui.shadcn.com/charts): Donut, line and bar chart components.
+- [Recharts](https://recharts.org/): SVG engine behind shadcn/ui Charts.
+- [lucide-react](https://lucide.dev/): Icon set used by shadcn/ui (sun, moon, arrows).
+- [next-themes](https://github.com/pacocoursey/next-themes): Light/dark mode that follows the OS, no flash on load.
+- [pele](https://pele.run): 📦 Renders Mermaid diagrams as themed SVG.
+- [jose](https://github.com/panva/jose): 📦 🔐 Verifies login tokens in the proxy; needs the API's signing key
+  and a `proxy.ts`.
 
-- [bun](https://bun.sh): Fast JavaScript runtime and package manager used to install and run this app.
-- [mise](https://mise.jdx.dev): Pins the bun and Node versions and runs the `web:*` commands from the repo root.
+</details>
+
+<details>
+<summary><strong>Tooling</strong></summary>
+
+- [bun](https://bun.sh): JavaScript runtime and package manager.
+- [mise](https://mise.jdx.dev): Installs and pins versions of almost any language or tool (e.g., Node,
+  Python, Rust, Ruby, Go, Java and more). Here it pins bun and Node, and runs the `web:*` commands
+  (see 👉🏾 [Commands](#commands-from-the-repo-root)).
+
+</details>
