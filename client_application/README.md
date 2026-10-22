@@ -63,8 +63,8 @@ The page says which part, and recovers on its own once it answers again.
 
 ### Sandbox: http://localhost:3000/sandbox
 
-The **sandbox** is where you test new features and preview how charts and graphs will look before
-they go into the real app. It has live API requests and example charts drawn from mock PDP AR data, and
+The **sandbox** endpoint series is where you create and test new features and preview how charts and
+graphs look in your development environment. It has live API requests and example charts drawn from mock PDP AR data, and
 is turned off in production (override with `NEXT_PUBLIC_SANDBOX_ENABLED`).
 
 <p>

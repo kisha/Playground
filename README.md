@@ -275,8 +275,9 @@ Open http://localhost:3000. It should say **All systems connected**:
 
 ### Step 7: Explore the sandbox
 
-The **sandbox** is where you test new features and preview how charts and graphs will look before
-they go into the real app. All data is mock data, and the sandbox is turned off in production.
+The **sandbox** endpoint series is where you create and test new features and preview how charts and
+graphs look in your development environment. All data is mock data, and the sandbox is turned off in
+production.
 
 In the sandbox (http://localhost:3000/sandbox) you can:
 

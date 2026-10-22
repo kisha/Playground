@@ -112,8 +112,8 @@ Every error has the same JSON shape ([`core/errors.py`](app/core/errors.py)):
 
 ### Sandbox
 
-The **sandbox** is where you test new features and preview how charts and graphs will look before
-they go into the real app. These endpoints serve mock data shaped like PDP Analysis-Ready files,
+The **sandbox** endpoint series is where you create and test new features and preview how charts and
+graphs look in your development environment. These endpoints serve mock data shaped like PDP Analysis-Ready files,
 answering with `meta` (title, takeaway, fields used) and `rows`, and are turned off in production via
 `SANDBOX_ENABLED`. Code: [route](app/api/v1/routes/sandbox.py) ·
 [schemas](app/schemas/sandbox.py) · [data](app/services/sandbox.py).
