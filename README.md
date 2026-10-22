@@ -91,8 +91,8 @@ Click a layer to see the libraries.
 
 ## How to use this template
 
-Each institution gets its own copy named **`[YourInstitution]_Playground`** (for example,
-`UTTC_Playground`).
+Each institution gets its own copy of this monorepo, named **`[YourInstitution]_Playground`** (for
+example, `UTTC_Playground`).
 
 ### Setup 1: Create a Playground for your institution
 
