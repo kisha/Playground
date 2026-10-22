@@ -13,10 +13,9 @@ and start building features. It pairs a Next.js **Client Application** with a Fa
 
 ## Why Playground
 
-- **One repo, independent apps:** The Client and Server Applications live together but run, scale and
+- **One repo, independent applications:** The Client and Server Applications live together but run, scale and
   deploy separately.
-- **Features, not setup:** Infrastructure is done, so crews focus on building features and analytics
-  from day one.
+- **Features, not foundational setup:** The foundation is covered, so crews focus on building features.
 
 ## Tech Stack Summary
 
