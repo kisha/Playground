@@ -2,66 +2,126 @@
 
 # dev/color Playground
 
-dev/color Playground is a reusable, lightly pre-configured starter kit for applications.
+dev/color Playground is a ready-to-use monorepo starter kit: a Next.js **Client Application** and a
+FastAPI + PostgreSQL **Server Application**, so teams skip setup and start building features.
 
-The architecture consists of a **Client Application** built with Next.js, Tailwind CSS, and
-shadcn/charts, paired with a **Server Application** powered by FastAPI and PostgreSQL with native
-vector search.
-
-Our foundational monorepo aims to accelerate project kickoff, allowing teams to focus on building core features.
-
-**Contents:** [Benefits](#benefits-of-playground) · [Tech Stack](#tech-stack-summary) · [Use this template](#use-this-template) ·
-[Run it locally](#run-it-locally) · [Server Application](#server-application-back-end) ·
-[Client Application](#client-application-front-end) · [Commands](#commands) ·
+**Contents:** [Why Playground](#why-playground) · [Tech Stack](#tech-stack-summary) ·
+[How to use this template](#how-to-use-this-template) · [How to run it locally](#how-to-run-it-locally) · [Commands](#commands) ·
 [Troubleshooting](#troubleshooting) · [Reference](#reference)
 
 ---
 
-## Benefits of Playground
+## Why Playground
 
-- **Centralized Code, Independent Scaling:** The Client Application and Server Application live in a
-  single repository for easy management, but they run, scale, and deploy completely independently.
-- **Accelerated Feature Delivery:** Skips infrastructure setup so teams can immediately build platform
-  features, learning analytics, or content delivery systems using a modern tech stack.
-- **Decoupled Performance:** Independent deployment allows the Client Application interface to remain
-  highly responsive while the Server Application backend scales separately to process heavy assessment
-  data.
-
-### Why Python & FastAPI for AI/ML
-
-- **Native Ecosystem Integration:** The Server Application was built on Python to provide direct,
-  seamless access to the vast majority of open-source AI and machine learning libraries.
+- **One repo, independent apps:** The Client and Server Applications live together but run, scale and
+  deploy separately.
+- **Features, not setup:** Infrastructure is done, so teams build analytics and content delivery from
+  day one.
+- **Python for AI/ML:** The Server Application has direct access to open-source AI and machine learning
+  libraries.
 
 ## Tech Stack Summary
 
-| Layer | Built with | What it gives you |
-|---|---|---|
-| **Front End** | TypeScript · Next.js · Tailwind CSS · shadcn/ui Charts | Server-rendered pages, light and dark modes, ready-made chart examples |
-| **Back End** | Python · FastAPI · SQLAlchemy 2.1.5 · Alembic · uv | A typed, documented JSON API with versioned database changes |
-| **Data Processing** | Polars · Pandas | Fast reading, cleaning and aggregating of large data files |
-| **Data Store** | PostgreSQL 18 · pgvector | Relational storage plus similarity search, in one database |
-| **Tooling** | mise · bun · Docker | Pinned tool versions and one command for every task |
+| Layer | Language(s) | Framework | What it gives |
+|---|---|---|---|
+| **Front End** | TypeScript | Next.js · Tailwind CSS · shadcn/ui Charts | Server-rendered pages, light/dark mode, charts |
+| **Back End** | Python | FastAPI · SQLAlchemy 2.1.5 · Alembic · uv | Typed JSON API with versioned migrations |
+| **Data Processing** | Python | Polars · Pandas | Fast cleaning and aggregating of large files |
+| **Data Store** | SQL | PostgreSQL 18 · pgvector | Relational data plus similarity search |
+| **Tooling** | — | mise · bun · Docker | Pinned versions, one command per task |
+
+### Core languages and libraries
+
+*Available* = installed, not yet used. *Needs setup* = authentication pieces, intentionally not built.
+
+<details>
+<summary><strong>Front End: TypeScript</strong></summary>
+
+- [Next.js](https://nextjs.org/): Server-rendered React framework with route protection via its proxy.
+- [Tailwind CSS](https://tailwindcss.com/): Utility-first styling with dark mode.
+- [shadcn/ui Charts](https://ui.shadcn.com/charts): Donut, line and bar chart components.
+- [Recharts](https://recharts.org/): SVG engine behind shadcn/ui Charts.
+- [next-themes](https://github.com/pacocoursey/next-themes): Light/dark mode that follows the OS, no flash on load.
+- [pele](https://pele.run): *Available.* Renders Mermaid diagrams as themed SVG.
+- [jose](https://github.com/panva/jose): *Available, needs setup.* Verifies login tokens in the proxy.
+
+</details>
+
+<details>
+<summary><strong>Back End: Python</strong></summary>
+
+- [FastAPI](https://fastapi.tiangolo.com/): Fast Python API framework.
+- [uv](https://github.com/astral-sh/uv): Fast package installer, written in Rust.
+- [SQLAlchemy 2.1.5](https://www.sqlalchemy.org/): Typed, async ORM for models and queries.
+- [Alembic](https://alembic.sqlalchemy.org/): Versioned database migrations, upgrade or roll back.
+- [Pydantic](https://docs.pydantic.dev/): Validates requests and serializes responses.
+- [PyJWT](https://pyjwt.readthedocs.io/): *Available, needs setup.* Issues and verifies JWT tokens.
+- [bcrypt](https://github.com/pyca/bcrypt): *Available, needs setup.* Salted password hashing.
+
+</details>
+
+<details>
+<summary><strong>Data Processing</strong></summary>
+
+- [Polars](https://pola.rs/) / [Pandas](https://pandas.pydata.org/): *Available.* Parse, clean and aggregate PDP AR files; Polars does the heavy lifting, [pyarrow](https://arrow.apache.org/docs/python/) converts between them.
+
+</details>
+
+<details>
+<summary><strong>Data Store</strong></summary>
+
+- [PostgreSQL 18](https://www.postgresql.org/): Relational database with JSONB support.
+- [pgvector](https://github.com/pgvector/pgvector): Stores embeddings and finds similar rows fast.
+
+</details>
+
+<details>
+<summary><strong>Tooling</strong></summary>
+
+- [mise](https://mise.jdx.dev): Pins tool versions and runs every command.
+- [bun](https://bun.sh): JavaScript runtime and package manager.
+- [Docker](https://www.docker.com/): Runs PostgreSQL locally.
+
+</details>
 
 ---
 
-## Use this template
+## How to use this template
 
 Each institution gets its own copy named **`[YourInstitution]_Playground`** (for example,
 `UTTC_Playground`).
 
-### 1. Create a Playground for Your Institution
+### Setup 1: Create a Playground for your institution
 
 Create an empty **private** repository on GitHub (no README, .gitignore or license), then clone
-Playground into it. Set your two names on the first lines:
+Playground into it.
+
+**a. Set your two names**
 
 ```bash
-INSTITUTION=YourInstitution     # your institution's short name, e.g. UTTC
-GITHUB_ACCOUNT=your-account     # the GitHub user or organization that will own the copy
+# Your institution's short name, e.g. UTTC
+INSTITUTION=YourInstitution
 
-gh repo create "${GITHUB_ACCOUNT}/${INSTITUTION}_Playground" --private   # or create it on github.com
+# The GitHub user or organization that will own the copy
+GITHUB_ACCOUNT=your-account
+```
+
+**b. Create the repository and clone Playground**
+
+```bash
+# Or create it on github.com
+gh repo create "${GITHUB_ACCOUNT}/${INSTITUTION}_Playground" --private
+
 git clone git@github.com:kisha/Playground.git "${INSTITUTION}_Playground"
 cd "${INSTITUTION}_Playground"
-git remote rename origin template      # keep a link back to Playground
+```
+
+**c. Point it at your new repository**
+
+```bash
+# Keep a link back to Playground
+git remote rename origin template
+
 git remote add origin "git@github.com:${GITHUB_ACCOUNT}/${INSTITUTION}_Playground.git"
 git push -u origin main
 ```
@@ -72,22 +132,58 @@ Your repository now has Playground's files. Later, to bring in template updates:
 git pull template main
 ```
 
-### 2. Make it yours
+### Setup 2: Make it yours
 
-Change these values (examples use `YourInstitution`):
+Swap in your institution's name. Examples use `YourInstitution`.
 
-| What | Where | Example |
-|---|---|---|
-| Name, logo, footer credit | `client_application/src/content/brand.ts` | `name: "YourInstitution Playground"` |
-| Logo image | `client_application/public/brand/` | your logo file |
-| Repository link on the landing page | `client_application/.env.local` (copy `.env.example`) | `NEXT_PUBLIC_REPOSITORY_URL=https://github.com/<your-account>/YourInstitution_Playground` |
-| API title in the docs | `server_application/.env.development` | `PROJECT_NAME="YourInstitution Playground API"` |
-| Docker project name | `docker-compose.yml` (`name:`) | `yourinstitution_playground` |
-| Database name and port | `.env` and `DATABASE_URL` in `server_application/.env.development` (and `TEST_DATABASE_URL` for a new port) | `POSTGRES_DB=yourinstitution_dev`, `POSTGRES_PORT=5434` |
+**a. Brand the Client Application**
+
+Put your logo in `client_application/public/brand/`, then set the name:
+
+```ts
+// client_application/src/content/brand.ts  (name, logo, footer credit)
+name: "YourInstitution Playground"
+```
+
+Link the landing page to your repository (copy `.env.example` to `.env.local` first):
+
+```bash
+# client_application/.env.local
+NEXT_PUBLIC_REPOSITORY_URL=https://github.com/<your-account>/YourInstitution_Playground
+```
+
+**b. Name the Server Application**
+
+```bash
+# server_application/.env.development
+PROJECT_NAME="YourInstitution Playground API"
+```
+
+**c. Name the database and Docker project**
+
+```yaml
+# docker-compose.yml
+name: yourinstitution_playground
+```
+
+```bash
+# .env
+POSTGRES_DB=yourinstitution_dev
+POSTGRES_PORT=5434
+```
+
+Then match the database name and port in the Server Application:
+
+```bash
+# server_application/.env.development
+DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5434/yourinstitution_dev
+```
+
+If you changed the port, also set `TEST_DATABASE_URL` so the tests can find the database.
 
 ---
 
-## Run it locally
+## How to run it locally
 
 **Prerequisites:** Git, [Docker](https://www.docker.com/) or [OrbStack](https://orbstack.dev/) (open and
 running), [mise](https://mise.jdx.dev) and [bun](https://bun.sh). mise installs everything else.
@@ -111,10 +207,6 @@ Run PostgreSQL 18 with pgvector in Docker; it ends with `Container playground-db
 
 ```bash
 mise run db
-
-# Optional
-mise run db:shell     # open a SQL prompt (\q to exit)
-mise run db:reset     # delete all data and start fresh
 ```
 
 ---
@@ -130,9 +222,6 @@ Installs dependencies, applies any pending migrations, then starts with auto-rel
 
 ```bash
 mise run api:install && mise run api:dev
-
-# Optional: start without applying migrations
-AUTO_MIGRATE=false mise run api:dev
 ```
 
 Check it: http://localhost:8000/api/v1/health
@@ -148,7 +237,7 @@ Every endpoint, ready to try in the browser: http://localhost:8000/docs ·
 
 ### Step 5: Run the tests
 
-Expect `24 passed`; tests use their own `playground_test` database.
+All tests should pass. They use their own `playground_test` database.
 
 ```bash
 mise run api:test
@@ -174,24 +263,29 @@ Open http://localhost:3000. It should say **All systems connected**:
 
 ![Landing page: all systems connected](client_application/docs/landing-light.png)
 
-### Step 7: Try the API from the Client Application
+### Step 7: Explore the sandbox
 
-Send real requests to the Server Application and see the responses: http://localhost:3000/sandbox#api
+The **sandbox** is where you test new features and preview how charts and graphs will look before
+they go into the real app. All data is mock data, and the sandbox is turned off in production.
 
-Endpoints: [Swagger](http://localhost:8000/docs) · [code](server_application/app/api/v1/routes/)
+Open http://localhost:3000/sandbox to:
+
+- **Try the API:** send real requests to the Server Application and see the responses
+  ([`/sandbox#api`](http://localhost:3000/sandbox#api)).
+- **Preview charts:** each chart loads its own `/api/v1/sandbox/...` endpoint.
 
 ![Gateway completion request and its JSON response: meta plus one row per term](client_application/docs/sandbox-gateway-request.png)
 
-### Step 8: Examples from `/sandbox`
-
-Example charts on http://localhost:3000/sandbox. Each chart loads its own `/api/v1/sandbox/...` endpoint.
-All data is mock data.
+<details>
+<summary><strong>See the example charts</strong></summary>
 
 ![KPI cards](client_application/docs/sandbox-kpis.png)
 
 ![Trend charts: gateway completion, term-to-term enrollment, credit completion, persistence and retention](client_application/docs/sandbox-trend-charts.png)
 
 ![Bar charts: completion by student group, persistence by age, time to complete](client_application/docs/sandbox-bar-charts.png)
+
+</details>
 
 ### When you're done
 
@@ -211,7 +305,8 @@ Run from the repository folder. To print this list:
 mise tasks
 ```
 
-**Database**
+<details>
+<summary><strong>Database</strong></summary>
 
 | Command | What it does |
 |---|---|
@@ -222,12 +317,16 @@ mise tasks
 | `mise run db:shell` | Open a SQL prompt (`\q` to exit) |
 | `mise run db:reset` | Delete all data and start a fresh database |
 
-**Server Application**
+</details>
+
+<details>
+<summary><strong>Server Application</strong></summary>
 
 | Command | What it does |
 |---|---|
 | `mise run api:install` | Install dependencies with uv |
 | `mise run api:dev` | Apply pending migrations, then run on http://localhost:8000 with auto-reload |
+| `AUTO_MIGRATE=false mise run api:dev` | Same, but skip the migrations |
 | `mise run api:test` | Run the tests |
 | `mise run api:lint` | Check linting and formatting |
 | `mise run api:format` | Fix lint issues and format the code |
@@ -235,7 +334,10 @@ mise tasks
 | `mise run api:migrate-down` | Roll back the most recent migration |
 | `mise run api:migration "message"` | Create a migration from model changes |
 
-**Client Application**
+</details>
+
+<details>
+<summary><strong>Client Application</strong></summary>
 
 | Command | What it does |
 |---|---|
@@ -245,6 +347,8 @@ mise tasks
 | `mise run web:build` | Production build |
 | `mise run web:build-staging` | Staging build |
 | `mise run web:start` | Serve the last build on http://localhost:3000 |
+
+</details>
 
 ---
 
@@ -294,62 +398,6 @@ Playground/
 ├── docker-compose.yml    # Local PostgreSQL 18 + pgvector
 └── mise.toml             # Tool versions + every command
 ```
-
-### Core languages and libraries
-
-Items marked *available* are installed but not yet used by a feature. Items marked *needs setup*
-(jose, PyJWT, bcrypt) also need configuration first: authentication (signing keys, a users table,
-login) is intentionally not built.
-
-<details>
-<summary><strong>Front End: TypeScript</strong></summary>
-
-- [Next.js](https://nextjs.org/): React framework used to build fast, server-rendered web applications, with request-level route protection through its proxy (formerly middleware) and client state management.
-- [Tailwind CSS](https://tailwindcss.com/): Utility-first CSS framework used to build modern, responsive, dark-mode user interfaces with high design consistency.
-- [shadcn/ui Charts](https://ui.shadcn.com/charts): Customizable React chart components built on Recharts and styled with Tailwind CSS variables for donut rings, line trends and bar graphs.
-- [Recharts](https://recharts.org/): The SVG charting engine driving shadcn/ui Charts.
-- [next-themes](https://github.com/pacocoursey/next-themes): Light and dark mode that follows the operating system until the user chooses, with no flash on load.
-- [pele](https://pele.run): *Available.* A small, dependency-free renderer that turns Mermaid diagram text into SVG, themed with CSS variables so diagrams follow light and dark mode.
-- [jose](https://github.com/panva/jose): *Available, needs setup:* verifies login tokens in the Next.js proxy before protected pages load; needs the API's signing key (or public key) and a `proxy.ts`.
-
-</details>
-
-<details>
-<summary><strong>Back End: Python</strong></summary>
-
-- [FastAPI](https://fastapi.tiangolo.com/): High-performance Python web framework used for API routing, background PDP file upload processing and query translation.
-- [uv](https://github.com/astral-sh/uv): Extremely fast Python package installer and dependency resolver, written in Rust.
-- [SQLAlchemy 2.1.5](https://www.sqlalchemy.org/): Typed, async ORM used to define database models and run queries.
-- [Alembic](https://alembic.sqlalchemy.org/): Records every schema change as a versioned migration, so every environment's database can be upgraded or rolled back the same way.
-- [Pydantic](https://docs.pydantic.dev/): Validates incoming request data and serializes responses to JSON; FastAPI is built on it.
-- [PyJWT](https://pyjwt.readthedocs.io/): *Available, needs setup:* issues and verifies signed JWT tokens containing user roles; needs a signing key in settings and login endpoints.
-- [bcrypt](https://github.com/pyca/bcrypt): *Available, needs setup:* hashes passwords with a deliberately slow, salted algorithm; needs a users table and sign-up/login endpoints.
-
-</details>
-
-<details>
-<summary><strong>Data Processing</strong></summary>
-
-- [Pandas](https://pandas.pydata.org/) / [Polars](https://pola.rs/): *Available.* High-speed Python data processing libraries used to parse, clean and aggregate multi-column PDP AR files in seconds. Polars does the heavy lifting; Pandas covers libraries that expect it; [pyarrow](https://arrow.apache.org/docs/python/) converts between them.
-
-</details>
-
-<details>
-<summary><strong>Data Store</strong></summary>
-
-- [PostgreSQL 18](https://www.postgresql.org/): Enterprise-grade open-source relational database used for secure storage of student records in standard tables and binary JSONB fields.
-- [pgvector](https://github.com/pgvector/pgvector): Postgres extension that stores embeddings as vector columns and finds the most similar rows with fast, indexed similarity search.
-
-</details>
-
-<details>
-<summary><strong>Tooling</strong></summary>
-
-- [mise](https://mise.jdx.dev): Pins the exact bun, Node, Python and uv versions and runs every day-to-day command.
-- [bun](https://bun.sh): Fast JavaScript runtime and package manager used to install and run the Client Application.
-- [Docker](https://www.docker.com/): Runs PostgreSQL locally without installing it.
-
-</details>
 
 ---
 
