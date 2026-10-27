@@ -5,11 +5,21 @@
 dev/color Playground is a ready-to-use monorepo starter kit, so engineering crews skip foundational setup
 and start building features. It pairs a Next.js **Client Application** with a FastAPI + PostgreSQL **Server Application**.
 
-**Contents:** [Why Playground](#why-playground) · [Tech Stack](#tech-stack-summary) ·
+**Contents:** [Start here](#start-here) · [Why Playground](#why-playground) · [Tech Stack](#tech-stack-summary) ·
 [How to set up your institution's Playground](#how-to-set-up-your-institutions-playground) · [How to run it locally](#how-to-run-it-locally) ·
 [Commands](#commands) · [Troubleshooting](#troubleshooting) · [Reference](#reference)
 
 ---
+
+## Start here
+
+Are you contributing to Playground, or creating one for your organization?
+
+- **Contributing to Playground:** Clone it and run it as is. Do not rename anything: keep the Playground
+  names, database and ports. Go to [How to run it locally](#how-to-run-it-locally).
+- **Creating a Playground for your organization or institution:** You must rename it. Follow
+  [How to set up your institution's Playground](#how-to-set-up-your-institutions-playground) first, then
+  [How to run it locally](#how-to-run-it-locally).
 
 ## Why Playground
 
@@ -90,10 +100,11 @@ Click a layer to see the libraries.
 
 ## How to set up your institution's Playground
 
+> **Only for a new organization or institution.** Contributing to Playground? Don't rename anything; go to
+> [How to run it locally](#how-to-run-it-locally).
+
 Each institution creates its own copy of this monorepo, named **`[YourInstitution]_Playground`** (for
 example, `UTTC_Playground`).
-
-Just trying Playground? Skip to [How to run it locally](#how-to-run-it-locally).
 
 ### Setup 1: Create a Playground for your institution
 
@@ -200,6 +211,14 @@ running), [mise](https://mise.jdx.dev) and [bun](https://bun.sh). mise installs 
 ```bash
 brew install mise
 brew install oven-sh/bun/bun
+```
+
+**Get the code:** Contributors clone Playground itself. Setting up an instance? You already cloned yours in
+[Setup 1](#setup-1-create-a-playground-for-your-institution).
+
+```bash
+git clone git@github.com:kisha/Playground.git
+cd Playground
 ```
 
 ### Step 1: Install the toolchain
