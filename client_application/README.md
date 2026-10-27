@@ -83,6 +83,19 @@ is turned off in production (override with `NEXT_PUBLIC_SANDBOX_ENABLED`).
 | Persistence by age group | Grouped bars, solid vs striped | `/sandbox/persistence-by-age` |
 | Time to complete | Horizontal bars | `/sandbox/time-to-complete` |
 
+#### Add a sandbox page
+
+Worked example: http://localhost:3000/sandbox/enrollment. Add the endpoint first
+([Server Application README](../server_application/README.md#add-a-sandbox-endpoint)).
+
+1. **Loader:** Add types and loaders in `src/services/sandbox-<topic>.ts`.
+2. **Labels:** Set each chart's fields in `src/content/sandbox-<topic>-charts.ts`.
+3. **Charts:** Build them in `src/components/sandbox/<topic>-charts.tsx` from `ChartCard` and the existing charts.
+4. **Page:** Create `src/app/sandbox/<topic>/page.tsx`. The sandbox layout adds the header, footer and production check.
+5. **Link:** Add the address to `src/lib/routes.ts`.
+
+Your page opens at `/sandbox/<topic>`, e.g. `/sandbox/enrollment`.
+
 ### 404 and error pages
 
 Unknown addresses and unexpected errors get designed pages ([`not-found.tsx`](src/app/not-found.tsx),

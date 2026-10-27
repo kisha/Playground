@@ -1,5 +1,4 @@
-import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
+import { PageShell } from "@/components/page-shell";
 
 type StatusPageProps = {
   /** Small line above the title, e.g. "404". */
@@ -14,9 +13,7 @@ type StatusPageProps = {
 /** Shared layout for the 404 and error pages: a broken version of the landing page's diagram. */
 export function StatusPage({ eyebrow, title, description, unreachableLabel, actions }: StatusPageProps) {
   return (
-    <div className="flex min-h-svh flex-col">
-      <SiteHeader />
-      <main className="flex flex-1 flex-col items-center justify-center gap-12 px-6 py-20 text-center">
+    <PageShell className="items-center justify-center gap-12 px-6 py-20 text-center">
         <div className="flex items-center motion-safe:animate-fade-up" aria-hidden>
           <div className="flex w-28 flex-col items-center gap-1.5 rounded-xl border border-foreground/70 px-3 py-4 sm:w-36">
             <span className="size-2 rounded-full bg-foreground" />
@@ -48,8 +45,6 @@ export function StatusPage({ eyebrow, title, description, unreachableLabel, acti
         <div className="flex flex-wrap items-center justify-center gap-3 motion-safe:animate-fade-up motion-safe:[animation-delay:400ms]">
           {actions}
         </div>
-      </main>
-      <SiteFooter />
-    </div>
+    </PageShell>
   );
 }

@@ -3,4 +3,5 @@ export const routes = {
   home: "/",
   sandbox: "/sandbox",
   sandboxCharts: "/sandbox#charts",
+  sandboxEnrollment: "/sandbox/enrollment",
 } as const;

@@ -21,7 +21,7 @@ export type Kpi = {
   detail: string;
 };
 
-type ChartResponse<Row> = { meta: ChartMeta; rows: Row[] };
+export type ChartResponse<Row> = { meta: ChartMeta; rows: Row[] };
 
 export type KpiResponse = { meta: ChartMeta; items: Kpi[] };
 export type GatewayCompletion = ChartResponse<{ term: string; english: number; math: number }>;
@@ -42,7 +42,7 @@ export type PersistenceByAge = ChartResponse<{
 export type TimeToComplete = ChartResponse<{ entry_term: string; average_terms: number }>;
 
 /** A loader for one sandbox endpoint, e.g. sandboxLoader("/kpis") fetches /api/v1/sandbox/kpis. */
-function sandboxLoader<T>(endpoint: string): () => Promise<T> {
+export function sandboxLoader<T>(endpoint: string): () => Promise<T> {
   return () => apiRequest<T>(`/sandbox${endpoint}`, { cache: "no-store" });
 }
 

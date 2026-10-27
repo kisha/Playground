@@ -4,9 +4,8 @@ import Link from "next/link";
 import { ExternalLink } from "@/components/external-link";
 import { LiveStatus } from "@/components/landing/live-status";
 import { StackOverview } from "@/components/landing/stack-overview";
+import { PageShell } from "@/components/page-shell";
 import { SectionHeading } from "@/components/section-heading";
-import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
 import { buttonVariants } from "@/components/ui/button";
 import { brand } from "@/content/brand";
 import { languagesLine } from "@/content/stack";
@@ -16,10 +15,7 @@ import { cn } from "@/lib/utils";
 
 export default function HomePage() {
   return (
-    <div className="flex min-h-svh flex-col">
-      <SiteHeader />
-
-      <main className="flex flex-1 flex-col gap-28 px-6 pt-16 pb-28 sm:px-10 sm:pt-24">
+    <PageShell className="gap-28 px-6 pt-16 pb-28 sm:px-10 sm:pt-24">
         <section className="flex flex-col items-center gap-6 text-center">
           <h1 className="text-6xl font-semibold tracking-tighter motion-safe:animate-fade-up sm:text-8xl">
             {brand.name}
@@ -60,9 +56,6 @@ export default function HomePage() {
           </SectionHeading>
           <StackOverview />
         </section>
-      </main>
-
-      <SiteFooter />
-    </div>
+    </PageShell>
   );
 }

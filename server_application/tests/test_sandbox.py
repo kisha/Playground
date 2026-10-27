@@ -13,6 +13,8 @@ ENDPOINTS = [
     "/api/v1/sandbox/completion-by-group",
     "/api/v1/sandbox/persistence-by-age",
     "/api/v1/sandbox/time-to-complete",
+    "/api/v1/sandbox/enrollment/by-modality",
+    "/api/v1/sandbox/enrollment/by-program",
 ]
 
 
@@ -60,4 +62,5 @@ def test_sandbox_is_not_mounted_when_disabled(monkeypatch: pytest.MonkeyPatch) -
 
     with TestClient(create_app()) as client:
         assert client.get("/api/v1/sandbox/kpis").status_code == 404
+        assert client.get("/api/v1/sandbox/enrollment/by-program").status_code == 404
         assert client.get("/api/v1/health").status_code == 200

@@ -284,7 +284,9 @@ In the sandbox (http://localhost:3000/sandbox) you can:
   ([`/sandbox#api`](http://localhost:3000/sandbox#api)).
 - **Preview charts:** Each chart loads its own `/api/v1/sandbox/...` endpoint.
 - ✨ **Add your own:** New sandbox endpoints can show how other charts, trends and features could work.
-  Copy an existing one ([Server Application README](server_application/README.md#sandbox)).
+  See the worked example at [`/sandbox/enrollment`](http://localhost:3000/sandbox/enrollment), then
+  [add an endpoint](server_application/README.md#add-a-sandbox-endpoint) and
+  [add a page](client_application/README.md#add-a-sandbox-page).
 
 ![Gateway completion request and its JSON response: meta plus one row per term](client_application/docs/sandbox-gateway-request.png)
 

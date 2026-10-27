@@ -142,6 +142,18 @@ curl http://localhost:8000/api/v1/sandbox/gateway-completion
 
 ![The same request and response in the sandbox's API explorer](../client_application/docs/sandbox-gateway-request.png)
 
+#### Add a sandbox endpoint
+
+Worked example: the `/sandbox/enrollment` endpoints. Copy its three files and rename them for your topic.
+
+1. **Schema:** Define the rows in `app/schemas/sandbox_<topic>.py`. Reuse `ChartResponse`.
+2. **Data:** Return mock data from `app/services/sandbox_<topic>.py`.
+3. **Route:** Create `app/api/v1/routes/sandbox_<topic>.py` with `prefix="/sandbox/<topic>"`.
+4. **Mount:** Add it to `sandbox_router` in [`router.py`](app/api/v1/router.py). Production turns it off.
+
+Your endpoints answer at `/api/v1/sandbox/<topic>/...`, e.g. `/api/v1/sandbox/enrollment/by-modality`.
+Check them at http://localhost:8000/docs.
+
 ## Libraries Included
 
 Click a layer to see the libraries.

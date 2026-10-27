@@ -1,3 +1,4 @@
+import { Eyebrow } from "@/components/eyebrow";
 import { ExternalLink } from "@/components/external-link";
 import {
   type Application,
@@ -39,7 +40,7 @@ function ApplicationCard({ application }: { application: Application }) {
   return (
     <article className="flex flex-col gap-5 rounded-2xl border p-6 transition-[border-color,box-shadow,transform] duration-300 hover:border-foreground/25 hover:shadow-[0_8px_30px_-12px_color-mix(in_oklab,var(--foreground)_25%,transparent)] motion-safe:hover:-translate-y-0.5 sm:p-8">
       <div className="flex flex-col gap-1">
-        <p className="text-xs tracking-widest text-muted-foreground uppercase">{application.role}</p>
+        <Eyebrow>{application.role}</Eyebrow>
         <h3 className="text-2xl font-semibold tracking-tight">{application.name}</h3>
         <p className="font-mono text-xs text-muted-foreground">{application.folder}/</p>
       </div>
@@ -68,7 +69,7 @@ export function StackOverview() {
       <div className="grid gap-4 rounded-2xl border p-6 sm:grid-cols-2 sm:p-8">
         {sharedFoundation.map((group) => (
           <div key={group.label} className="flex flex-col gap-3">
-            <p className="text-xs tracking-widest text-muted-foreground uppercase">{group.label}</p>
+            <Eyebrow>{group.label}</Eyebrow>
             <LibraryChips libraries={group.items} />
           </div>
         ))}
