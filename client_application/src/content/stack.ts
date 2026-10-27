@@ -2,6 +2,7 @@
 
 import { env } from "@/lib/env";
 import { repositoryFolderUrl } from "@/lib/links";
+import type { DatabaseEngine } from "@/services/health";
 
 export type Library = {
   name: string;
@@ -21,7 +22,7 @@ export type Application = {
 };
 
 /** Shown under the landing page tagline. */
-export const languagesLine = "TypeScript · Python · PostgreSQL 18 · pgvector";
+export const languagesLine = "TypeScript · Python · PostgreSQL 18 · pgvector or SQLite";
 
 /** Marks a library that needs setup, with this hint on hover. */
 export const SETUP_MARK = "*";
@@ -72,7 +73,16 @@ export const applications: Application[] = [
   },
 ];
 
-export const sharedFoundation: { label: string; items: Library[] }[] = [
-  { label: "Data Store", items: [{ name: "PostgreSQL 18" }, { name: "pgvector" }] },
-  { label: "Tooling", items: [{ name: "mise" }, { name: "bun" }, { name: "Docker" }] },
+/** The two databases an instance chooses between. PostgreSQL comes first: it is the default. */
+export const dataStoreOptions: { engine: DatabaseEngine; libraries: Library[] }[] = [
+  { engine: "postgresql", libraries: [{ name: "PostgreSQL 18" }, { name: "pgvector" }] },
+  { engine: "sqlite", libraries: [{ name: "SQLite" }] },
 ];
+
+/** Marks the Data Store, pointing to the footnote about choosing a database. */
+export const DATABASE_MARK = "†";
+export const databaseNote =
+  "The Playground starter kit includes a choice: PostgreSQL with pgvector (the default) or SQLite. Each instance picks one:";
+export const databaseCommands = ["mise run db:choose postgresql", "mise run db:choose sqlite"];
+
+export const tooling: Library[] = [{ name: "mise" }, { name: "bun" }, { name: "Docker" }];

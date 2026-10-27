@@ -35,7 +35,7 @@ Are you contributing to Playground, or creating one for your organization?
 | **Front End** | TypeScript | Next.js · Tailwind CSS · shadcn/ui Charts | Server-rendered pages, light/dark mode, charts |
 | **Back End** | Python | FastAPI · SQLAlchemy 2.1.5 · Alembic · uv | Typed JSON API with versioned migrations |
 | **Data Processing** | Python | Polars · Pandas | Fast cleaning and aggregating of large files |
-| **Data Store** | SQL | PostgreSQL 18 · pgvector (SQLite optional) | Relational data plus similarity search |
+| **Data Store** | SQL | PostgreSQL 18 · pgvector (default) or SQLite | Relational data plus similarity search |
 | **Tooling** | — | mise · bun · Docker | Pinned versions, one command per task |
 
 ### Core languages and libraries

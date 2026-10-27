@@ -1,15 +1,23 @@
+import { Suspense } from "react";
+
 import { Eyebrow } from "@/components/eyebrow";
 import { ExternalLink } from "@/components/external-link";
+import { PulseDot } from "@/components/landing/pulse-dot";
 import {
   type Application,
   applications,
+  DATABASE_MARK,
+  databaseCommands,
+  databaseNote,
+  dataStoreOptions,
   type Library,
   SETUP_HINT,
   SETUP_MARK,
   setupNote,
-  sharedFoundation,
+  tooling,
 } from "@/content/stack";
 import { cn } from "@/lib/utils";
+import { currentDatabaseEngine, type DatabaseEngine } from "@/services/health";
 
 function LibraryChips({ libraries }: { libraries: Library[] }) {
   return (
@@ -57,6 +65,44 @@ function ApplicationCard({ application }: { application: Application }) {
   );
 }
 
+/** PostgreSQL with pgvector, or SQLite. The one this instance runs on pulses "in use" once the API answers. */
+function DataStoreChoices({ engineInUse }: { engineInUse?: DatabaseEngine }) {
+  return (
+    <ul className="flex flex-wrap items-center gap-x-3 gap-y-2">
+      {dataStoreOptions.map((option, index) => {
+        const inUse = option.engine === engineInUse;
+        return (
+          <li key={option.engine} className="flex items-center gap-3">
+            {index > 0 && <span className="text-xs text-muted-foreground">or</span>}
+            <div className={cn("flex items-center gap-2", engineInUse && !inUse && "opacity-50")}>
+              <LibraryChips libraries={option.libraries} />
+              {inUse && (
+                <span className="flex items-center gap-1.5 text-xs font-medium">
+                  <PulseDot state="healthy" className="size-2" />
+                  in use
+                </span>
+              )}
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+async function DataStoreChoicesInUse() {
+  return <DataStoreChoices engineInUse={await currentDatabaseEngine()} />;
+}
+
+function Footnote({ mark, children }: { mark: string; children: React.ReactNode }) {
+  return (
+    <p className="flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
+      <span className="shrink-0 rounded-full border border-dashed border-foreground/40 px-2 py-0.5">{mark}</span>
+      <span className="pt-0.5">{children}</span>
+    </p>
+  );
+}
+
 /** "What's inside": one card per application plus the shared foundation. */
 export function StackOverview() {
   return (
@@ -67,17 +113,31 @@ export function StackOverview() {
         ))}
       </div>
       <div className="grid gap-4 rounded-2xl border p-6 sm:grid-cols-2 sm:p-8">
-        {sharedFoundation.map((group) => (
-          <div key={group.label} className="flex flex-col gap-3">
-            <Eyebrow>{group.label}</Eyebrow>
-            <LibraryChips libraries={group.items} />
-          </div>
-        ))}
+        <div className="flex flex-col gap-3">
+          <Eyebrow>
+            Data Store <span aria-hidden>{DATABASE_MARK}</span>
+          </Eyebrow>
+          <Suspense fallback={<DataStoreChoices />}>
+            <DataStoreChoicesInUse />
+          </Suspense>
+        </div>
+        <div className="flex flex-col gap-3">
+          <Eyebrow>Tooling</Eyebrow>
+          <LibraryChips libraries={tooling} />
+        </div>
       </div>
-      <p className="flex items-center gap-2 text-xs text-muted-foreground">
-        <span className="rounded-full border border-dashed border-foreground/40 px-2 py-0.5">{SETUP_MARK}</span>
-        {setupNote}
-      </p>
+      <div className="flex flex-col gap-2">
+        <Footnote mark={SETUP_MARK}>{setupNote}</Footnote>
+        <Footnote mark={DATABASE_MARK}>
+          {databaseNote}{" "}
+          {databaseCommands.map((command, index) => (
+            <span key={command}>
+              {index > 0 && " or "}
+              <code className="font-mono whitespace-nowrap text-foreground">{command}</code>
+            </span>
+          ))}
+        </Footnote>
+      </div>
     </div>
   );
 }
