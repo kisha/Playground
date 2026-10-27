@@ -1,7 +1,9 @@
 """Tests run against their own database, migrated to head, so development data is never touched.
 
 They use the same kind of database the app is set up for (`mise run db:choose`): PostgreSQL by
-default, SQLite if chosen. `mise run api:test-sqlite` runs them on SQLite either way.
+default, SQLite if chosen. `mise run api:test-sqlite` (TEST_ON_SQLITE=true) runs them on SQLite
+either way.
+The test database is named after the development one: playground_dev becomes playground_test.
 """
 
 import asyncio
@@ -24,10 +26,11 @@ def _default_test_database_url() -> str:
     url = make_url(_CONFIGURED_URL)
     database = Path(url.database or "playground_dev")
     test_name = database.stem.removesuffix("_dev") + "_test"
-    # SQLite: a file next to the development one. PostgreSQL: a database on the same server.
-    is_sqlite = url.drivername.startswith("sqlite")
-    test_database = database.with_stem(test_name) if is_sqlite else test_name
-    return url.set(database=str(test_database)).render_as_string(hide_password=False)
+    if url.drivername.startswith("sqlite") or os.getenv("TEST_ON_SQLITE") == "true":
+        # A file next to the development database.
+        return f"sqlite:///./{test_name}.db"
+    # A database on the same PostgreSQL server.
+    return url.set(database=test_name).render_as_string(hide_password=False)
 
 
 TEST_DATABASE_URL = os.getenv("TEST_DATABASE_URL", _default_test_database_url())
