@@ -18,13 +18,16 @@ _CONFIGURED_URL = os.getenv("DATABASE_URL") or dotenv_values(
 
 
 def _default_test_database_url() -> str:
-    """The configured database, but a separate test copy: playground_test on the same server."""
-    if _CONFIGURED_URL.startswith("sqlite"):
-        return "sqlite:///./playground_test.db"
+    """The configured database, but a separate test copy: playground_dev becomes playground_test."""
     if not _CONFIGURED_URL:
         return "postgresql+asyncpg://postgres:postgres@localhost:5433/playground_test"
-    url = make_url(_CONFIGURED_URL).set(database="playground_test")
-    return url.render_as_string(hide_password=False)
+    url = make_url(_CONFIGURED_URL)
+    database = Path(url.database or "playground_dev")
+    test_name = database.stem.removesuffix("_dev") + "_test"
+    # SQLite: a file next to the development one. PostgreSQL: a database on the same server.
+    is_sqlite = url.drivername.startswith("sqlite")
+    test_database = database.with_stem(test_name) if is_sqlite else test_name
+    return url.set(database=str(test_database)).render_as_string(hide_password=False)
 
 
 TEST_DATABASE_URL = os.getenv("TEST_DATABASE_URL", _default_test_database_url())
