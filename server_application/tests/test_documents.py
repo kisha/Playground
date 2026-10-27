@@ -25,7 +25,7 @@ def test_get_list_and_delete(client: TestClient) -> None:
 
     listing = client.get("/api/v1/documents").json()
     assert listing["total"] == 2
-    assert [d["id"] for d in listing["items"]] == [second["id"], first["id"]]
+    assert [document["id"] for document in listing["items"]] == [second["id"], first["id"]]
 
     assert client.delete(f"/api/v1/documents/{first['id']}").status_code == 204
     assert client.get(f"/api/v1/documents/{first['id']}").status_code == 404

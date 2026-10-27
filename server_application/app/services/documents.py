@@ -69,12 +69,15 @@ async def _rank_in_python(
     distances = [
         (document, _cosine_distance(document.embedding, query_embedding)) for document in documents
     ]
-    return sorted(distances, key=lambda pair: pair[1])[:limit]
+    return sorted(distances, key=lambda document_and_distance: document_and_distance[1])[:limit]
 
 
-def _cosine_distance(a: list[float], b: list[float]) -> float:
+def _cosine_distance(embedding: list[float], other_embedding: list[float]) -> float:
     """1 minus cosine similarity, the same measure as pgvector's <=> operator."""
-    norms = math.hypot(*a) * math.hypot(*b)
-    if norms == 0:
+    lengths = math.hypot(*embedding) * math.hypot(*other_embedding)
+    if lengths == 0:
         return 1.0
-    return 1 - sum(x * y for x, y in zip(a, b, strict=True)) / norms
+    dot_product = sum(
+        value * other_value for value, other_value in zip(embedding, other_embedding, strict=True)
+    )
+    return 1 - dot_product / lengths
