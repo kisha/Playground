@@ -64,7 +64,11 @@ async def search_documents(
 async def _rank_in_python(
     session: AsyncSession, query_embedding: list[float], limit: int
 ) -> list[tuple[Document, float]]:
-    """SQLite has no vector index, so compare the query with every document. Fine when small."""
+    """SQLite has no pgvector, so compare the query with every document here, in Python.
+
+    Gives the same results as pgvector, without an index: fine for a small instance. If an SQLite
+    instance needs faster search, the sqlite-vec extension can move this work into SQLite.
+    """
     documents = await session.scalars(select(Document))
     distances = [
         (document, _cosine_distance(document.embedding, query_embedding)) for document in documents

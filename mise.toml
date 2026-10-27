@@ -25,9 +25,10 @@ description = "Start the database: PostgreSQL 18 + pgvector in Docker (nothing t
 depends = ["setup"]
 run = """
 if grep -q '^DATABASE_URL=sqlite' server_application/.env.development; then
-  echo "Using SQLite (chosen with mise run db:choose): nothing to start."
+  echo "Database: SQLite (chosen with mise run db:choose). Nothing to start."
 else
   docker compose up -d --wait db
+  echo "Database: PostgreSQL. Setting up an instance? Choose PostgreSQL or SQLite with mise run db:choose."
 fi
 """
 

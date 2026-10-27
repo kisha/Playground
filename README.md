@@ -17,7 +17,8 @@ Are you contributing to Playground, or creating one for your organization?
 
 - **Contributing to Playground:** Clone it and run it as is. Do not rename anything: keep the Playground
   names, database and ports. Go to [How to run it locally](#how-to-run-it-locally).
-- **Creating a Playground for your organization or institution:** You must rename it. Follow
+- **Creating a Playground for your organization or institution:** You must rename it and
+  [choose your database](#setup-2-choose-your-database): PostgreSQL (recommended) or SQLite. Follow
   [How to set up your institution's Playground](#how-to-set-up-your-institutions-playground) first, then
   [How to run it locally](#how-to-run-it-locally).
 
@@ -151,7 +152,8 @@ git pull playground main
 
 ### Setup 2: Choose your database
 
-Choose once, now, before anything uses the database. Everyone on your instance then uses the same one.
+**Required for every instance.** Choose PostgreSQL (recommended) or SQLite once, now, before anything uses the
+database. Everyone on your instance then uses the same one.
 
 | | PostgreSQL (default) | SQLite |
 |---|---|---|
@@ -168,6 +170,13 @@ mise run db:choose sqlite
 
 It sets `DATABASE_URL` in `server_application/.env.development`. Commit that file. From then on `mise run db`,
 `mise run api:dev` and `mise run api:test` use your choice. Contributors to Playground skip this step.
+
+The landing page's Data box shows which one is running:
+
+<p>
+  <img src="client_application/docs/data-postgresql.png" alt="Data box on the landing page reading PostgreSQL · pgvector" width="250">
+  <img src="client_application/docs/data-sqlite.png" alt="Data box on the landing page reading SQLite" width="250">
+</p>
 
 ### Setup 3: Make it yours
 
