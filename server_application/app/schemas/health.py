@@ -6,6 +6,7 @@ from app.core.config import Environment
 
 
 class DatabaseHealth(BaseModel):
+    engine: Literal["postgresql", "sqlite"]
     status: Literal["connected", "disconnected"]
     latency_ms: float | None = None
 

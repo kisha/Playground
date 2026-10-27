@@ -12,6 +12,7 @@ app/
 ├── core/errors.py        # One JSON shape for every error
 ├── db/base.py            # Base (naming convention), UUIDv7 + timestamp mixins
 ├── db/session.py         # Async engine, get_session dependency
+├── db/types.py           # Embedding: pgvector on PostgreSQL (default), JSON on SQLite
 ├── models/               # SQLAlchemy models (import each in models/__init__.py)
 ├── schemas/              # Pydantic request/response models
 ├── services/             # Business logic; routes stay thin
@@ -71,7 +72,8 @@ variables, which always win. `postgres://` URLs from hosts are converted to the 
 |---|---|
 | `mise run api:install` | Install dependencies (`uv sync`) |
 | `mise run api:dev` | Apply pending migrations, then run with reload on http://localhost:8000 |
-| `mise run api:test` | Run tests |
+| `mise run api:test` | Run tests on the chosen database (`mise run db:choose`; PostgreSQL by default) |
+| `mise run api:test-sqlite` | Run tests on SQLite, whichever database is chosen |
 | `mise run api:lint` / `api:format` | Ruff lint / auto-fix + format |
 | `mise run api:migrate` | Apply migrations |
 | `mise run api:migrate-down` | Roll back one migration |

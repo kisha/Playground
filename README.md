@@ -34,7 +34,7 @@ Are you contributing to Playground, or creating one for your organization?
 | **Front End** | TypeScript | Next.js · Tailwind CSS · shadcn/ui Charts | Server-rendered pages, light/dark mode, charts |
 | **Back End** | Python | FastAPI · SQLAlchemy 2.1.5 · Alembic · uv | Typed JSON API with versioned migrations |
 | **Data Processing** | Python | Polars · Pandas | Fast cleaning and aggregating of large files |
-| **Data Store** | SQL | PostgreSQL 18 · pgvector | Relational data plus similarity search |
+| **Data Store** | SQL | PostgreSQL 18 · pgvector (SQLite optional) | Relational data plus similarity search |
 | **Tooling** | — | mise · bun · Docker | Pinned versions, one command per task |
 
 ### Core languages and libraries
@@ -80,7 +80,9 @@ Click a layer to see the libraries.
 <details>
 <summary><strong>Data Store</strong></summary>
 
-- [PostgreSQL 18](https://www.postgresql.org/): Relational database with JSONB support.
+- [PostgreSQL 18](https://www.postgresql.org/): Relational database with JSONB support. The default.
+- [SQLite](https://sqlite.org/): Optional instead of PostgreSQL, for an instance that wants no Docker
+  ([choose it](#setup-2-choose-your-database)).
 - [pgvector](https://github.com/pgvector/pgvector): Stores embeddings and finds similar rows fast.
 
 </details>
@@ -147,7 +149,27 @@ Your repository now has Playground's files. Later, to bring in Playground update
 git pull playground main
 ```
 
-### Setup 2: Make it yours
+### Setup 2: Choose your database
+
+Choose once, now, before anything uses the database. Everyone on your instance then uses the same one.
+
+| | PostgreSQL (default) | SQLite |
+|---|---|---|
+| Needs | Docker or OrbStack | Nothing |
+| Vector search | Indexed, with pgvector | Works, without an index |
+| Choose it for | Most instances; it matches Playground | A small instance without Docker |
+
+Install the toolchain (`mise trust && mise install`), then run one of:
+
+```bash
+mise run db:choose postgresql   # the default
+mise run db:choose sqlite
+```
+
+It sets `DATABASE_URL` in `server_application/.env.development`. Commit that file. From then on `mise run db`,
+`mise run api:dev` and `mise run api:test` use your choice. Contributors to Playground skip this step.
+
+### Setup 3: Make it yours
 
 Swap in your institution's name. Examples use `YourInstitution`.
 
@@ -174,12 +196,7 @@ NEXT_PUBLIC_REPOSITORY_URL=https://github.com/<your-account>/YourInstitution_Pla
 PROJECT_NAME="YourInstitution Playground API"
 ```
 
-**c. Name the database and Docker project**
-
-```yaml
-# docker-compose.yml
-name: yourinstitution_playground
-```
+**c. Name the database**
 
 ```bash
 # .env
@@ -187,18 +204,17 @@ POSTGRES_DB=yourinstitution_dev
 POSTGRES_PORT=5434
 ```
 
-Then match the database name and port in the Server Application:
+PostgreSQL only: also name the Docker project.
 
-```bash
-# server_application/.env.development
-DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5434/yourinstitution_dev
+```yaml
+# docker-compose.yml
+name: yourinstitution_playground
 ```
 
-If you changed the port, point the tests at it in a git-ignored `mise.local.toml` at the repo root:
+Then run your choice from Setup 2 again, which applies the new name (and port) to `DATABASE_URL`:
 
-```toml
-[env]
-TEST_DATABASE_URL = "postgresql+asyncpg://postgres:postgres@localhost:5434/playground_test"
+```bash
+mise run db:choose postgresql   # or sqlite
 ```
 
 ---
@@ -206,7 +222,7 @@ TEST_DATABASE_URL = "postgresql+asyncpg://postgres:postgres@localhost:5434/playg
 ## How to run it locally
 
 **Prerequisites:** Git, [Docker](https://www.docker.com/) or [OrbStack](https://orbstack.dev/) (open and
-running), [mise](https://mise.jdx.dev) and [bun](https://bun.sh). mise installs everything else.
+running; not needed with SQLite), [mise](https://mise.jdx.dev) and [bun](https://bun.sh). mise installs everything else.
 
 ```bash
 brew install mise
@@ -231,7 +247,8 @@ mise trust && mise install
 
 ### Step 2: Start the database
 
-Run PostgreSQL 18 with pgvector in Docker; it ends with `Healthy`.
+Run PostgreSQL 18 with pgvector in Docker; it ends with `Healthy`. An instance that chose SQLite has nothing to
+start, and this says so.
 
 ```bash
 mise run db
@@ -359,7 +376,8 @@ mise tasks
 | Command | What it does |
 |---|---|
 | `mise run setup` | Create the local `.env` from `.env.example` (safe to re-run; `db` runs it for you) |
-| `mise run db` | Start PostgreSQL 18 + pgvector and wait until it is healthy |
+| `mise run db:choose postgresql\|sqlite` | Choose the database, once, when setting up an instance (PostgreSQL is the default) |
+| `mise run db` | Start PostgreSQL 18 + pgvector and wait until it is healthy (nothing to start with SQLite) |
 | `mise run db:down` | Stop PostgreSQL (data is kept) |
 | `mise run db:logs` | Follow the PostgreSQL logs |
 | `mise run db:shell` | Open a SQL prompt (`\q` to exit) |
@@ -376,6 +394,7 @@ mise tasks
 | `mise run api:dev` | Apply pending migrations, then run on http://localhost:8000 with auto-reload |
 | `AUTO_MIGRATE=false mise run api:dev` | Same, but skip the migrations |
 | `mise run api:test` | Run the tests |
+| `mise run api:test-sqlite` | Run the tests on SQLite, whichever database is chosen |
 | `mise run api:lint` | Check linting and formatting |
 | `mise run api:format` | Fix lint issues and format the code |
 | `mise run api:migrate` | Apply all pending migrations |

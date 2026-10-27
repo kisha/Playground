@@ -24,6 +24,8 @@ __pycache__/
 .mypy_cache/
 .coverage
 htmlcov/
+# SQLite databases (an instance can choose SQLite instead of PostgreSQL)
+*.db
 
 # Logs
 *.log

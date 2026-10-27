@@ -14,6 +14,7 @@ import os
 from enum import StrEnum
 from functools import lru_cache
 from pathlib import Path
+from typing import Literal
 
 from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -78,11 +79,18 @@ class Settings(BaseSettings):
 
     @property
     def async_database_url(self) -> str:
-        """DATABASE_URL with the asyncpg driver, whatever form the host provides it in."""
+        """DATABASE_URL with an async driver (asyncpg or aiosqlite), whatever form it is in."""
         for prefix in ("postgres://", "postgresql://"):
             if self.DATABASE_URL.startswith(prefix):
                 return "postgresql+asyncpg://" + self.DATABASE_URL.removeprefix(prefix)
+        if self.DATABASE_URL.startswith("sqlite://"):
+            return "sqlite+aiosqlite://" + self.DATABASE_URL.removeprefix("sqlite://")
         return self.DATABASE_URL
+
+    @property
+    def database_engine(self) -> Literal["postgresql", "sqlite"]:
+        """PostgreSQL by default; SQLite when DATABASE_URL starts with sqlite://."""
+        return "sqlite" if self.async_database_url.startswith("sqlite") else "postgresql"
 
     @model_validator(mode="after")
     def _require_database_url(self) -> Settings:

@@ -18,9 +18,11 @@ async def check_database(session: AsyncSession) -> DatabaseHealth:
     except Exception:
         # Details go to the server log, never to the client.
         logger.exception("Database health check failed")
-        return DatabaseHealth(status="disconnected")
+        return DatabaseHealth(engine=settings.database_engine, status="disconnected")
     latency_ms = round((time.perf_counter() - started_at) * 1000, 2)
-    return DatabaseHealth(status="connected", latency_ms=latency_ms)
+    return DatabaseHealth(
+        engine=settings.database_engine, status="connected", latency_ms=latency_ms
+    )
 
 
 async def get_health(session: AsyncSession) -> HealthResponse:

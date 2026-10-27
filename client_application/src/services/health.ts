@@ -7,6 +7,8 @@ export type HealthResponse = {
   environment: "development" | "staging" | "production";
   version: string;
   database: {
+    /** PostgreSQL by default; SQLite when an instance chooses it. */
+    engine: "postgresql" | "sqlite";
     status: "connected" | "disconnected";
     latency_ms: number | null;
   };

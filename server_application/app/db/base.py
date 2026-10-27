@@ -26,7 +26,7 @@ class Base(DeclarativeBase):
 class UUIDPrimaryKeyMixin:
     """Time-ordered UUIDv7 primary key.
 
-    Python generates it for ORM inserts; Postgres 18 generates the same kind for raw SQL.
+    Python generates it for ORM inserts; PostgreSQL 18 generates the same kind for raw SQL.
     """
 
     id: Mapped[uuid.UUID] = mapped_column(

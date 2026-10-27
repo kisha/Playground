@@ -15,10 +15,21 @@ uv = "0.13"        # server_application: dependencies, virtualenv, lockfile
 description = "Create local .env from the template (safe to re-run)"
 run = "test -f .env || (cp .env.example .env && echo 'Created .env from .env.example')"
 
+[tasks."db:choose"]
+description = "Choose the database, once, early: mise run db:choose postgresql (default) or sqlite"
+usage = 'arg "<database>" help="postgresql (the default) or sqlite"'
+run = 'python3 scripts/choose_database.py "$usage_database"'
+
 [tasks.db]
-description = "Start Postgres 18 + pgvector and wait until it is healthy"
+description = "Start the database: PostgreSQL 18 + pgvector in Docker (nothing to start with SQLite)"
 depends = ["setup"]
-run = "docker compose up -d --wait db"
+run = """
+if grep -q '^DATABASE_URL=sqlite' server_application/.env.development; then
+  echo "Using SQLite (chosen with mise run db:choose): nothing to start."
+else
+  docker compose up -d --wait db
+fi
+"""
 
 [tasks."db:down"]
 description = "Stop Postgres (data is kept)"
@@ -77,6 +88,12 @@ run = 'uv run alembic revision --autogenerate -m "$usage_message"'
 [tasks."api:test"]
 description = "Run backend tests"
 dir = "server_application"
+run = "uv run pytest"
+
+[tasks."api:test-sqlite"]
+description = "Run backend tests on SQLite, whichever database is chosen"
+dir = "server_application"
+env = { TEST_DATABASE_URL = "sqlite:///./playground_test.db" }
 run = "uv run pytest"
 
 [tasks."api:lint"]

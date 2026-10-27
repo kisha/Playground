@@ -22,9 +22,11 @@ depends_on: str | Sequence[str] | None = None
 
 def upgrade() -> None:
     """Enable pgvector. Lives in a migration so it runs in every environment, including
-    managed databases that never execute Docker init scripts."""
-    op.execute("CREATE EXTENSION IF NOT EXISTS vector")
+    managed databases that never execute Docker init scripts. SQLite has no extensions."""
+    if op.get_bind().dialect.name == "postgresql":
+        op.execute("CREATE EXTENSION IF NOT EXISTS vector")
 
 
 def downgrade() -> None:
-    op.execute("DROP EXTENSION IF EXISTS vector")
+    if op.get_bind().dialect.name == "postgresql":
+        op.execute("DROP EXTENSION IF EXISTS vector")

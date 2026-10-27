@@ -79,6 +79,9 @@ export type DiagramNode = {
   state: ConnectionState;
 };
 
+/** How the Data box names each database. Unknown until the API answers. */
+const databaseLabels = { postgresql: "PostgreSQL · pgvector", sqlite: "SQLite" } as const;
+
 /** The three boxes of the landing page diagram: Client Application → Server Application → Data. */
 export function toDiagramNodes(latest: HealthCheckRecord | undefined): [DiagramNode, DiagramNode, DiagramNode] {
   const status = toSystemStatus(latest);
@@ -94,7 +97,12 @@ export function toDiagramNodes(latest: HealthCheckRecord | undefined): [DiagramN
   return [
     { name: "Client Application", technology: "Next.js", detail: env.appEnv, state: status.clientApplication },
     { name: "Server Application", technology: "FastAPI", detail: serverDetail, state: status.serverApplication },
-    { name: "Data", technology: "PostgreSQL · pgvector", detail: databaseDetail, state: status.database },
+    {
+      name: "Data",
+      technology: health ? databaseLabels[health.database.engine] : "Database",
+      detail: databaseDetail,
+      state: status.database,
+    },
   ];
 }
 
