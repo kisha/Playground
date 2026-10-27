@@ -6,21 +6,40 @@ dev/color Playground is a ready-to-use starter kit, so engineering crews skip fo
 and start building features. It pairs a Next.js **Client Application** with a FastAPI + PostgreSQL **Server Application**.
 
 **Contents:** [Start here](#start-here) · [Why Playground](#why-playground) · [Tech Stack](#tech-stack-summary) ·
-[How to set up your institution's Playground](#how-to-set-up-your-institutions-playground) · [How to run it locally](#how-to-run-it-locally) ·
+[How to run it locally](#how-to-run-it-locally) · [How to create a Playground for your organization](#how-to-create-a-playground-for-your-organization) ·
 [Commands](#commands) · [Troubleshooting](#troubleshooting) · [Reference](#reference)
 
 ---
 
 ## Start here
 
-Are you contributing to Playground, or creating one for your organization?
+### 🧭 Pick your path 👇🏾
 
-- **Contributing to Playground:** Clone it and run it as is. Do not rename anything: keep the Playground
-  names, database and ports. Go to [How to run it locally](#how-to-run-it-locally).
-- **Creating a Playground for your organization or institution:** You must rename it and
-  [choose your database](#setup-2-choose-your-database): PostgreSQL (recommended) or SQLite. Follow
-  [How to set up your institution's Playground](#how-to-set-up-your-institutions-playground) first, then
-  [How to run it locally](#how-to-run-it-locally).
+**Open the one that matches what you're doing.**
+
+<details>
+<summary><h3>🛠️ I'm contributing to Playground</h3> &nbsp;Improving the starter kit itself</summary>
+
+<br>
+
+- 🚫 **Don't rename anything.** Keep the Playground names, database and ports.
+- ⏭️ **Skip setup.**
+- 👉🏾 Go straight to [How to run it locally](#how-to-run-it-locally).
+
+</details>
+
+<details>
+<summary><h3>🏫 I'm creating a Playground for my organization</h3> &nbsp;Your own copy, e.g. <code>UTTC_Playground</code></summary>
+
+<br>
+
+- ✏️ **You must rename it** to `[YourInstitution]_Playground`.
+- 🗄️ **You must [choose your database](#setup-2-choose-your-database):** PostgreSQL or SQLite.
+- 👉🏾 Do these in order:
+  1. [How to create a Playground for your organization](#how-to-create-a-playground-for-your-organization) (Setup 1–3)
+  2. Come back to [How to run it locally](#how-to-run-it-locally), starting at Step 1
+
+</details>
 
 ## Why Playground
 
@@ -81,10 +100,13 @@ Click a layer to see the libraries.
 <details>
 <summary><strong>Data Store</strong></summary>
 
-- [PostgreSQL 18](https://www.postgresql.org/): Relational database with JSONB support. The default.
-- [SQLite](https://sqlite.org/): Optional instead of PostgreSQL, for an instance that wants no Docker
-  ([choose it](#setup-2-choose-your-database)).
-- [pgvector](https://github.com/pgvector/pgvector): Stores embeddings and finds similar rows fast.
+Choose one. How to choose: [Setup 2: Choose your database](#setup-2-choose-your-database).
+
+- **Option 1 (default):** [PostgreSQL 18](https://www.postgresql.org/), a relational database with JSONB support,
+  plus [pgvector](https://github.com/pgvector/pgvector), which stores embeddings and finds similar rows fast.
+  Choose it with `mise run db:choose postgresql`.
+- **Option 2:** [SQLite](https://sqlite.org/), a database in a single file, for an instance that wants no Docker.
+  Choose it with `mise run db:choose sqlite`.
 
 </details>
 
@@ -101,13 +123,168 @@ Click a layer to see the libraries.
 
 ---
 
-## How to set up your institution's Playground
+## How to run it locally
 
-> **Only for a new organization or institution.** Contributing to Playground? Don't rename anything; go to
+**Prerequisites:** Git, [Docker](https://www.docker.com/) or [OrbStack](https://orbstack.dev/) (open and
+running; not needed with SQLite), [mise](https://mise.jdx.dev) and [bun](https://bun.sh). mise installs everything else.
+
+```bash
+brew install mise
+brew install oven-sh/bun/bun
+```
+
+**Get the code:** 🛠️ Contributors clone Playground itself (below). 🏫 Creating one for your organization? Do
+[How to create a Playground for your organization](#how-to-create-a-playground-for-your-organization) first, then come back to Step 1.
+
+```bash
+git clone git@github.com:kisha/Playground.git
+cd Playground
+```
+
+### Step 1: Install the toolchain
+
+Install the pinned versions of bun, Node, Python and uv.
+
+```bash
+mise trust && mise install
+```
+
+### Step 2: Start the database
+
+Run PostgreSQL 18 with pgvector in Docker; it ends with `Healthy`. An instance that chose SQLite has nothing to
+start, and this says so.
+
+```bash
+mise run db
+```
+
+---
+
+## Server Application (Back End)
+
+A FastAPI API on Python 3.14 that reads and writes PostgreSQL and serves vector search.
+📁 [`server_application/`](server_application/) · [README](server_application/README.md)
+
+### Step 3: Start the Server Application (FastAPI)
+
+Installs dependencies, applies any pending migrations, then starts with auto-reload.
+
+```bash
+mise run api:install && mise run api:dev
+```
+
+Check it: http://localhost:8000/api/v1/health
+
+![Health check response: status ok, database engine postgresql, connected](server_application/docs/health-response.png)
+
+### Step 4: Explore the endpoints
+
+Every endpoint, ready to try in the browser: http://localhost:8000/docs ·
+[code](server_application/app/api/v1/routes/)
+
+![Swagger UI showing the health, documents, sandbox and sandbox: enrollment endpoints](server_application/docs/swagger-endpoints.png)
+
+### Step 5: Run the tests
+
+All tests should pass. They use their own `playground_test` database.
+
+```bash
+mise run api:test
+```
+
+---
+
+## Client Application (Front End)
+
+A Next.js web interface in TypeScript, black and white with light and dark modes, that gets all of
+its data from the Server Application.
+📁 [`client_application/`](client_application/) · [README](client_application/README.md)
+
+### Step 6: Start the Client Application (Next.js)
+
+In a second terminal (the Server Application keeps running in the first):
+
+```bash
+mise run web:install && mise run web:dev
+```
+
+Open http://localhost:3000. It should say **All systems connected**:
+
+![Landing page: all systems connected](client_application/docs/landing-light.png)
+
+### Step 7: Explore the sandbox
+
+The **sandbox** endpoint series is where you create and test new features and preview how charts and
+graphs look in your development environment. All data is mock data, and the sandbox is turned off in
+production.
+
+In the sandbox (http://localhost:3000/sandbox) you can:
+
+- **Try the API:** Send real requests to the Server Application and see the responses
+  ([`/sandbox#api`](http://localhost:3000/sandbox#api)).
+- **Preview charts:** Each chart loads its own `/api/v1/sandbox/...` endpoint.
+- ✨ **Add your own:** New sandbox pages can show how other charts, trends and features could work.
+
+#### Add your own sandbox example
+
+Everything in the sandbox is a reusable example. Add your own charts, filters or other UI on a new sandbox
+page, with its own endpoints. Start from **Add your own** at the top of http://localhost:3000/sandbox:
+
+![Add your own, at the top of the sandbox: a link to the worked example, How to add a sandbox page](client_application/docs/sandbox-add-your-own.png)
+
+A sandbox page has two halves: endpoints on the back end and a page that draws them. Worked example:
+[`/sandbox/enrollment`](http://localhost:3000/sandbox/enrollment). Copy one folder on each side.
+
+1. **Add the endpoints (FastAPI):** Copy `server_application/app/sandbox/enrollment/`
+   ([steps](server_application/README.md#add-a-sandbox-endpoint)).
+2. **Add the page (Next.js):** Copy `client_application/src/app/sandbox/enrollment/`
+   ([steps](client_application/README.md#add-a-sandbox-page)).
+
+The worked example lists every file to change, on both sides:
+
+![Build your own: step 1 adds the endpoints in server_application, step 2 adds the page in client_application, each ending with a check](client_application/docs/sandbox-build-your-own.png)
+
+![Gateway completion request and its JSON response: meta plus one row per term](client_application/docs/sandbox-gateway-request.png)
+
+<details open>
+<summary>📊 <strong>See the example charts</strong> (KPI cards, trend lines and bar charts)</summary>
+
+**KPI cards:** `/sandbox/kpis`
+
+![KPI cards](client_application/docs/sandbox-kpis.png)
+
+**Trend lines:** `/sandbox/gateway-completion` · `/sandbox/term-enrollment` ·
+`/sandbox/credit-completion` · `/sandbox/persistence-retention`
+
+![Trend charts: gateway completion, term-to-term enrollment, credit completion, persistence and retention](client_application/docs/sandbox-trend-charts.png)
+
+**Bar charts:** `/sandbox/completion-by-group` · `/sandbox/persistence-by-age` ·
+`/sandbox/time-to-complete`
+
+![Bar charts: completion by student group, persistence by age, time to complete](client_application/docs/sandbox-bar-charts.png)
+
+</details>
+
+### When you're done
+
+Press `Ctrl+C` in each terminal, then stop the database (your data is kept):
+
+```bash
+mise run db:down
+```
+
+---
+
+## How to create a Playground for your organization
+
+> [!IMPORTANT]
+> 🛠️ **Contributing to Playground? Stop here.** Don't rename anything. Skip this whole section and go to
 > [How to run it locally](#how-to-run-it-locally).
+>
+> 🏫 **Creating a Playground for your organization or institution?** Keep reading.
 
-Each institution creates its own copy of this starter kit, named **`[YourInstitution]_Playground`** (for
-example, `UTTC_Playground`).
+Your organization gets its own copy of this starter kit, named **`[YourInstitution]_Playground`** (for
+example, `UTTC_Playground`). Setup 1–3 create the copy, choose its database and rename it.
 
 ### Setup 1: Create a Playground for your institution
 
@@ -152,12 +329,13 @@ git pull playground main
 
 ### Setup 2: Choose your database
 
-**Required for every instance.** Choose PostgreSQL (recommended) or SQLite once, now, before anything uses the
+⚠️ **Required for every instance.** Choose PostgreSQL or SQLite once, now, before anything uses the
 database. Everyone on your instance then uses the same one.
 
 | | PostgreSQL (default) | SQLite |
 |---|---|---|
 | Needs | Docker or OrbStack | Nothing |
+| Where it lives | A Docker container, from `docker-compose.yml` | One file, `server_application/playground_dev.db` |
 | Vector search | Indexed, with pgvector | Works, without an index |
 | Choose it for | Most instances; it matches Playground | A small instance without Docker |
 
@@ -171,12 +349,26 @@ mise run db:choose sqlite
 It sets `DATABASE_URL` in `server_application/.env.development`. Commit that file. From then on `mise run db`,
 `mise run api:dev` and `mise run api:test` use your choice. Contributors to Playground skip this step.
 
-The landing page's Data box shows which one is running:
+| Choice | `DATABASE_URL` it writes |
+|---|---|
+| PostgreSQL | `postgresql+asyncpg://postgres:postgres@localhost:5433/playground_dev` |
+| SQLite | `sqlite:///./playground_dev.db` |
+
+> [!NOTE]
+> **Chose SQLite? You don't need `docker-compose.yml`.** SQLite is a file, not a server, so there is no
+> container to run and `mise run db` has nothing to start. The file is created the first time
+> `mise run api:dev` runs.
+
+The landing page's Data box detects your database and shows which one is running:
 
 <p>
   <img src="client_application/docs/data-postgresql.png" alt="Data box on the landing page reading PostgreSQL · pgvector" width="250">
   <img src="client_application/docs/data-sqlite.png" alt="Data box on the landing page reading SQLite" width="250">
 </p>
+
+So does the Data Store under "What's inside", with a pulsing **in use** next to your choice:
+
+<img src="client_application/docs/data-store-choice.gif" alt="Data Store on the landing page: PostgreSQL 18 and pgvector marked in use, then SQLite marked in use after switching" width="700">
 
 ### Setup 3: Make it yours
 
@@ -226,148 +418,7 @@ Then run your choice from Setup 2 again, which applies the new name (and port) t
 mise run db:choose postgresql   # or sqlite
 ```
 
----
-
-## How to run it locally
-
-**Prerequisites:** Git, [Docker](https://www.docker.com/) or [OrbStack](https://orbstack.dev/) (open and
-running; not needed with SQLite), [mise](https://mise.jdx.dev) and [bun](https://bun.sh). mise installs everything else.
-
-```bash
-brew install mise
-brew install oven-sh/bun/bun
-```
-
-**Get the code:** Contributors clone Playground itself. Setting up an instance? You already cloned yours in
-[Setup 1](#setup-1-create-a-playground-for-your-institution).
-
-```bash
-git clone git@github.com:kisha/Playground.git
-cd Playground
-```
-
-### Step 1: Install the toolchain
-
-Install the pinned versions of bun, Node, Python and uv.
-
-```bash
-mise trust && mise install
-```
-
-### Step 2: Start the database
-
-Run PostgreSQL 18 with pgvector in Docker; it ends with `Healthy`. An instance that chose SQLite has nothing to
-start, and this says so.
-
-```bash
-mise run db
-```
-
----
-
-## Server Application (Back End)
-
-A FastAPI API on Python 3.14 that reads and writes PostgreSQL and serves vector search.
-📁 [`server_application/`](server_application/) · [README](server_application/README.md)
-
-### Step 3: Start the Server Application (FastAPI)
-
-Installs dependencies, applies any pending migrations, then starts with auto-reload.
-
-```bash
-mise run api:install && mise run api:dev
-```
-
-Check it: http://localhost:8000/api/v1/health
-
-![Health check response: status ok, database connected](server_application/docs/health-response.png)
-
-### Step 4: Explore the endpoints
-
-Every endpoint, ready to try in the browser: http://localhost:8000/docs ·
-[code](server_application/app/api/v1/routes/)
-
-![Swagger UI showing the health, documents and sandbox endpoints](server_application/docs/swagger-endpoints.png)
-
-### Step 5: Run the tests
-
-All tests should pass. They use their own `playground_test` database.
-
-```bash
-mise run api:test
-```
-
----
-
-## Client Application (Front End)
-
-A Next.js web interface in TypeScript, black and white with light and dark modes, that gets all of
-its data from the Server Application.
-📁 [`client_application/`](client_application/) · [README](client_application/README.md)
-
-### Step 6: Start the Client Application (Next.js)
-
-In a second terminal (the Server Application keeps running in the first):
-
-```bash
-mise run web:install && mise run web:dev
-```
-
-Open http://localhost:3000. It should say **All systems connected**:
-
-![Landing page: all systems connected](client_application/docs/landing-light.png)
-
-### Step 7: Explore the sandbox
-
-The **sandbox** endpoint series is where you create and test new features and preview how charts and
-graphs look in your development environment. All data is mock data, and the sandbox is turned off in
-production.
-
-In the sandbox (http://localhost:3000/sandbox) you can:
-
-- **Try the API:** Send real requests to the Server Application and see the responses
-  ([`/sandbox#api`](http://localhost:3000/sandbox#api)).
-- **Preview charts:** Each chart loads its own `/api/v1/sandbox/...` endpoint.
-- ✨ **Add your own:** New sandbox pages can show how other charts, trends and features could work.
-
-#### Add a sandbox page
-
-A sandbox page has two halves: endpoints on the back end and a page that draws them. Worked example:
-[`/sandbox/enrollment`](http://localhost:3000/sandbox/enrollment). Copy one folder on each side.
-
-1. **Add the endpoints (FastAPI):** Copy `server_application/app/sandbox/enrollment/`
-   ([steps](server_application/README.md#add-a-sandbox-endpoint)).
-2. **Add the page (Next.js):** Copy `client_application/src/app/sandbox/enrollment/`
-   ([steps](client_application/README.md#add-a-sandbox-page)).
-
-![Gateway completion request and its JSON response: meta plus one row per term](client_application/docs/sandbox-gateway-request.png)
-
-<details open>
-<summary>📊 <strong>See the example charts</strong> (KPI cards, trend lines and bar charts)</summary>
-
-**KPI cards:** `/sandbox/kpis`
-
-![KPI cards](client_application/docs/sandbox-kpis.png)
-
-**Trend lines:** `/sandbox/gateway-completion` · `/sandbox/term-enrollment` ·
-`/sandbox/credit-completion` · `/sandbox/persistence-retention`
-
-![Trend charts: gateway completion, term-to-term enrollment, credit completion, persistence and retention](client_application/docs/sandbox-trend-charts.png)
-
-**Bar charts:** `/sandbox/completion-by-group` · `/sandbox/persistence-by-age` ·
-`/sandbox/time-to-complete`
-
-![Bar charts: completion by student group, persistence by age, time to complete](client_application/docs/sandbox-bar-charts.png)
-
-</details>
-
-### When you're done
-
-Press `Ctrl+C` in each terminal, then stop the database (your data is kept):
-
-```bash
-mise run db:down
-```
+👉🏾 **Next:** go back to [How to run it locally](#how-to-run-it-locally), starting at Step 1.
 
 ---
 

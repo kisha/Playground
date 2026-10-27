@@ -1,5 +1,7 @@
 # Local infrastructure for Playground.
 # Only Postgres runs here; client_application and server_application run natively for fast reloads.
+# Chose SQLite (mise run db:choose sqlite)? You don't need this file: SQLite is a single file,
+# server_application/playground_dev.db, so there is no container to run.
 name: playground
 
 services:
