@@ -1,41 +1,8 @@
-"""Response shapes for the sandbox: mock PDP AR-style data that powers the example charts."""
-
-from typing import Literal
+"""Response shapes for /sandbox: mock PDP AR-style data that powers the example charts."""
 
 from pydantic import BaseModel, Field
 
-
-class ChartMeta(BaseModel):
-    title: str
-    description: str
-    takeaway: str | None = Field(default=None, description="One-sentence reading of the chart.")
-    fields_used: list[str] = Field(description="AR file fields the numbers come from.")
-    filters: list[str] = Field(default=[], description='Cohort filters, e.g. "Fall entry".')
-    definitions: dict[str, str] = Field(default={}, description="How each measure is defined.")
-    source: Literal["mock"] = "mock"
-
-
-class Kpi(BaseModel):
-    id: str
-    label: str
-    unit: Literal["percent", "split", "terms"]
-    value: float
-    secondary_value: float | None = Field(
-        default=None, description='Second half of a split, e.g. 36 in "64 / 36".'
-    )
-    detail: str
-
-
-class KpiResponse(BaseModel):
-    meta: ChartMeta
-    items: list[Kpi]
-
-
-class ChartResponse[RowT: BaseModel](BaseModel):
-    """Every chart endpoint answers with its meta plus one row per point or bar."""
-
-    meta: ChartMeta
-    rows: list[RowT]
+from app.sandbox.shared import ChartResponse
 
 
 class GatewayCompletionRow(BaseModel):

@@ -16,7 +16,12 @@ app/
 ├── schemas/              # Pydantic request/response models
 ├── services/             # Business logic; routes stay thin
 ├── api/dependencies.py   # SessionDep, EmbedderDep: shared by every route module
-└── api/v1/routes/        # HTTP endpoints
+├── api/v1/routes/        # HTTP endpoints
+└── sandbox/              # Mock-data endpoints, one folder per sandbox page
+    ├── router.py         #   Mounts every sandbox page (off in production)
+    ├── shared.py         #   ChartMeta, ChartResponse, Kpi: shared by every page
+    ├── routes.py, schemas.py, mock_data.py   # /sandbox
+    └── enrollment/       #   /sandbox/enrollment: the same three files
 alembic/                  # Migrations (config in pyproject.toml [tool.alembic])
 tests/
 ```
@@ -115,8 +120,7 @@ Every error has the same JSON shape ([`core/errors.py`](app/core/errors.py)):
 The **sandbox** endpoint series is where you create and test new features and preview how charts and
 graphs look in your development environment. These endpoints serve mock data shaped like PDP Analysis-Ready files,
 answering with `meta` (title, takeaway, fields used) and `rows`, and are turned off in production via
-`SANDBOX_ENABLED`. Code: [route](app/api/v1/routes/sandbox.py) ·
-[schemas](app/schemas/sandbox.py) · [data](app/services/sandbox.py).
+`SANDBOX_ENABLED`. Code: [`app/sandbox/`](app/sandbox/), one folder per sandbox page.
 
 ```bash
 curl http://localhost:8000/api/v1/sandbox/gateway-completion
@@ -144,12 +148,15 @@ curl http://localhost:8000/api/v1/sandbox/gateway-completion
 
 #### Add a sandbox endpoint
 
-Worked example: the `/sandbox/enrollment` endpoints. Copy its three files and rename them for your topic.
+Step 1 of 2 for a new sandbox page. Then [add the page](../client_application/README.md#add-a-sandbox-page).
 
-1. **Schema:** Define the rows in `app/schemas/sandbox_<topic>.py`. Reuse `ChartResponse`.
-2. **Data:** Return mock data from `app/services/sandbox_<topic>.py`.
-3. **Route:** Create `app/api/v1/routes/sandbox_<topic>.py` with `prefix="/sandbox/<topic>"`.
-4. **Mount:** Add it to `sandbox_router` in [`router.py`](app/api/v1/router.py). Production turns it off.
+Worked example: [`app/sandbox/enrollment/`](app/sandbox/enrollment/). Every sandbox page has the same three files.
+
+1. **Copy:** Copy `app/sandbox/enrollment/` to `app/sandbox/<topic>/`.
+2. **Schemas:** Define your rows in `schemas.py`. Reuse `ChartResponse`.
+3. **Data:** Return your mock data from `mock_data.py`.
+4. **Routes:** Set `prefix="/sandbox/<topic>"` and `tags=["sandbox: <topic>"]` in `routes.py`.
+5. **Mount:** Add one line to [`app/sandbox/router.py`](app/sandbox/router.py). Production turns it off.
 
 Your endpoints answer at `/api/v1/sandbox/<topic>/...`, e.g. `/api/v1/sandbox/enrollment/by-modality`.
 Check them at http://localhost:8000/docs.

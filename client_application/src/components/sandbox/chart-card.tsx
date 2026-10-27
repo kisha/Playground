@@ -5,7 +5,7 @@ import { FilterChips } from "@/components/sandbox/filter-chips";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useApiResource } from "@/hooks/use-api-resource";
 import { cn } from "@/lib/utils";
-import type { ChartMeta } from "@/services/sandbox";
+import type { ChartMeta } from "@/app/sandbox/shared";
 
 type ChartCardProps<Data extends { meta: ChartMeta }> = {
   load: () => Promise<Data>;

@@ -1,7 +1,7 @@
-/** Which fields each example chart draws, and how they are labelled. Edit here, not in the components. */
+/** /sandbox: which fields each chart draws, and how they are labelled. Edit here, not in charts.tsx. */
 
 import { type BarListItem, type ChartSeries, formatPercent, toBarListItems } from "@/lib/charts";
-import type { CompletionByGroup, TermEnrollmentRow, TimeToComplete } from "@/services/sandbox";
+import type { CompletionByGroup, TermEnrollmentRow, TimeToComplete } from "./data";
 
 export const KPI_COUNT = 8;
 

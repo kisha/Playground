@@ -3,11 +3,12 @@ import type { Metadata } from "next";
 import { ExternalLink } from "@/components/external-link";
 import { PageIntro } from "@/components/page-intro";
 import { ApiExplorer } from "@/components/sandbox/api-explorer";
-import { ExampleCharts } from "@/components/sandbox/example-charts";
 import { ExamplePageLink } from "@/components/sandbox/example-page-link";
 import { SectionHeading } from "@/components/section-heading";
 import { env } from "@/lib/env";
-import { repositoryFolderUrl, serverRoutesFolder } from "@/lib/links";
+import { repositoryFolderUrl, serverRoutesFolder, serverSandboxFolder } from "@/lib/links";
+
+import { Charts } from "./charts";
 
 export const metadata: Metadata = {
   title: "Sandbox",
@@ -40,6 +41,10 @@ export default function SandboxPage() {
             )}
             <ExternalLink href={repositoryFolderUrl(serverRoutesFolder)} variant="inline">
               {serverRoutesFolder}
+            </ExternalLink>{" "}
+            and{" "}
+            <ExternalLink href={repositoryFolderUrl(serverSandboxFolder)} variant="inline">
+              {serverSandboxFolder}
             </ExternalLink>
             .
           </p>
@@ -54,7 +59,7 @@ export default function SandboxPage() {
             the answer and the AR fields it draws on.
           </p>
         </SectionHeading>
-        <ExampleCharts />
+        <Charts />
       </section>
 
       <section aria-labelledby="add-your-own-heading" className="flex flex-col gap-6">

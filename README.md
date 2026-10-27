@@ -302,10 +302,17 @@ In the sandbox (http://localhost:3000/sandbox) you can:
 - **Try the API:** Send real requests to the Server Application and see the responses
   ([`/sandbox#api`](http://localhost:3000/sandbox#api)).
 - **Preview charts:** Each chart loads its own `/api/v1/sandbox/...` endpoint.
-- ✨ **Add your own:** New sandbox endpoints can show how other charts, trends and features could work.
-  See the worked example at [`/sandbox/enrollment`](http://localhost:3000/sandbox/enrollment), then
-  [add an endpoint](server_application/README.md#add-a-sandbox-endpoint) and
-  [add a page](client_application/README.md#add-a-sandbox-page).
+- ✨ **Add your own:** New sandbox pages can show how other charts, trends and features could work.
+
+#### Add a sandbox page
+
+A sandbox page has two halves: endpoints on the back end and a page that draws them. Worked example:
+[`/sandbox/enrollment`](http://localhost:3000/sandbox/enrollment). Copy one folder on each side.
+
+1. **Add the endpoints (FastAPI):** Copy `server_application/app/sandbox/enrollment/`
+   ([steps](server_application/README.md#add-a-sandbox-endpoint)).
+2. **Add the page (Next.js):** Copy `client_application/src/app/sandbox/enrollment/`
+   ([steps](client_application/README.md#add-a-sandbox-page)).
 
 ![Gateway completion request and its JSON response: meta plus one row per term](client_application/docs/sandbox-gateway-request.png)
 

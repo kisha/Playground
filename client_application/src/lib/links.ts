@@ -7,3 +7,6 @@ export function repositoryFolderUrl(folder: string): string {
 
 /** Where the Server Application's endpoints are defined. */
 export const serverRoutesFolder = "server_application/app/api/v1/routes";
+
+/** Where the sandbox endpoints are defined, one folder per sandbox page. */
+export const serverSandboxFolder = "server_application/app/sandbox";

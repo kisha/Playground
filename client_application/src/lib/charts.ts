@@ -1,5 +1,5 @@
 import type { ChartConfig } from "@/components/ui/chart";
-import type { Kpi } from "@/services/sandbox";
+import type { Kpi } from "@/app/sandbox/shared";
 
 /** One line or bar series. Charts are black and white, so `dashed` tells the second one apart. */
 export type ChartSeries = {

@@ -1,8 +1,8 @@
-"""Response shapes for the enrollment sandbox examples, built on the shared sandbox chart shape."""
+"""Response shapes for /sandbox/enrollment, built on the shared sandbox chart shape."""
 
 from pydantic import BaseModel
 
-from app.schemas.sandbox import ChartResponse
+from app.sandbox.shared import ChartResponse
 
 
 class EnrollmentByModalityRow(BaseModel):

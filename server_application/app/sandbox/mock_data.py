@@ -5,16 +5,15 @@ invented and contain no real institution or student data. Replace these function
 queries when an instance has AR data of its own.
 """
 
-from app.schemas.sandbox import (
-    ChartMeta,
+from app.sandbox.shared import COHORT_YEARS, TERMS, ChartMeta, Kpi, KpiResponse
+
+from .schemas import (
     CompletionByGroupResponse,
     CompletionByGroupRow,
     CreditCompletionResponse,
     CreditCompletionRow,
     GatewayCompletionResponse,
     GatewayCompletionRow,
-    Kpi,
-    KpiResponse,
     PersistenceByAgeResponse,
     PersistenceByAgeRow,
     PersistenceRetentionResponse,
@@ -25,8 +24,6 @@ from app.schemas.sandbox import (
     TimeToCompleteRow,
 )
 
-TERMS = ["Fall 23", "Spr 24", "Fall 24", "Spr 25", "Fall 25", "Spr 26"]
-COHORT_YEARS = [2020, 2021, 2022, 2023, 2024, 2025]
 COHORT_FILTERS = ["Fall entry", "New + Transfer"]
 DEFINITIONS = {
     "Persistence": "Students continuing anywhere",

@@ -3,10 +3,9 @@
 import { LoadError } from "@/components/load-error";
 import { FilterChips } from "@/components/sandbox/filter-chips";
 import { Skeleton } from "@/components/ui/skeleton";
-import { KPI_COUNT } from "@/content/sandbox-charts";
 import { useApiResource } from "@/hooks/use-api-resource";
 import { formatKpi } from "@/lib/charts";
-import { type Kpi, sandbox } from "@/services/sandbox";
+import type { Kpi, KpiResponse } from "@/app/sandbox/shared";
 
 const kpiTileClasses = "flex min-h-32 flex-col gap-1 rounded-2xl border p-4 sm:p-5";
 const kpiGridClasses = "grid grid-cols-2 gap-3 lg:grid-cols-4";
@@ -25,9 +24,15 @@ function KpiTile({ kpi }: { kpi: Kpi }) {
   );
 }
 
+type KpiGridProps = {
+  load: () => Promise<KpiResponse>;
+  /** How many placeholder tiles to show while loading. */
+  placeholderCount: number;
+};
+
 /** KPI stat cards, as at the top of the briefs' dashboards. */
-export function KpiGrid() {
-  const { resource, retry } = useApiResource(sandbox.kpis);
+export function KpiGrid({ load, placeholderCount }: KpiGridProps) {
+  const { resource, retry } = useApiResource(load);
 
   if (resource.status === "error") {
     return (
@@ -43,7 +48,7 @@ export function KpiGrid() {
   if (resource.status === "loading") {
     return (
       <ul className={kpiGridClasses} aria-busy="true" aria-label="Loading KPIs">
-        {Array.from({ length: KPI_COUNT }, (_, placeholderIndex) => (
+        {Array.from({ length: placeholderCount }, (_, placeholderIndex) => (
           <li key={placeholderIndex} className={kpiTileClasses}>
             <Skeleton className="h-full rounded-lg" />
           </li>

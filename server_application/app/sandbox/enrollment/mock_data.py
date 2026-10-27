@@ -1,13 +1,13 @@
-"""Mock enrollment data for the enrollment sandbox examples. The numbers are invented."""
+"""Mock data for /sandbox/enrollment. The numbers are invented."""
 
-from app.schemas.sandbox import ChartMeta
-from app.schemas.sandbox_enrollment import (
+from app.sandbox.shared import TERMS, ChartMeta
+
+from .schemas import (
     EnrollmentByModalityResponse,
     EnrollmentByModalityRow,
     EnrollmentByProgramResponse,
     EnrollmentByProgramRow,
 )
-from app.services.sandbox import TERMS
 
 
 def get_enrollment_by_modality() -> EnrollmentByModalityResponse:

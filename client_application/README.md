@@ -7,15 +7,19 @@ The Next.js front end for Playground; it gets all of its data from the
 
 ```
 src/
-├── app/            # Pages: layout.tsx, page.tsx, sandbox/, not-found.tsx, error.tsx, globals.css
+├── app/            # Pages: layout.tsx, page.tsx, not-found.tsx, error.tsx, globals.css
+│   └── sandbox/    # One folder per sandbox page; layout.tsx adds the shell and the production 404
+│       ├── shared.ts                                   # ChartMeta, Kpi, the loader: shared by every page
+│       ├── page.tsx, charts.tsx, chart-config.ts, data.ts  # /sandbox
+│       └── enrollment/                                 # /sandbox/enrollment: the same four files
 ├── components/     # Render only. Shared: site header/footer, external link, section heading, load error
 │   ├── landing/    # Live status, system diagram, tracker, sparkline, stack cards
-│   ├── sandbox/    # API explorer, chart card, trend / bar / grouped-bar charts, KPI grid
+│   ├── sandbox/    # Building blocks for every sandbox page: chart card, charts, KPI grid, API explorer
 │   └── ui/         # shadcn/ui components (button, card, chart, skeleton)
 ├── content/        # Words and settings shown on pages
 │   ├── brand.ts            # Name, tagline, logo, footer credit
 │   ├── stack.ts            # "What's inside" cards
-│   ├── sandbox-charts.ts   # Which fields each example chart draws, and their labels
+│   ├── sandbox-how-to.ts   # The steps on the /sandbox/enrollment example
 │   └── sandbox-requests.ts # The API explorer's preset requests
 ├── hooks/          # Browser state: use-health-monitor, use-api-resource, use-api-explorer
 ├── lib/            # Logic, with no markup
@@ -27,7 +31,7 @@ src/
 │   ├── api-explorer.ts       # Sends a preset request and describes the result
 │   ├── routes.ts, links.ts   # Page addresses and repository links
 │   └── errors.ts, timing.ts, theme.ts, utils.ts
-└── services/       # One file per API resource: health.ts, sandbox.ts
+└── services/       # One file per API resource: health.ts
 public/brand/       # Logo files (swap the logo in src/content/brand.ts, or set it to null)
 docs/               # Screenshots used in the READMEs
 ```
@@ -85,14 +89,16 @@ is turned off in production (override with `NEXT_PUBLIC_SANDBOX_ENABLED`).
 
 #### Add a sandbox page
 
-Worked example: http://localhost:3000/sandbox/enrollment. Add the endpoint first
-([Server Application README](../server_application/README.md#add-a-sandbox-endpoint)).
+Step 2 of 2. [Add the endpoints](../server_application/README.md#add-a-sandbox-endpoint) first.
 
-1. **Loader:** Add types and loaders in `src/services/sandbox-<topic>.ts`.
-2. **Labels:** Set each chart's fields in `src/content/sandbox-<topic>-charts.ts`.
-3. **Charts:** Build them in `src/components/sandbox/<topic>-charts.tsx` from `ChartCard` and the existing charts.
-4. **Page:** Create `src/app/sandbox/<topic>/page.tsx`. The sandbox layout adds the header, footer and production check.
-5. **Link:** Add the address to `src/lib/routes.ts`.
+Worked example: http://localhost:3000/sandbox/enrollment. Every sandbox page has the same four files. The
+sandbox layout adds the header, footer and production check.
+
+1. **Copy:** Copy `src/app/sandbox/enrollment/` to `src/app/sandbox/<topic>/`.
+2. **Data:** Point the loaders in `data.ts` at the endpoints from step 1.
+3. **Labels:** Set each chart's fields in `chart-config.ts`.
+4. **Charts:** Build them in `charts.tsx` from `ChartCard` and the existing charts.
+5. **Page:** Set your title and text in `page.tsx`, and remove `<HowToAddASandboxPage />`.
 
 Your page opens at `/sandbox/<topic>`, e.g. `/sandbox/enrollment`.
 
