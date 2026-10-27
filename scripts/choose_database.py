@@ -1,16 +1,20 @@
-"""Choose this Playground's database: PostgreSQL (the default) or SQLite.
+"""Choose this Playground's database: PostgreSQL or SQLite. Both work equally well.
 
-Run once, early, when setting up an organization's Playground:  mise run db:choose sqlite
-It rewrites DATABASE_URL in server_application/.env.development. That file is committed, so everyone
-working on that organization's Playground uses the same database. Contributors to Playground keep PostgreSQL.
+Run once, early:  mise run db:choose postgresql  (or sqlite)
+- An organization's Playground (it has a `playground` remote, from Setup 1): writes DATABASE_URL to
+  server_application/.env.development. Commit it so the whole team uses the same database.
+- Contributing to Playground (no `playground` remote): writes DATABASE_URL to the git-ignored
+  server_application/.env.development.local, so your choice stays on your machine.
 """
 
 import re
+import subprocess
 import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SERVER_ENV = REPO_ROOT / "server_application" / ".env.development"
+LOCAL_ENV = REPO_ROOT / "server_application" / ".env.development.local"
 CHOICES = ("postgresql", "sqlite")
 
 
@@ -44,25 +48,38 @@ def database_url(choice: str) -> str:
 
 def main(arguments: list[str]) -> None:
     if len(arguments) != 1 or arguments[0] not in CHOICES:
-        sys.exit("Usage: mise run db:choose postgresql|sqlite  (PostgreSQL is the default)")
+        sys.exit("Usage: mise run db:choose postgresql|sqlite")
     choice = arguments[0]
     url = database_url(choice)
 
-    text = SERVER_ENV.read_text()
-    updated, replaced = re.subn(
-        r"^DATABASE_URL=.*$", f"DATABASE_URL={url}", text, count=1, flags=re.MULTILINE
+    target = SERVER_ENV if is_organization_playground() else LOCAL_ENV
+    text = target.read_text() if target.exists() else ""
+    if not re.search(r"^DATABASE_URL=", text, flags=re.MULTILINE):
+        if target == SERVER_ENV:
+            sys.exit(f"No DATABASE_URL line found in {SERVER_ENV.relative_to(REPO_ROOT)}")
+        text += ("" if not text or text.endswith("\n") else "\n") + "DATABASE_URL=\n"
+    target.write_text(
+        re.sub(r"^DATABASE_URL=.*$", f"DATABASE_URL={url}", text, count=1, flags=re.MULTILINE)
     )
-    if not replaced:
-        sys.exit(f"No DATABASE_URL line found in {SERVER_ENV.relative_to(REPO_ROOT)}")
-    SERVER_ENV.write_text(updated)
 
     if choice == "sqlite":
         print(f"Database: SQLite, in server_application/{url.removeprefix('sqlite:///./')}")
         print("No Docker needed: `mise run db` has nothing to start.")
     else:
-        print("Database: PostgreSQL (the default), started in Docker by `mise run db`.")
-    print("Commit server_application/.env.development so everyone on this organization's Playground uses it.")
+        print("Database: PostgreSQL, started in Docker by `mise run db`.")
+    if target == SERVER_ENV:
+        print("Commit server_application/.env.development so your whole team uses the same database.")
+    else:
+        print("Saved in server_application/.env.development.local (git-ignored), just for you.")
     print("Switching later starts an empty database; data does not move across.")
+
+
+def is_organization_playground() -> bool:
+    """An organization's Playground keeps a `playground` remote back to Playground (Setup 1)."""
+    remotes = subprocess.run(
+        ["git", "remote"], cwd=REPO_ROOT, capture_output=True, text=True, check=False
+    ).stdout.split()
+    return "playground" in remotes
 
 
 if __name__ == "__main__":

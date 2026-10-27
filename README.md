@@ -2,8 +2,9 @@
 
 # dev/color Playground
 
-dev/color Playground is a ready-to-use starter kit, so engineering crews skip foundational setup
-and start building features. It pairs a Next.js **Client Application** with a FastAPI + PostgreSQL **Server Application**.
+Welcome! 👋🏾 dev/color Playground is a ready-to-use starter kit, so engineering crews skip foundational setup
+and start building features. It pairs a Next.js **Client Application** with a FastAPI **Server Application**,
+on PostgreSQL or SQLite.
 
 **Contents:** [Start here](#start-here) · [Why Playground](#why-playground) · [Tech Stack](#tech-stack-summary) ·
 [How to run it locally](#how-to-run-it-locally) · [How to create a Playground for your organization](#how-to-create-a-playground-for-your-organization) ·
@@ -22,13 +23,11 @@ and start building features. It pairs a Next.js **Client Application** with a Fa
 
 <br>
 
-🚫 **Don't rename anything.** Keep the Playground names, database and ports, and skip setup.
-
-Do these in order 👇🏾
+Contributing to Playground? Here are the steps 👇🏾
 
 | Step | What you do | Where |
 |---|---|---|
-| 1. ▶️ **Run it** | Clone Playground and start both applications | [How to run it locally](#how-to-run-it-locally) |
+| 1. 📥 **Set it up** | Clone Playground and start both applications, as is: no extra setup needed | [How to run it locally](#how-to-run-it-locally) |
 | 2. 🌿 **Make your change** | Work on a branch: `git switch -c your-change` | Your editor |
 | 3. ✅ **Check it** | Tests pass and the app still runs | [Step 5: Run the tests](#step-5-run-the-tests) |
 | 4. 🔀 **Open a pull request** | Push your branch and open a pull request against `main` for review | [Pull requests](https://github.com/kisha/Playground/pulls) |
@@ -40,7 +39,7 @@ Do these in order 👇🏾
 
 <br>
 
-Do these in order 👇🏾
+Creating a Playground for your organization? Here are the steps 👇🏾
 
 | Step | What you do | Where |
 |---|---|---|
@@ -65,7 +64,7 @@ Do these in order 👇🏾
 | **Front End** | TypeScript | Next.js · Tailwind CSS · shadcn/ui Charts | Server-rendered pages, light/dark mode, charts |
 | **Back End** | Python | FastAPI · SQLAlchemy 2.1.5 · Alembic · uv | Typed JSON API with versioned migrations |
 | **Data Processing** | Python | Polars · Pandas | Fast cleaning and aggregating of large files |
-| **Data Store** | SQL | PostgreSQL 18 · pgvector (default) or SQLite | Relational data plus similarity search |
+| **Data Store** | SQL | PostgreSQL 18 · pgvector or SQLite | Relational data plus similarity search |
 | **Tooling** | — | mise · bun · Docker | Pinned versions, one command per task |
 
 ### Core languages and libraries
@@ -113,7 +112,7 @@ Click a layer to see the libraries.
 
 Choose one. How to choose: [Setup 2: Choose your database](#setup-2-choose-your-database).
 
-- **Option 1 (default):** [PostgreSQL 18](https://www.postgresql.org/), a relational database with JSONB support,
+- **Option 1:** [PostgreSQL 18](https://www.postgresql.org/), a relational database with JSONB support,
   plus [pgvector](https://github.com/pgvector/pgvector), which stores embeddings and finds similar rows fast.
   Choose it with `mise run db:choose postgresql`.
 - **Option 2:** [SQLite](https://sqlite.org/), a database in a single file, for an organization's Playground that wants no Docker.
@@ -136,7 +135,7 @@ Choose one. How to choose: [Setup 2: Choose your database](#setup-2-choose-your-
 
 ## How to run it locally
 
-**Prerequisites:** Git, [Docker](https://www.docker.com/) or [OrbStack](https://orbstack.dev/) (open and
+**Before you start, you'll need:** Git, [Docker](https://www.docker.com/) or [OrbStack](https://orbstack.dev/) (open and
 running; not needed with SQLite), [mise](https://mise.jdx.dev) and [bun](https://bun.sh). mise installs everything else.
 
 ```bash
@@ -162,8 +161,11 @@ mise trust && mise install
 
 ### Step 2: Start the database
 
-Run PostgreSQL 18 with pgvector in Docker; it ends with `Healthy`. An organization's Playground that chose SQLite has nothing to
-start, and this says so.
+Start your database. With PostgreSQL, this runs PostgreSQL 18 with pgvector in Docker and ends with `Healthy`.
+With SQLite there's nothing to start, and it says so.
+
+🛠️ **Contributing?** Use whichever you like: `mise run db:choose postgresql` or `mise run db:choose sqlite`.
+Your choice is saved in the git-ignored `server_application/.env.development.local`, so it stays on your machine.
 
 ```bash
 mise run db
@@ -197,7 +199,7 @@ Every endpoint, ready to try in the browser: http://localhost:8000/docs ·
 
 ### Step 5: Run the tests
 
-All tests should pass. They use their own `playground_test` database.
+You should see every test pass ✅. They use their own `playground_test` database, so your data is safe.
 
 ```bash
 mise run api:test
@@ -288,11 +290,11 @@ mise run db:down
 
 ## How to create a Playground for your organization
 
-> [!IMPORTANT]
-> 🛠️ **Contributing to Playground? Stop here.** Don't rename anything. Skip this whole section and go to
+> [!TIP]
+> 🛠️ **Contributing to Playground?** This section isn't needed: Playground runs as is. Go to
 > [How to run it locally](#how-to-run-it-locally).
 >
-> 🏫 **Creating a Playground for your organization or institution?** Keep reading.
+> 🏫 **Creating a Playground for your organization or institution?** Welcome! Here's how to set it up.
 
 Your organization gets its own Playground, built from this starter kit and named **`[YourInstitution]_Playground`**
 (for example, `UTTC_Playground`). Setup 1–3 create it, choose its database and rename it.
@@ -340,10 +342,10 @@ git pull playground main
 
 ### Setup 2: Choose your database
 
-⚠️ **Required for every organization's Playground.** Choose PostgreSQL or SQLite once, now, before anything uses the
-database. Everyone on your organization's Playground then uses the same one.
+📌 **Choose this once, early.** Pick PostgreSQL or SQLite before anything uses the database, so everyone on
+your organization's Playground works with the same one.
 
-| | PostgreSQL (default) | SQLite |
+| | PostgreSQL | SQLite |
 |---|---|---|
 | Needs | Docker or OrbStack | Nothing |
 | Where it lives | A Docker container, from `docker-compose.yml` | One file, `server_application/playground_dev.db` |
@@ -353,12 +355,13 @@ database. Everyone on your organization's Playground then uses the same one.
 Install the toolchain (`mise trust && mise install`), then run one of:
 
 ```bash
-mise run db:choose postgresql   # the default
+mise run db:choose postgresql
 mise run db:choose sqlite
 ```
 
-It sets `DATABASE_URL` in `server_application/.env.development`. Commit that file. From then on `mise run db`,
-`mise run api:dev` and `mise run api:test` use your choice. Contributors to Playground skip this step.
+It sets `DATABASE_URL` in `server_application/.env.development`. Commit that file so your whole team uses the
+same database. From then on `mise run db`,
+`mise run api:dev` and `mise run api:test` use your choice.
 
 | Choice | `DATABASE_URL` it writes |
 |---|---|
@@ -383,7 +386,7 @@ So does the Data Store under "What's inside", with a pulsing **in use** next to 
 
 ### Setup 3: Make it yours
 
-Swap in your institution's name. Examples use `YourInstitution`.
+Now make it feel like yours: swap in your institution's name. Examples use `YourInstitution`.
 
 **a. Brand the Client Application**
 
@@ -441,18 +444,29 @@ Run from the repository folder. To print this list:
 mise tasks
 ```
 
-<details>
+<details open>
 <summary><strong>Database</strong></summary>
+
+**Both databases**
 
 | Command | What it does |
 |---|---|
 | `mise run setup` | Create the local `.env` from `.env.example` (safe to re-run; `db` runs it for you) |
-| `mise run db:choose postgresql\|sqlite` | Choose the database, once, when setting up your organization's Playground (PostgreSQL is the default) |
-| `mise run db` | Start PostgreSQL 18 + pgvector and wait until it is healthy (nothing to start with SQLite) |
+| `mise run db:choose postgresql\|sqlite` | Choose the database, once, when setting up your organization's Playground |
+| `mise run db` | Start the database: PostgreSQL 18 + pgvector in Docker, or nothing to start with SQLite |
+| `mise run db:shell` | Open a SQL prompt: `psql` for PostgreSQL (`\q` to exit), `sqlite3` for SQLite (`.quit` to exit) |
+| `mise run db:reset` | Delete all data and start fresh: a new PostgreSQL database, or a new SQLite file |
+
+**🐘 PostgreSQL only**
+
+| Command | What it does |
+|---|---|
 | `mise run db:down` | Stop PostgreSQL (data is kept) |
 | `mise run db:logs` | Follow the PostgreSQL logs |
-| `mise run db:shell` | Open a SQL prompt (`\q` to exit) |
-| `mise run db:reset` | Delete all data and start a fresh database |
+
+> [!NOTE]
+> **🪶 Using SQLite?** You won't need `db:down` or `db:logs`. SQLite has no server to stop or follow: your
+> database is one file, `server_application/playground_dev.db`.
 
 </details>
 
@@ -491,6 +505,8 @@ mise tasks
 ---
 
 ## Troubleshooting
+
+Stuck? Most hiccups are one of these:
 
 | You see | Cause | Fix |
 |---|---|---|
@@ -536,4 +552,4 @@ Playground/
 
 ---
 
-Made with ♥ by dev/color.
+Happy building! Made with ♥ by dev/color.

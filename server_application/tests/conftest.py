@@ -1,7 +1,7 @@
 """Tests run against their own database, migrated to head, so development data is never touched.
 
-They use the same kind of database the app is set up for (`mise run db:choose`): PostgreSQL by
-default, SQLite if chosen. `mise run api:test-sqlite` (TEST_ON_SQLITE=true) runs them on SQLite
+They use the same kind of database the app is set up for (`mise run db:choose`): PostgreSQL or
+SQLite. `mise run api:test-sqlite` (TEST_ON_SQLITE=true) runs them on SQLite
 either way.
 The test database is named after the development one: playground_dev becomes playground_test.
 """
@@ -14,9 +14,12 @@ from pathlib import Path
 from dotenv import dotenv_values
 from sqlalchemy.engine import make_url
 
-_CONFIGURED_URL = os.getenv("DATABASE_URL") or dotenv_values(
-    Path(__file__).resolve().parents[1] / ".env.development"
-).get("DATABASE_URL", "")
+_SERVER_ROOT = Path(__file__).resolve().parents[1]
+# A contributor's own choice (.env.development.local) wins over the committed .env.development.
+_CONFIGURED_URL = os.getenv("DATABASE_URL") or (
+    dotenv_values(_SERVER_ROOT / ".env.development.local").get("DATABASE_URL")
+    or dotenv_values(_SERVER_ROOT / ".env.development").get("DATABASE_URL", "")
+)
 
 
 def _default_test_database_url() -> str:

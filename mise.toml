@@ -16,19 +16,20 @@ description = "Create local .env from the template (safe to re-run)"
 run = "test -f .env || (cp .env.example .env && echo 'Created .env from .env.example')"
 
 [tasks."db:choose"]
-description = "Choose the database, once, early: mise run db:choose postgresql (default) or sqlite"
-usage = 'arg "<database>" help="postgresql (the default) or sqlite"'
+description = "Choose the database, once, early: mise run db:choose postgresql or sqlite"
+usage = 'arg "<database>" help="postgresql or sqlite"'
 run = 'python3 scripts/choose_database.py "$usage_database"'
 
 [tasks.db]
 description = "Start the database: PostgreSQL 18 + pgvector in Docker (nothing to start with SQLite)"
 depends = ["setup"]
 run = """
-if grep -q '^DATABASE_URL=sqlite' server_application/.env.development; then
+url=$(cat server_application/.env.development server_application/.env.development.local 2>/dev/null | grep '^DATABASE_URL=' | tail -1 | cut -d= -f2-)
+if [ "${url#sqlite}" != "$url" ]; then
   echo "Database: SQLite (chosen with mise run db:choose). Nothing to start."
 else
   docker compose up -d --wait db
-  echo "Database: PostgreSQL. Setting up an instance? Choose PostgreSQL or SQLite with mise run db:choose."
+  echo "Database: PostgreSQL. Setting up your organization's Playground? Choose PostgreSQL or SQLite with mise run db:choose."
 fi
 """
 
@@ -41,12 +42,28 @@ description = "Follow Postgres logs"
 run = "docker compose logs -f db"
 
 [tasks."db:shell"]
-description = "Open psql inside the database container"
-run = "docker compose exec db sh -c 'psql -U \"$POSTGRES_USER\" -d \"$POSTGRES_DB\"'"
+description = "Open a SQL prompt: psql in the PostgreSQL container, or sqlite3 on the SQLite file"
+run = """
+url=$(cat server_application/.env.development server_application/.env.development.local 2>/dev/null | grep '^DATABASE_URL=' | tail -1 | cut -d= -f2-)
+if [ "${url#sqlite}" != "$url" ]; then
+  sqlite3 "server_application/${url#sqlite:///./}"
+else
+  docker compose exec db sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"'
+fi
+"""
 
 [tasks."db:reset"]
-description = "Destroy the database volume and start fresh"
-run = ["docker compose down -v", "docker compose up -d --wait db"]
+description = "Delete all data and start fresh: a new PostgreSQL volume, or a new SQLite file"
+run = """
+url=$(cat server_application/.env.development server_application/.env.development.local 2>/dev/null | grep '^DATABASE_URL=' | tail -1 | cut -d= -f2-)
+if [ "${url#sqlite}" != "$url" ]; then
+  rm -f "server_application/${url#sqlite:///./}"
+  echo "Database: SQLite file deleted. mise run api:dev creates a fresh one."
+else
+  docker compose down -v
+  docker compose up -d --wait db
+fi
+"""
 
 # --- server_application ----------------------------------------------------------------
 
