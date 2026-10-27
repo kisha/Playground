@@ -14,9 +14,12 @@ export function useApiExplorer() {
   const [selectedRequest, setSelectedRequest] = useState<PresetRequest>(presetRequests[0]);
   const [exchange, setExchange] = useState<ExplorerExchange>({ state: "sending" });
   const latestRequestId = useRef(0);
+  /** How many requests have been sent. Each new one replays the Request → Response animation. */
+  const [sendCount, setSendCount] = useState(0);
 
   const send = useCallback((request: PresetRequest) => {
     const requestId = ++latestRequestId.current;
+    setSendCount(requestId);
     void sendPresetRequest(request).then((result) => {
       if (requestId === latestRequestId.current) setExchange(result);
     });
@@ -37,5 +40,5 @@ export function useApiExplorer() {
     send(request);
   }
 
-  return { selectedRequest, exchange, sendAgain, selectAndSend };
+  return { selectedRequest, exchange, sendCount, sendAgain, selectAndSend };
 }

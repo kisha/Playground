@@ -134,6 +134,9 @@
   --animate-fade-up: fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-travel-x: travel-x 1.2s cubic-bezier(0.65, 0, 0.35, 1) both;
   --animate-travel-y: travel-y 1.2s cubic-bezier(0.65, 0, 0.35, 1) both;
+  /* The same movement, repeating: data flowing from one step to the next. */
+  --animate-flow-x: travel-x 2.4s cubic-bezier(0.65, 0, 0.35, 1) 1s infinite;
+  --animate-flow-y: travel-y 2.4s cubic-bezier(0.65, 0, 0.35, 1) 1s infinite;
   --animate-pulse-ring: pulse-ring 2.4s cubic-bezier(0.4, 0, 0.2, 1) 1.4s infinite;
   --animate-nudge-x: nudge-x 2.4s cubic-bezier(0.4, 0, 0.2, 1) 1.4s infinite;
 

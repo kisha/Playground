@@ -1,3 +1,4 @@
+import { FlowConnector } from "@/components/flow-connector";
 import { BuildSteps } from "@/components/sandbox/build-steps";
 import { SectionHeading } from "@/components/section-heading";
 import { clientSteps, serverSteps } from "@/content/sandbox-how-to";
@@ -12,7 +13,7 @@ export function HowToAddASandboxPage() {
           lowercase name for your page, such as <code className="font-mono text-sm">grades</code>.
         </p>
       </SectionHeading>
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="flex flex-col lg:flex-row">
         <BuildSteps
           step={1}
           title="Add the endpoints"
@@ -25,6 +26,7 @@ export function HowToAddASandboxPage() {
             </>
           }
         />
+        <FlowConnector direction="responsive" />
         <BuildSteps
           step={2}
           title="Add the page"

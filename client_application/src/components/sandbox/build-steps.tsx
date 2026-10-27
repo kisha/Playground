@@ -17,7 +17,7 @@ type BuildStepsProps = {
 /** One step of adding a sandbox page: the folder to copy on one side, and what to change in it. */
 export function BuildSteps({ step, title, app, folder, steps, check }: BuildStepsProps) {
   return (
-    <article className="flex min-w-0 flex-col gap-4 rounded-2xl border p-5 sm:p-6">
+    <article className="flex min-w-0 flex-1 flex-col gap-4 rounded-2xl border p-5 sm:p-6">
       <div className="flex flex-col gap-1">
         <Eyebrow>Step {step}</Eyebrow>
         <h3 className="text-lg font-semibold">{title}</h3>

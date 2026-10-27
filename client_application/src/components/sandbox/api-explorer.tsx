@@ -2,6 +2,7 @@
 
 import { Send } from "lucide-react";
 
+import { FlowConnector } from "@/components/flow-connector";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { presetRequests } from "@/content/sandbox-requests";
@@ -14,7 +15,7 @@ const responseSkeletonWidths = [80, 60, 70, 40];
 
 function Panel({ title, aside, children }: { title: string; aside?: React.ReactNode; children: React.ReactNode }) {
   return (
-    <div className="flex min-w-0 flex-col overflow-hidden rounded-xl border">
+    <div className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-xl border">
       <div className="flex items-center justify-between gap-3 border-b bg-muted/50 px-4 py-2.5 text-xs">
         <span className="font-medium tracking-wide uppercase">{title}</span>
         {aside}
@@ -45,7 +46,7 @@ function ResponseStatus({ exchange }: { exchange: ExplorerExchange }) {
 
 /** Send preset requests to the server application and show exactly what comes back. */
 export function ApiExplorer() {
-  const { selectedRequest, exchange, sendAgain, selectAndSend } = useApiExplorer();
+  const { selectedRequest, exchange, sendCount, sendAgain, selectAndSend } = useApiExplorer();
 
   return (
     <div className="flex flex-col gap-4">
@@ -71,7 +72,7 @@ export function ApiExplorer() {
 
       <p className="text-sm text-muted-foreground">{selectedRequest.note}</p>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="flex flex-col lg:flex-row">
         <Panel
           title="Request"
           aside={
@@ -94,6 +95,8 @@ export function ApiExplorer() {
             </div>
           )}
         </Panel>
+
+        <FlowConnector direction="responsive" trigger={sendCount} className="lg:mt-5 lg:self-start" />
 
         <Panel title="Response" aside={<ResponseStatus exchange={exchange} />}>
           {exchange.state === "done" && <JsonBlock value={exchange.response.body} />}
