@@ -22,22 +22,33 @@ and start building features. It pairs a Next.js **Client Application** with a Fa
 
 <br>
 
-- 🚫 **Don't rename anything.** Keep the Playground names, database and ports.
-- ⏭️ **Skip setup.**
-- 👉🏾 Go straight to [How to run it locally](#how-to-run-it-locally).
+🚫 **Don't rename anything.** Keep the Playground names, database and ports, and skip setup.
+
+Do these in order 👇🏾
+
+| Step | What you do | Where |
+|---|---|---|
+| 1. ▶️ **Run it** | Clone Playground and start both applications | [How to run it locally](#how-to-run-it-locally) |
+| 2. 🌿 **Make your change** | Work on a branch: `git switch -c your-change` | Your editor |
+| 3. ✅ **Check it** | Tests pass and the app still runs | [Step 5: Run the tests](#step-5-run-the-tests) |
+| 4. 🔀 **Open a pull request** | Push your branch and open a pull request against `main` for review | [Pull requests](https://github.com/kisha/Playground/pulls) |
 
 </details>
 
 <details>
-<summary><h3>🏫 I'm creating a Playground for my organization</h3> &nbsp;Your own copy, e.g. <code>UTTC_Playground</code></summary>
+<summary><h3>🏫 I'm creating a Playground for my organization</h3> &nbsp;Your organization's own Playground, e.g. <code>UTTC_Playground</code></summary>
 
 <br>
 
-- ✏️ **You must rename it** to `[YourInstitution]_Playground`.
-- 🗄️ **You must [choose your database](#setup-2-choose-your-database):** PostgreSQL or SQLite.
-- 👉🏾 Do these in order:
-  1. [How to create a Playground for your organization](#how-to-create-a-playground-for-your-organization) (Setup 1–3)
-  2. Come back to [How to run it locally](#how-to-run-it-locally), starting at Step 1
+Do these in order 👇🏾
+
+| Step | What you do | Where |
+|---|---|---|
+| 1. 📥 **Create it** | Create an empty private repository and clone Playground into it | [Setup 1](#setup-1-create-a-playground-for-your-institution) |
+| 2. 🗄️ **Choose your database** | PostgreSQL or SQLite, once | [Setup 2](#setup-2-choose-your-database) |
+| 3. ✏️ **Rename it** | Your name, logo and database name, e.g. `UTTC_Playground` | [Setup 3](#setup-3-make-it-yours) |
+| 4. ▶️ **Run it** | Come back and start at Step 1 | [How to run it locally](#how-to-run-it-locally) |
+| 5. 🔀 **Open a pull request** | Push your branch and open a pull request against `main` for review. It goes to your organization's Playground (e.g. `UTTC_Playground`), not to Playground | Your repository's Pull requests |
 
 </details>
 
@@ -105,7 +116,7 @@ Choose one. How to choose: [Setup 2: Choose your database](#setup-2-choose-your-
 - **Option 1 (default):** [PostgreSQL 18](https://www.postgresql.org/), a relational database with JSONB support,
   plus [pgvector](https://github.com/pgvector/pgvector), which stores embeddings and finds similar rows fast.
   Choose it with `mise run db:choose postgresql`.
-- **Option 2:** [SQLite](https://sqlite.org/), a database in a single file, for an instance that wants no Docker.
+- **Option 2:** [SQLite](https://sqlite.org/), a database in a single file, for an organization's Playground that wants no Docker.
   Choose it with `mise run db:choose sqlite`.
 
 </details>
@@ -151,7 +162,7 @@ mise trust && mise install
 
 ### Step 2: Start the database
 
-Run PostgreSQL 18 with pgvector in Docker; it ends with `Healthy`. An instance that chose SQLite has nothing to
+Run PostgreSQL 18 with pgvector in Docker; it ends with `Healthy`. An organization's Playground that chose SQLite has nothing to
 start, and this says so.
 
 ```bash
@@ -283,8 +294,8 @@ mise run db:down
 >
 > 🏫 **Creating a Playground for your organization or institution?** Keep reading.
 
-Your organization gets its own copy of this starter kit, named **`[YourInstitution]_Playground`** (for
-example, `UTTC_Playground`). Setup 1–3 create the copy, choose its database and rename it.
+Your organization gets its own Playground, built from this starter kit and named **`[YourInstitution]_Playground`**
+(for example, `UTTC_Playground`). Setup 1–3 create it, choose its database and rename it.
 
 ### Setup 1: Create a Playground for your institution
 
@@ -297,7 +308,7 @@ Playground into it.
 # Your institution's short name, e.g. UTTC
 INSTITUTION=YourInstitution
 
-# The GitHub user or organization that will own the copy
+# The GitHub user or organization that will own your organization's Playground
 GITHUB_ACCOUNT=your-account
 ```
 
@@ -329,15 +340,15 @@ git pull playground main
 
 ### Setup 2: Choose your database
 
-⚠️ **Required for every instance.** Choose PostgreSQL or SQLite once, now, before anything uses the
-database. Everyone on your instance then uses the same one.
+⚠️ **Required for every organization's Playground.** Choose PostgreSQL or SQLite once, now, before anything uses the
+database. Everyone on your organization's Playground then uses the same one.
 
 | | PostgreSQL (default) | SQLite |
 |---|---|---|
 | Needs | Docker or OrbStack | Nothing |
 | Where it lives | A Docker container, from `docker-compose.yml` | One file, `server_application/playground_dev.db` |
 | Vector search | Indexed, with pgvector | Works, without an index |
-| Choose it for | Most instances; it matches Playground | A small instance without Docker |
+| Choose it for | Indexed vector search, with Docker | No Docker, one file |
 
 Install the toolchain (`mise trust && mise install`), then run one of:
 
@@ -436,7 +447,7 @@ mise tasks
 | Command | What it does |
 |---|---|
 | `mise run setup` | Create the local `.env` from `.env.example` (safe to re-run; `db` runs it for you) |
-| `mise run db:choose postgresql\|sqlite` | Choose the database, once, when setting up an instance (PostgreSQL is the default) |
+| `mise run db:choose postgresql\|sqlite` | Choose the database, once, when setting up your organization's Playground (PostgreSQL is the default) |
 | `mise run db` | Start PostgreSQL 18 + pgvector and wait until it is healthy (nothing to start with SQLite) |
 | `mise run db:down` | Stop PostgreSQL (data is kept) |
 | `mise run db:logs` | Follow the PostgreSQL logs |

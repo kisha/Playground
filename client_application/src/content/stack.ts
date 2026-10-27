@@ -73,7 +73,7 @@ export const applications: Application[] = [
   },
 ];
 
-/** The two databases an instance chooses between. PostgreSQL comes first: it is the default. */
+/** The two databases an organization's Playground chooses between. PostgreSQL comes first: it is the default. */
 export const dataStoreOptions: { engine: DatabaseEngine; libraries: Library[] }[] = [
   { engine: "postgresql", libraries: [{ name: "PostgreSQL 18" }, { name: "pgvector" }] },
   { engine: "sqlite", libraries: [{ name: "SQLite" }] },
@@ -82,7 +82,7 @@ export const dataStoreOptions: { engine: DatabaseEngine; libraries: Library[] }[
 /** Marks the Data Store, pointing to the footnote about choosing a database. */
 export const DATABASE_MARK = "†";
 export const databaseNote =
-  "The Playground starter kit includes a choice: PostgreSQL with pgvector (the default) or SQLite. Each instance picks one:";
+  "The Playground starter kit includes a choice: PostgreSQL with pgvector (the default) or SQLite. Each organization's Playground picks one:";
 export const databaseCommands = ["mise run db:choose postgresql", "mise run db:choose sqlite"];
 
 export const tooling: Library[] = [{ name: "mise" }, { name: "bun" }, { name: "Docker" }];

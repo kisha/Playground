@@ -1,8 +1,8 @@
 """Choose this Playground's database: PostgreSQL (the default) or SQLite.
 
-Run once, early, when setting up an instance:  mise run db:choose sqlite
+Run once, early, when setting up an organization's Playground:  mise run db:choose sqlite
 It rewrites DATABASE_URL in server_application/.env.development. That file is committed, so everyone
-working on the instance uses the same database. Contributors to Playground keep PostgreSQL.
+working on that organization's Playground uses the same database. Contributors to Playground keep PostgreSQL.
 """
 
 import re
@@ -61,7 +61,7 @@ def main(arguments: list[str]) -> None:
         print("No Docker needed: `mise run db` has nothing to start.")
     else:
         print("Database: PostgreSQL (the default), started in Docker by `mise run db`.")
-    print("Commit server_application/.env.development so everyone on this instance uses it.")
+    print("Commit server_application/.env.development so everyone on this organization's Playground uses it.")
     print("Switching later starts an empty database; data does not move across.")
 
 
