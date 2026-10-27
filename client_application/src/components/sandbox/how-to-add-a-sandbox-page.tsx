@@ -2,14 +2,14 @@ import { BuildSteps } from "@/components/sandbox/build-steps";
 import { SectionHeading } from "@/components/section-heading";
 import { clientSteps, serverSteps } from "@/content/sandbox-how-to";
 
-/** "How it was built": step 1 adds the endpoints, step 2 the page that draws them. */
+/** "Build your own": step 1 adds the endpoints, step 2 the page that draws them. */
 export function HowToAddASandboxPage() {
   return (
-    <section aria-labelledby="how-to-heading" className="flex flex-col gap-6">
-      <SectionHeading id="how-to-heading" title="How it was built">
+    <section id="build-your-own" aria-labelledby="how-to-heading" className="flex scroll-mt-8 flex-col gap-6">
+      <SectionHeading id="how-to-heading" title="Build your own">
         <p className="text-muted-foreground">
-          Two steps: add the endpoints, then the page that draws them. Each is one folder to copy and rename after your
-          topic.
+          Do step 1, then step 2. Replace <code className="font-mono text-sm">&lt;topic&gt;</code> with a short,
+          lowercase name for your page, such as <code className="font-mono text-sm">grades</code>.
         </p>
       </SectionHeading>
       <div className="grid gap-4 lg:grid-cols-2">
@@ -19,6 +19,11 @@ export function HowToAddASandboxPage() {
           app="Server Application (FastAPI)"
           folder="server_application/"
           steps={serverSteps}
+          check={
+            <>
+              Your endpoints appear in the API docs at <code className="font-mono">http://localhost:8000/docs</code>.
+            </>
+          }
         />
         <BuildSteps
           step={2}
@@ -26,6 +31,11 @@ export function HowToAddASandboxPage() {
           app="Client Application (Next.js)"
           folder="client_application/"
           steps={clientSteps}
+          check={
+            <>
+              Open <code className="font-mono">http://localhost:3000/sandbox/&lt;topic&gt;</code>. Your charts load.
+            </>
+          }
         />
       </div>
     </section>

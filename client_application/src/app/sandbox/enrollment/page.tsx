@@ -28,15 +28,24 @@ export default function SandboxEnrollmentPage() {
         }
         title="How to add a sandbox page."
       >
-        <p>This page is the example. Copy it to start your own.</p>
+        <p>This page is a working example of a sandbox page.</p>
         <p>A sandbox page has two parts:</p>
         <SandboxPageParts />
-        <p>Copy one folder for each. The steps are below.</p>
+        <p>
+          To build your own, copy both folders and follow the steps in{" "}
+          <a href="#build-your-own" className="font-medium text-foreground underline underline-offset-4">
+            Build your own
+          </a>
+          .
+        </p>
       </PageIntro>
 
       <section aria-labelledby="result-heading" className="flex flex-col gap-6">
         <SectionHeading id="result-heading" title="The result">
-          <p className="text-muted-foreground">Two new endpoints, drawn with the same chart components as the main sandbox.</p>
+          <p className="text-muted-foreground">
+            Each chart fetches its own endpoint. Select <span className="font-medium">Mock data</span> on a chart to see
+            the JSON it draws.
+          </p>
         </SectionHeading>
         <Charts />
       </section>

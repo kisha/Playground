@@ -10,10 +10,12 @@ type BuildStepsProps = {
   /** The application folder the paths are relative to. */
   folder: string;
   steps: BuildStep[];
+  /** How to see that this step worked. */
+  check: React.ReactNode;
 };
 
 /** One step of adding a sandbox page: the folder to copy on one side, and what to change in it. */
-export function BuildSteps({ step, title, app, folder, steps }: BuildStepsProps) {
+export function BuildSteps({ step, title, app, folder, steps, check }: BuildStepsProps) {
   return (
     <article className="flex min-w-0 flex-col gap-4 rounded-2xl border p-5 sm:p-6">
       <div className="flex flex-col gap-1">
@@ -36,6 +38,9 @@ export function BuildSteps({ step, title, app, folder, steps }: BuildStepsProps)
           </li>
         ))}
       </ol>
+      <p className="border-t pt-4 text-sm">
+        <span className="font-medium">Check:</span> <span className="text-muted-foreground">{check}</span>
+      </p>
     </article>
   );
 }

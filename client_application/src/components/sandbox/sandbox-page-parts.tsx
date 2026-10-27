@@ -21,6 +21,7 @@ export function SandboxPageParts() {
           <span className="font-medium text-foreground">
             {part.name} <span className="font-normal text-muted-foreground">({part.framework})</span>
           </span>
+          <span>{part.does}</span>
           <span>
             Example: <PartExample part={part} />
           </span>

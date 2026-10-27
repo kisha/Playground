@@ -13,8 +13,8 @@ export function ExamplePageLink() {
       <Eyebrow className="text-background/70">Example</Eyebrow>
       <span className="text-lg font-semibold underline-offset-4 group-hover:underline">How to add a sandbox page →</span>
       <span className="text-sm text-background/80">
-        A worked example at <code className="font-mono">{routes.sandboxEnrollment}</code>: two example charts, their
-        endpoints, and the one folder on each side that built them.
+        A working example at <code className="font-mono">{routes.sandboxEnrollment}</code>: two charts, their endpoints,
+        and the steps to build your own.
       </span>
     </Link>
   );
