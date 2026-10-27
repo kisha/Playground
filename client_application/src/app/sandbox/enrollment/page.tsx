@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { PageIntro } from "@/components/page-intro";
 import { HowToAddASandboxPage } from "@/components/sandbox/how-to-add-a-sandbox-page";
+import { SandboxPageParts } from "@/components/sandbox/sandbox-page-parts";
 import { SectionHeading } from "@/components/section-heading";
 import { routes } from "@/lib/routes";
 
@@ -27,9 +28,10 @@ export default function SandboxEnrollmentPage() {
         }
         title="How to add a sandbox page."
       >
-        This page is the example. A sandbox page has two halves: endpoints in the Server Application (FastAPI), here{" "}
-        <code className="font-mono text-base">/api/v1/sandbox/enrollment</code>, and a page in the Client
-        Application (Next.js) that draws them. Copy one folder on each side to start your own. All data is mock data.
+        <p>This page is the example. Copy it to start your own.</p>
+        <p>A sandbox page has two parts:</p>
+        <SandboxPageParts />
+        <p>Copy one folder for each. The steps are below.</p>
       </PageIntro>
 
       <section aria-labelledby="result-heading" className="flex flex-col gap-6">

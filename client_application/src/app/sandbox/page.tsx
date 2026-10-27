@@ -18,10 +18,21 @@ export const metadata: Metadata = {
 export default function SandboxPage() {
   return (
     <>
-      <PageIntro eyebrow="Sandbox" title="Client Application & Server Application working together.">
-        Every request below goes from this page to the Server Application and back. The charts are drawn from those
-        responses, using mock data shaped like PDP Analysis-Ready files.
+      <PageIntro eyebrow="Sandbox" title="Client and server, working together.">
+        Every request and chart below is live, built from mock data.
       </PageIntro>
+
+      <section aria-labelledby="add-your-own-heading" className="flex flex-col gap-6">
+        <SectionHeading id="add-your-own-heading" title="Add your own">
+          <p className="text-muted-foreground">
+            Everything in the sandbox is an example: reusable pieces for anyone building on the Playground starter kit.
+          </p>
+          <p className="text-muted-foreground">
+            Add your own example charts, filters or other UI on a new sandbox page, with its own endpoints.
+          </p>
+        </SectionHeading>
+        <ExamplePageLink />
+      </section>
 
       <section id="api" aria-labelledby="api-heading" className="flex scroll-mt-8 flex-col gap-6">
         <SectionHeading id="api-heading" title="Try the API">
@@ -62,12 +73,6 @@ export default function SandboxPage() {
         <Charts />
       </section>
 
-      <section aria-labelledby="add-your-own-heading" className="flex flex-col gap-6">
-        <SectionHeading id="add-your-own-heading" title="Add your own">
-          <p className="text-muted-foreground">A new set of charts can live on its own sandbox page, with its own endpoints.</p>
-        </SectionHeading>
-        <ExamplePageLink />
-      </section>
     </>
   );
 }

@@ -2,7 +2,7 @@
 
 # dev/color Playground
 
-dev/color Playground is a ready-to-use monorepo starter kit, so engineering crews skip foundational setup
+dev/color Playground is a ready-to-use starter kit, so engineering crews skip foundational setup
 and start building features. It pairs a Next.js **Client Application** with a FastAPI + PostgreSQL **Server Application**.
 
 **Contents:** [Start here](#start-here) · [Why Playground](#why-playground) · [Tech Stack](#tech-stack-summary) ·
@@ -23,8 +23,8 @@ Are you contributing to Playground, or creating one for your organization?
 
 ## Why Playground
 
-- **One repo, independent applications:** The Client and Server Applications live together but run, scale and
-  deploy separately.
+- **One starter kit, independent applications:** The Client and Server Applications live together in one
+  repository but run, scale and deploy separately.
 - **Features, not foundational setup:** The foundation is covered, so crews focus on building features.
 
 ## Tech Stack Summary
@@ -105,7 +105,7 @@ Click a layer to see the libraries.
 > **Only for a new organization or institution.** Contributing to Playground? Don't rename anything; go to
 > [How to run it locally](#how-to-run-it-locally).
 
-Each institution creates its own copy of this monorepo, named **`[YourInstitution]_Playground`** (for
+Each institution creates its own copy of this starter kit, named **`[YourInstitution]_Playground`** (for
 example, `UTTC_Playground`).
 
 ### Setup 1: Create a Playground for your institution

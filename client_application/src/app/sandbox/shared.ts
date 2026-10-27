@@ -26,7 +26,11 @@ export type Kpi = {
 
 export type KpiResponse = { meta: ChartMeta; items: Kpi[] };
 
+/** Loads one sandbox endpoint. `path` is what it fetches, relative to the API base URL. */
+export type SandboxLoader<T> = (() => Promise<T>) & { path: string };
+
 /** A loader for one sandbox endpoint, e.g. sandboxLoader("/kpis") fetches /api/v1/sandbox/kpis. */
-export function sandboxLoader<T>(endpoint: string): () => Promise<T> {
-  return () => apiRequest<T>(`/sandbox${endpoint}`, { cache: "no-store" });
+export function sandboxLoader<T>(endpoint: string): SandboxLoader<T> {
+  const path = `/sandbox${endpoint}`;
+  return Object.assign(() => apiRequest<T>(path, { cache: "no-store" }), { path });
 }

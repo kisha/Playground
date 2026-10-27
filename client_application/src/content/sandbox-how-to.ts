@@ -1,5 +1,32 @@
 /** The files behind every sandbox page, shown on the /sandbox/enrollment example in the order you change them. */
 
+/** One of the two parts every sandbox page has, with this example's version of it. */
+export type SandboxPagePart = {
+  name: string;
+  framework: string;
+  /** This example's version, as shown: an endpoint's full path, or a page route. */
+  example: string;
+  /** For an endpoint, its path relative to the API base URL, so the example links to the live JSON. */
+  apiPath?: string;
+  docs: { label: string; file: string; section: string };
+};
+
+export const sandboxPageParts: SandboxPagePart[] = [
+  {
+    name: "Backend endpoint",
+    framework: "FastAPI",
+    example: "/api/v1/sandbox/enrollment/by-program",
+    apiPath: "/sandbox/enrollment/by-program",
+    docs: { label: "Add a sandbox endpoint", file: "server_application/README.md", section: "add-a-sandbox-endpoint" },
+  },
+  {
+    name: "Frontend page with its route",
+    framework: "Next.js",
+    example: "/sandbox/enrollment",
+    docs: { label: "Add a sandbox page", file: "client_application/README.md", section: "add-a-sandbox-page" },
+  },
+];
+
 export type BuildStep = {
   file: string;
   what: string;

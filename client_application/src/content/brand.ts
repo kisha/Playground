@@ -23,7 +23,7 @@ export const brand: Brand = {
   name: "Playground",
   tagline:
     "A Next.js client application and a FastAPI server application, preconfigured with core libraries and connected end to end, out of the box.",
-  summary: "a reusable starter client and server application",
+  summary: "a reusable starter kit for client and server applications",
   madeBy: "dev/color",
   logo: {
     src: "/brand/devcolor-logo.png",

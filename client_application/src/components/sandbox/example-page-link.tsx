@@ -3,18 +3,18 @@ import Link from "next/link";
 import { Eyebrow } from "@/components/eyebrow";
 import { routes } from "@/lib/routes";
 
-/** A card linking to the worked example of adding a sandbox page. */
+/** A card linking to the worked example of adding a sandbox page. Inverted, so it stands out. */
 export function ExamplePageLink() {
   return (
     <Link
       href={routes.sandboxEnrollment}
-      className="group flex flex-col gap-2 rounded-2xl border p-5 transition-colors hover:bg-muted/50 sm:p-6"
+      className="group flex flex-col gap-2 rounded-2xl bg-foreground p-5 text-background transition-opacity hover:opacity-90 sm:p-6"
     >
-      <Eyebrow>Example</Eyebrow>
+      <Eyebrow className="text-background/70">Example</Eyebrow>
       <span className="text-lg font-semibold underline-offset-4 group-hover:underline">How to add a sandbox page →</span>
-      <span className="text-sm text-muted-foreground">
-        A worked example at <code className="font-mono">{routes.sandboxEnrollment}</code>: two enrollment charts, their
-        endpoints and the eight files that built them.
+      <span className="text-sm text-background/80">
+        A worked example at <code className="font-mono">{routes.sandboxEnrollment}</code>: two example charts, their
+        endpoints, and the one folder on each side that built them.
       </span>
     </Link>
   );

@@ -1,14 +1,18 @@
 "use client";
 
+import { ArrowUpRight } from "lucide-react";
+
+import type { ChartMeta, SandboxLoader } from "@/app/sandbox/shared";
 import { LoadError } from "@/components/load-error";
 import { FilterChips } from "@/components/sandbox/filter-chips";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useApiResource } from "@/hooks/use-api-resource";
+import { apiUrl } from "@/lib/links";
 import { cn } from "@/lib/utils";
-import type { ChartMeta } from "@/app/sandbox/shared";
 
 type ChartCardProps<Data extends { meta: ChartMeta }> = {
-  load: () => Promise<Data>;
+  /** The endpoint to load. Its path is also where the "Mock data" badge links. */
+  load: SandboxLoader<Data>;
   /** Draws the chart once the data has loaded. */
   children: (data: Data) => React.ReactNode;
   className?: string;
@@ -26,7 +30,7 @@ export function ChartCard<Data extends { meta: ChartMeta }>({ load, children, cl
       )}
       {resource.status === "success" && (
         <>
-          <ChartHeader meta={resource.data.meta} />
+          <ChartHeader meta={resource.data.meta} payloadPath={load.path} />
           <div className="min-w-0">{children(resource.data)}</div>
           <ChartFooter meta={resource.data.meta} />
         </>
@@ -45,14 +49,22 @@ function ChartSkeleton() {
   );
 }
 
-function ChartHeader({ meta }: { meta: ChartMeta }) {
+/** Title, description and filters. The "Mock data" badge opens the JSON the chart is drawn from. */
+function ChartHeader({ meta, payloadPath }: { meta: ChartMeta; payloadPath: string }) {
   return (
     <header className="flex flex-col gap-2">
       <div className="flex items-start justify-between gap-3">
         <h3 className="text-base font-semibold tracking-tight">{meta.title}</h3>
-        <span className="shrink-0 rounded-full bg-foreground px-2 py-0.5 text-[10px] font-medium tracking-wide text-background uppercase">
+        <a
+          href={apiUrl(payloadPath)}
+          target="_blank"
+          rel="noreferrer"
+          title="Open the JSON this chart is drawn from"
+          className="inline-flex shrink-0 items-center gap-0.5 rounded-full bg-foreground px-2 py-0.5 text-[10px] font-medium tracking-wide text-background uppercase transition-opacity hover:opacity-80"
+        >
           Mock data
-        </span>
+          <ArrowUpRight className="size-3" aria-hidden />
+        </a>
       </div>
       <p className="text-sm text-muted-foreground">{meta.description}</p>
       <FilterChips filters={meta.filters} />
