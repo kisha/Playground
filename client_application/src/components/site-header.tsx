@@ -7,10 +7,11 @@ import { env } from "@/lib/env";
 import { routes } from "@/lib/routes";
 
 /** Logo (links home), Sandbox link, environment badge and theme toggle. */
-export function SiteHeader() {
+export function SiteHeader({ linksInNewTab = false }: { linksInNewTab?: boolean }) {
+  const newTab = linksInNewTab ? { target: "_blank", rel: "noreferrer" } : {};
   return (
     <header className="flex items-center justify-between px-6 py-5 sm:px-10">
-      <Link href={routes.home} className="flex items-center gap-3" aria-label={`${brand.name} home`}>
+      <Link href={routes.home} {...newTab} className="flex items-center gap-3" aria-label={`${brand.name} home`}>
         {brand.logo ? (
           // The logo artwork has a black background, so it sits in a black badge in both themes.
           <span className="flex h-8 items-center rounded-md bg-black px-1.5 ring-1 ring-foreground/10">
@@ -29,7 +30,7 @@ export function SiteHeader() {
       </Link>
       <div className="flex items-center gap-3">
         {env.sandboxEnabled && (
-          <Link href={routes.sandbox} className="text-sm font-medium underline-offset-4 hover:underline">
+          <Link href={routes.sandbox} {...newTab} className="text-sm font-medium underline-offset-4 hover:underline">
             Sandbox
           </Link>
         )}

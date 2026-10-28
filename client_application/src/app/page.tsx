@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 
 export default function HomePage() {
   return (
-    <PageShell className="gap-28 px-6 pt-16 pb-28 sm:px-10 sm:pt-24">
+    <PageShell className="gap-28 px-6 pt-16 pb-28 sm:px-10 sm:pt-24" linksInNewTab>
         <section className="flex flex-col items-center gap-6 text-center">
           <h1 className="text-6xl font-semibold tracking-tighter motion-safe:animate-fade-up sm:text-8xl">
             {brand.name}
@@ -30,6 +30,8 @@ export default function HomePage() {
             {env.sandboxEnabled && (
               <Link
                 href={routes.sandboxCharts}
+                target="_blank"
+                rel="noreferrer"
                 className={cn(buttonVariants({ size: "lg" }), "motion-safe:animate-pulse-ring hover:animate-none")}
               >
                 See example charts
