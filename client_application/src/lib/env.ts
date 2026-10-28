@@ -61,4 +61,6 @@ export const env = {
     : appEnv !== "production",
   /** Source repository, linked from the landing page. Copies of Playground override this. */
   repositoryUrl: process.env.NEXT_PUBLIC_REPOSITORY_URL || "https://github.com/kisha/Playground",
+  /** Folder in the repository that holds Playground (empty for the repository root). */
+  repositoryFolder: process.env.NEXT_PUBLIC_REPOSITORY_FOLDER ?? "",
 } as const;
