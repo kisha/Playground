@@ -8,18 +8,29 @@ The Next.js front end for Playground; it gets all of its data from the
 ```
 src/
 ├── app/            # Pages: layout.tsx, page.tsx, not-found.tsx, error.tsx, globals.css
-│   └── sandbox/    # One folder per sandbox page; layout.tsx adds the shell and the production 404
-│       ├── shared.ts                                   # ChartMeta, Kpi, the loader: shared by every page
-│       ├── page.tsx, charts.tsx, chart-config.ts, data.ts  # /sandbox
-│       └── enrollment/                                 # /sandbox/enrollment: the same four files
+│   └── (app)/      # Every page except /; layout.tsx adds the app frame. The folder name isn't in the address
+│       └── sandbox/    # One folder per sandbox page; layout.tsx adds the production 404
+│           ├── shared.ts                                   # ChartMeta, the loader: shared by every page
+│           ├── page.tsx                                    # /sandbox: blank for now
+│           ├── chart-examples/                             # /sandbox/chart-examples: page.tsx, charts.tsx, chart-config.ts, data.ts
+│           ├── api-requests/                               # /sandbox/api-requests: the API explorer
+│           ├── app-ui-frame-1/                             # /sandbox/app-ui-frame-1
+│           ├── filters/                                    # /sandbox/filters: a filter panel, with filters in the URL
+│           ├── chat-ui/                                    # /sandbox/chat-ui: two chat layouts, with canned replies
+│           ├── upload/                                     # /sandbox/upload: drop a CSV and preview it, in the browser
+│           └── add-a-sandbox-page/                         # /sandbox/add-a-sandbox-page: the same four files
 ├── components/     # Render only. Shared: site header/footer, external link, section heading, load error
 │   ├── landing/    # Live status, system diagram, tracker, sparkline, stack cards
-│   ├── sandbox/    # Building blocks for every sandbox page: chart card, charts, KPI grid, API explorer
+│   ├── chat/       # The chat layouts: side panel, messenger
+│   ├── upload/     # The CSV upload example
+│   ├── sandbox/    # Building blocks for every sandbox page: chart card, charts, filters, API explorer
 │   └── ui/         # shadcn/ui components (button, card, chart, skeleton)
 ├── content/        # Words and settings shown on pages
 │   ├── brand.ts            # Name, tagline, logo, footer credit
 │   ├── stack.ts            # "What's inside" cards
-│   ├── sandbox-how-to.ts   # The steps on the /sandbox/enrollment example
+│   ├── chat-ui.ts          # The chat's wording and canned replies
+│   ├── sandbox-examples.ts # The sandbox links in the left sidebar
+│   ├── sandbox-how-to.ts   # The steps on the /sandbox/add-a-sandbox-page page
 │   └── sandbox-requests.ts # The API explorer's preset requests
 ├── hooks/          # Browser state: use-health-monitor, use-api-resource, use-api-explorer
 ├── lib/            # Logic, with no markup
@@ -27,7 +38,7 @@ src/
 │   ├── api-client.ts         # The single place that calls the API
 │   ├── system-status.ts      # Turns health checks into states, diagram boxes, sparkline points
 │   ├── connection-styles.ts  # Classes for each state (solid, striped, outlined)
-│   ├── charts.ts             # Chart config, formatting (percent, KPI), bar widths
+│   ├── charts.ts             # Chart config, formatting (percent, counts), bar widths
 │   ├── api-explorer.ts       # Sends a preset request and describes the result
 │   ├── routes.ts, links.ts   # Page addresses and repository links
 │   └── errors.ts, timing.ts, theme.ts, utils.ts
@@ -78,7 +89,6 @@ is turned off in production (override with `NEXT_PUBLIC_SANDBOX_ENABLED`).
 
 | Chart | Type | Endpoint |
 |---|---|---|
-| Student progress | KPI cards (percent, split, terms) | `/sandbox/kpis` |
 | Gateway course completion | Two lines, six terms | `/sandbox/gateway-completion` |
 | Students who stayed enrolled | One line, fall terms filled | `/sandbox/term-enrollment` |
 | First-year credit completion | Two lines, fall cohorts | `/sandbox/credit-completion` |
@@ -86,21 +96,27 @@ is turned off in production (override with `NEXT_PUBLIC_SANDBOX_ENABLED`).
 | Completion by student group | Horizontal bars | `/sandbox/completion-by-group` |
 | Persistence by age group | Grouped bars, solid vs striped | `/sandbox/persistence-by-age` |
 | Time to complete | Horizontal bars | `/sandbox/time-to-complete` |
+| Students by entry status | Pie | `/sandbox/entry-status-share` |
+| Students by gender | Donut | `/sandbox/gender-share` |
+| Credit load by cohort | Stacked bars | `/sandbox/credit-load` |
+| Students enrolled, term by term | Area | `/sandbox/headcount` |
+| Gateway completion, filtered | Filter panel, tiles, trend and bars | `/sandbox/filtered-completion` |
 
 #### Add a sandbox page
 
 Step 2 of 2. [Add the endpoints](../server_application/README.md#add-a-sandbox-endpoint) first.
 
-Worked example: http://localhost:3000/sandbox/enrollment. Every sandbox page has the same four files. The
-sandbox layout adds the header, footer and production check.
+Worked example: http://localhost:3000/sandbox/add-a-sandbox-page. Every sandbox page has the same four files. The
+app frame and the sandbox layout add everything around it, and the production check.
 
-1. **Copy:** Copy `src/app/sandbox/enrollment/` to `src/app/sandbox/<topic>/`.
+1. **Copy:** Copy `src/app/(app)/sandbox/add-a-sandbox-page/` to `src/app/(app)/sandbox/<topic>/`.
 2. **Data:** Point the loaders in `data.ts` at the endpoints from step 1.
 3. **Labels:** Set each chart's fields in `chart-config.ts`.
 4. **Charts:** Build them in `charts.tsx` from `ChartCard` and the existing charts.
 5. **Page:** Set your title and text in `page.tsx`, and remove `<HowToAddASandboxPage />`.
+6. **Sidebar:** Add one entry to `src/content/sandbox-examples.ts`.
 
-Your page opens at `/sandbox/<topic>`, e.g. `/sandbox/enrollment`.
+Your page opens at `/sandbox/<topic>`, e.g. `/sandbox/add-a-sandbox-page`.
 
 ### 404 and error pages
 

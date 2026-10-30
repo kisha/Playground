@@ -5,7 +5,6 @@ from app.core.config import settings
 from app.main import create_app
 
 ENDPOINTS = [
-    "/api/v1/sandbox/kpis",
     "/api/v1/sandbox/gateway-completion",
     "/api/v1/sandbox/term-enrollment",
     "/api/v1/sandbox/credit-completion",
@@ -13,8 +12,12 @@ ENDPOINTS = [
     "/api/v1/sandbox/completion-by-group",
     "/api/v1/sandbox/persistence-by-age",
     "/api/v1/sandbox/time-to-complete",
-    "/api/v1/sandbox/enrollment/by-modality",
-    "/api/v1/sandbox/enrollment/by-program",
+    "/api/v1/sandbox/entry-status-share",
+    "/api/v1/sandbox/gender-share",
+    "/api/v1/sandbox/credit-load",
+    "/api/v1/sandbox/headcount",
+    "/api/v1/sandbox/add-a-sandbox-page/by-modality",
+    "/api/v1/sandbox/add-a-sandbox-page/by-program",
 ]
 
 
@@ -36,20 +39,6 @@ def test_gateway_completion_has_both_series_for_six_terms(client: TestClient) ->
     assert all({"term", "english", "math"} <= row.keys() for row in rows)
 
 
-def test_kpis_include_percent_and_split_measures(client: TestClient) -> None:
-    items = {item["id"]: item for item in client.get("/api/v1/sandbox/kpis").json()["items"]}
-
-    assert items["first_year_credit_completion"] == {
-        "id": "first_year_credit_completion",
-        "label": "First-year credit completion",
-        "unit": "percent",
-        "value": 76.0,
-        "secondary_value": None,
-        "detail": "fall 2025 cohort",
-    }
-    assert (items["female_male"]["value"], items["female_male"]["secondary_value"]) == (64, 36)
-
-
 def test_persistence_retention_carries_filters_and_definitions(client: TestClient) -> None:
     meta = client.get("/api/v1/sandbox/persistence-retention").json()["meta"]
 
@@ -61,6 +50,24 @@ def test_sandbox_is_not_mounted_when_disabled(monkeypatch: pytest.MonkeyPatch) -
     monkeypatch.setattr(settings, "SANDBOX_ENABLED", False)
 
     with TestClient(create_app()) as client:
-        assert client.get("/api/v1/sandbox/kpis").status_code == 404
-        assert client.get("/api/v1/sandbox/enrollment/by-program").status_code == 404
+        assert client.get("/api/v1/sandbox/gateway-completion").status_code == 404
+        assert client.get("/api/v1/sandbox/add-a-sandbox-page/by-program").status_code == 404
         assert client.get("/api/v1/health").status_code == 200
+
+
+def test_filtered_completion_changes_with_its_filters(client: TestClient) -> None:
+    unfiltered = client.get("/api/v1/sandbox/filtered-completion").json()
+    filtered = client.get(
+        "/api/v1/sandbox/filtered-completion",
+        params={"cohort_year": 2023, "gender": "Female", "course_modality": "Online"},
+    ).json()
+
+    assert unfiltered["kpis"] == {"gateway_completion": 68, "english": 74, "math": 62}
+    assert filtered["kpis"]["english"] == 70
+    assert filtered["applied_filters"] == ["2023", "Female", "Online"]
+
+
+def test_filtered_completion_rejects_an_unknown_filter_value(client: TestClient) -> None:
+    response = client.get("/api/v1/sandbox/filtered-completion", params={"gender": "Unknown"})
+
+    assert response.status_code == 422

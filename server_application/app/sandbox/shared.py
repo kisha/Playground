@@ -18,22 +18,6 @@ class ChartMeta(BaseModel):
     source: Literal["mock"] = "mock"
 
 
-class Kpi(BaseModel):
-    id: str
-    label: str
-    unit: Literal["percent", "split", "terms"]
-    value: float
-    secondary_value: float | None = Field(
-        default=None, description='Second half of a split, e.g. 36 in "64 / 36".'
-    )
-    detail: str
-
-
-class KpiResponse(BaseModel):
-    meta: ChartMeta
-    items: list[Kpi]
-
-
 class ChartResponse[RowT: BaseModel](BaseModel):
     """Every chart endpoint answers with its meta plus one row per point or bar."""
 

@@ -234,23 +234,28 @@ production.
 In the sandbox (http://localhost:3000/sandbox) you can:
 
 - **Try the API:** Send real requests to the Server Application and see the responses
-  ([`/sandbox#api`](http://localhost:3000/sandbox#api)).
-- **Preview charts:** Each chart loads its own `/api/v1/sandbox/...` endpoint.
+  ([`/sandbox/api-requests`](http://localhost:3000/sandbox/api-requests)).
+- **Preview charts:** Each chart loads its own `/api/v1/sandbox/...` endpoint
+  ([`/sandbox/chart-examples`](http://localhost:3000/sandbox/chart-examples)).
+- **Filter a view:** Filters go in the address and the server answers with new numbers
+  ([`/sandbox/filters`](http://localhost:3000/sandbox/filters)).
+- **Upload a CSV:** Check its columns and rows, in the browser
+  ([`/sandbox/upload`](http://localhost:3000/sandbox/upload)).
 - ✨ **Add your own:** New sandbox pages can show how other charts, trends and features could work.
 
 #### Add your own sandbox example
 
 Everything in the sandbox is a reusable example. Add your own charts, filters or other UI on a new sandbox
-page, with its own endpoints. Start from **Add your own** at the top of http://localhost:3000/sandbox:
+page, with its own endpoints. Start from **Add A Sandbox Page** in the sidebar:
 
 ![Add your own, at the top of the sandbox: a link to the worked example, How to add a sandbox page](client_application/docs/sandbox-add-your-own.png)
 
 A sandbox page has two halves: endpoints on the back end and a page that draws them. Worked example:
-[`/sandbox/enrollment`](http://localhost:3000/sandbox/enrollment). Copy one folder on each side.
+[`/sandbox/add-a-sandbox-page`](http://localhost:3000/sandbox/add-a-sandbox-page). Copy one folder on each side.
 
-1. **Add the endpoints (FastAPI):** Copy `server_application/app/sandbox/enrollment/`
+1. **Add the endpoints (FastAPI):** Copy `server_application/app/sandbox/add_a_sandbox_page/`
    ([steps](server_application/README.md#add-a-sandbox-endpoint)).
-2. **Add the page (Next.js):** Copy `client_application/src/app/sandbox/enrollment/`
+2. **Add the page (Next.js):** Copy `client_application/src/app/(app)/sandbox/add-a-sandbox-page/`
    ([steps](client_application/README.md#add-a-sandbox-page)).
 
 The worked example lists every file to change, on both sides:
@@ -260,11 +265,7 @@ The worked example lists every file to change, on both sides:
 ![Gateway completion request and its JSON response: meta plus one row per term](client_application/docs/sandbox-gateway-request.png)
 
 <details open>
-<summary>📊 <strong>See the example charts</strong> (KPI cards, trend lines and bar charts)</summary>
-
-**KPI cards:** `/sandbox/kpis`
-
-![KPI cards](client_application/docs/sandbox-kpis.png)
+<summary>📊 <strong>See the example charts</strong> (trend lines, bar charts, pies and more)</summary>
 
 **Trend lines:** `/sandbox/gateway-completion` · `/sandbox/term-enrollment` ·
 `/sandbox/credit-completion` · `/sandbox/persistence-retention`
@@ -275,6 +276,9 @@ The worked example lists every file to change, on both sides:
 `/sandbox/time-to-complete`
 
 ![Bar charts: completion by student group, persistence by age, time to complete](client_application/docs/sandbox-bar-charts.png)
+
+**Parts of a whole and amounts:** `/sandbox/entry-status-share` · `/sandbox/gender-share` ·
+`/sandbox/credit-load` · `/sandbox/headcount`
 
 </details>
 

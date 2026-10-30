@@ -1,5 +1,4 @@
 import type { ChartConfig } from "@/components/ui/chart";
-import type { Kpi } from "@/app/sandbox/shared";
 
 /** One line or bar series. Charts are black and white, so `dashed` tells the second one apart. */
 export type ChartSeries = {
@@ -39,17 +38,6 @@ export function barWidthPercent(value: number, max: number): number {
   return Math.min((value / max) * 100, 100);
 }
 
-/** A KPI's headline, e.g. "76%", "64 / 36" or "5.5" with the unit "terms" shown smaller. */
-export function formatKpi(kpi: Kpi): { headline: string; unitLabel: string | null } {
-  switch (kpi.unit) {
-    case "percent":
-      return { headline: formatPercent(kpi.value), unitLabel: null };
-    case "split":
-      return { headline: `${kpi.value} / ${kpi.secondary_value}`, unitLabel: null };
-    case "terms":
-      return { headline: `${kpi.value}`, unitLabel: "terms" };
-  }
-}
 
 /**
  * Whether a line chart point is drawn filled. By default the first series has hollow points and a
@@ -58,4 +46,36 @@ export function formatKpi(kpi: Kpi): { headline: string; unitLabel: string | nul
 export function isPointFilled<Row>(series: ChartSeries, row: Row | undefined, isFilled?: (row: Row) => boolean): boolean {
   if (isFilled && row) return isFilled(row);
   return Boolean(series.dashed);
+}
+
+/**
+ * Fills for the parts of a whole, in order. Charts are black and white, so parts step from solid to light, and the
+ * fourth is striped. Pie, donut and stacked charts keep to four parts or fewer.
+ */
+export const PART_FILLS = [
+  "var(--foreground)",
+  "color-mix(in oklab, var(--foreground) 62%, var(--background))",
+  "color-mix(in oklab, var(--foreground) 30%, var(--background))",
+  "url(#part-stripes)",
+];
+
+/** The fill for the part at `index`, and whether it's the striped one. */
+export function partFill(index: number): { fill: string; isStriped: boolean } {
+  return { fill: PART_FILLS[index], isStriped: index === PART_FILLS.length - 1 };
+}
+
+export type ShareSlice = { label: string; value: number; display: string; fill: string; isStriped: boolean };
+
+/** Turn chart rows into pie or donut slices, in the order they arrive. */
+export function toShareSlices<Row>(rows: Row[], labelOf: (row: Row) => string, valueOf: (row: Row) => number): ShareSlice[] {
+  return rows.map((row, index) => ({
+    label: labelOf(row),
+    value: valueOf(row),
+    display: formatPercent(valueOf(row)),
+    ...partFill(index),
+  }));
+}
+
+export function formatCount(value: unknown): string {
+  return Number(value).toLocaleString("en-US");
 }

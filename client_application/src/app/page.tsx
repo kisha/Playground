@@ -29,12 +29,12 @@ export default function HomePage() {
           <div className="mt-2 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm motion-safe:animate-fade-up motion-safe:[animation-delay:450ms]">
             {env.sandboxEnabled && (
               <Link
-                href={routes.sandboxCharts}
+                href={routes.sandbox}
                 target="_blank"
                 rel="noreferrer"
                 className={cn(buttonVariants({ size: "lg" }), "motion-safe:animate-pulse-ring hover:animate-none")}
               >
-                See example charts
+                Go to Sandbox
                 <ArrowRight aria-hidden className="motion-safe:animate-nudge-x" />
               </Link>
             )}

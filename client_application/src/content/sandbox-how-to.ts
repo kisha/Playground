@@ -1,4 +1,4 @@
-/** The files behind every sandbox page, shown on the /sandbox/enrollment example in the order you change them. */
+/** The files behind every sandbox page, shown on the /sandbox/add-a-sandbox-page page in the order you change them. */
 
 /** One of the two parts every sandbox page has, with this example's version of it. */
 export type SandboxPagePart = {
@@ -18,15 +18,15 @@ export const sandboxPageParts: SandboxPagePart[] = [
     name: "Backend endpoint",
     framework: "FastAPI",
     does: "Returns the chart data as JSON.",
-    example: "/api/v1/sandbox/enrollment/by-program",
-    apiPath: "/sandbox/enrollment/by-program",
+    example: "/api/v1/sandbox/add-a-sandbox-page/by-program",
+    apiPath: "/sandbox/add-a-sandbox-page/by-program",
     docs: { label: "Add a sandbox endpoint", file: "server_application/README.md", section: "add-a-sandbox-endpoint" },
   },
   {
     name: "Frontend page with its route",
     framework: "Next.js",
     does: "Fetches that JSON and draws the charts, at its own route.",
-    example: "/sandbox/enrollment",
+    example: "/sandbox/add-a-sandbox-page",
     docs: { label: "Add a sandbox page", file: "client_application/README.md", section: "add-a-sandbox-page" },
   },
 ];
@@ -37,7 +37,7 @@ export type BuildStep = {
 };
 
 export const serverSteps: BuildStep[] = [
-  { file: "app/sandbox/enrollment/", what: "Copy this folder to app/sandbox/<topic>/." },
+  { file: "app/sandbox/add_a_sandbox_page/", what: "Copy this folder to app/sandbox/<topic>/." },
   {
     file: "schemas.py",
     what: "Define the rows each endpoint returns. Keep ChartResponse, so every endpoint returns meta and rows.",
@@ -52,11 +52,12 @@ export const serverSteps: BuildStep[] = [
 
 export const clientSteps: BuildStep[] = [
   {
-    file: "src/app/sandbox/enrollment/",
-    what: "Copy this folder to src/app/sandbox/<topic>/. The folder name becomes the route: /sandbox/<topic>.",
+    file: "src/app/(app)/sandbox/add-a-sandbox-page/",
+    what: "Copy this folder to src/app/(app)/sandbox/<topic>/. The folder name becomes the route: /sandbox/<topic>.",
   },
   { file: "data.ts", what: "Add one type and one loader for each endpoint from step 1." },
   { file: "chart-config.ts", what: "Choose which fields each chart draws, and their labels." },
   { file: "charts.tsx", what: "Build your charts from ChartCard, TrendChart, BarList and the other chart components." },
   { file: "page.tsx", what: "Set your title and text. Delete the <HowToAddASandboxPage /> line." },
+  { file: "src/content/sandbox-examples.ts", what: "Add one entry, so your page appears in the left sidebar." },
 ];

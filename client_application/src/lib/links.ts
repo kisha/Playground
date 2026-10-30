@@ -15,7 +15,7 @@ export function repositorySectionUrl(file: string, section: string): string {
   return `${env.repositoryUrl}/blob/main/${repositoryPath(file)}#${section}`;
 }
 
-/** The full address of an API path on the current environment, e.g. apiUrl("/sandbox/kpis"). */
+/** The full address of an API path on the current environment, e.g. apiUrl("/sandbox/headcount"). */
 export function apiUrl(path: string): string {
   return `${env.apiBaseUrl}${path}`;
 }

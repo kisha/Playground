@@ -20,9 +20,9 @@ app/
 ├── api/v1/routes/        # HTTP endpoints
 └── sandbox/              # Mock-data endpoints, one folder per sandbox page
     ├── router.py         #   Mounts every sandbox page (off in production)
-    ├── shared.py         #   ChartMeta, ChartResponse, Kpi: shared by every page
+    ├── shared.py         #   ChartMeta, ChartResponse: shared by every page
     ├── routes.py, schemas.py, mock_data.py   # /sandbox
-    └── enrollment/       #   /sandbox/enrollment: the same three files
+    └── add_a_sandbox_page/  #   /sandbox/add-a-sandbox-page: the same three files
 alembic/                  # Migrations (config in pyproject.toml [tool.alembic])
 tests/
 ```
@@ -91,7 +91,6 @@ All under `/api/v1`; try them at http://localhost:8000/docs.
 | `GET` | `/documents/{id}` | Fetch one document |
 | `DELETE` | `/documents/{id}` | Delete a document |
 | `POST` | `/documents/search` | Most similar documents to a query, via pgvector cosine distance |
-| `GET` | `/sandbox/kpis` | Headline measures, including splits like Female / Male 64 / 36 |
 | `GET` | `/sandbox/gateway-completion` | Gateway English vs math, last six terms |
 | `GET` | `/sandbox/term-enrollment` | Term-to-term enrollment, last six terms |
 | `GET` | `/sandbox/credit-completion` | First-year credit completion, new vs transfer, fall cohorts 2020 to 2025 |
@@ -99,6 +98,11 @@ All under `/api/v1`; try them at http://localhost:8000/docs.
 | `GET` | `/sandbox/completion-by-group` | First-year credit completion per student group |
 | `GET` | `/sandbox/persistence-by-age` | Persistence and gateway completion per age group |
 | `GET` | `/sandbox/time-to-complete` | Average terms to completion per entry term |
+| `GET` | `/sandbox/entry-status-share` | Share of students by entry status |
+| `GET` | `/sandbox/gender-share` | Share of students by gender |
+| `GET` | `/sandbox/credit-load` | First-term credit load per fall cohort |
+| `GET` | `/sandbox/headcount` | Total students enrolled, last six terms |
+| `GET` | `/sandbox/filtered-completion` | Gateway completion for a filtered view: tiles, trend and group bars |
 
 ### Errors
 
@@ -152,15 +156,15 @@ curl http://localhost:8000/api/v1/sandbox/gateway-completion
 
 Step 1 of 2 for a new sandbox page. Then [add the page](../client_application/README.md#add-a-sandbox-page).
 
-Worked example: [`app/sandbox/enrollment/`](app/sandbox/enrollment/). Every sandbox page has the same three files.
+Worked example: [`app/sandbox/add_a_sandbox_page/`](app/sandbox/add_a_sandbox_page/). Every sandbox page has the same three files.
 
-1. **Copy:** Copy `app/sandbox/enrollment/` to `app/sandbox/<topic>/`.
+1. **Copy:** Copy `app/sandbox/add_a_sandbox_page/` to `app/sandbox/<topic>/`.
 2. **Schemas:** Define your rows in `schemas.py`. Reuse `ChartResponse`.
 3. **Data:** Return your mock data from `mock_data.py`.
 4. **Routes:** Set `prefix="/sandbox/<topic>"` and `tags=["sandbox: <topic>"]` in `routes.py`.
 5. **Mount:** Add one line to [`app/sandbox/router.py`](app/sandbox/router.py). Production turns it off.
 
-Your endpoints answer at `/api/v1/sandbox/<topic>/...`, e.g. `/api/v1/sandbox/enrollment/by-modality`.
+Your endpoints answer at `/api/v1/sandbox/<topic>/...`, e.g. `/api/v1/sandbox/add-a-sandbox-page/by-modality`.
 Check them at http://localhost:8000/docs.
 
 ## Libraries Included

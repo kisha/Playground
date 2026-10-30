@@ -1,29 +1,31 @@
-/** Preset requests for the sandbox's API explorer. Add or edit requests here. */
+/** Quick picks for the sandbox's API explorer. Add or edit them here; every endpoint is listed automatically. */
 
-export type PresetRequest = {
-  id: string;
-  label: string;
-  method: "GET" | "POST";
-  path: string;
-  body?: unknown;
-  /** What this request demonstrates. */
-  note: string;
+export type EndpointParam = {
+  name: string;
+  location: "path" | "query";
+  required: boolean;
+  defaultValue: string;
 };
 
-export const presetRequests: PresetRequest[] = [
+export type ExplorerRequest = {
+  id: string;
+  label: string;
+  method: string;
+  /** Relative to the API base URL. May hold {placeholders} for path params. */
+  path: string;
+  body?: unknown;
+  /** What this request does. */
+  note: string;
+  params?: EndpointParam[];
+};
+
+export const presetRequests: ExplorerRequest[] = [
   {
     id: "health",
     label: "Health",
     method: "GET",
     path: "/health",
     note: "Is the server application up, and can it reach the database?",
-  },
-  {
-    id: "kpis",
-    label: "KPIs",
-    method: "GET",
-    path: "/sandbox/kpis",
-    note: "The headline measures behind the KPI cards below.",
   },
   {
     id: "gateway",

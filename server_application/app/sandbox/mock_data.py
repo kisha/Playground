@@ -5,15 +5,27 @@ invented and contain no real institution or student data. Replace these function
 queries when an instance has AR data of its own.
 """
 
-from app.sandbox.shared import COHORT_YEARS, TERMS, ChartMeta, Kpi, KpiResponse
+from app.sandbox.shared import COHORT_YEARS, TERMS, ChartMeta
 
 from .schemas import (
     CompletionByGroupResponse,
     CompletionByGroupRow,
     CreditCompletionResponse,
     CreditCompletionRow,
+    CreditLoadResponse,
+    CreditLoadRow,
+    EntryStatusShareResponse,
+    EntryStatusShareRow,
+    FilteredCompletionResponse,
+    FilteredGroupRow,
+    FilteredKpis,
+    FilteredTrendRow,
     GatewayCompletionResponse,
     GatewayCompletionRow,
+    GenderShareResponse,
+    GenderShareRow,
+    HeadcountResponse,
+    HeadcountRow,
     PersistenceByAgeResponse,
     PersistenceByAgeRow,
     PersistenceRetentionResponse,
@@ -29,78 +41,6 @@ DEFINITIONS = {
     "Persistence": "Students continuing anywhere",
     "Retention": "Students staying at the institution",
 }
-
-
-def get_kpis() -> KpiResponse:
-    return KpiResponse(
-        meta=ChartMeta(
-            title="Student progress",
-            description="Headline measures for the fall 2025 cohort.",
-            fields_used=["Cohort", "Credits earned", "Gateway course", "Gender", "First gen"],
-            filters=COHORT_FILTERS,
-            definitions=DEFINITIONS,
-        ),
-        items=[
-            Kpi(
-                id="first_year_credit_completion",
-                label="First-year credit completion",
-                unit="percent",
-                value=76,
-                detail="fall 2025 cohort",
-            ),
-            Kpi(
-                id="gateway_completion",
-                label="Gateway course completion",
-                unit="percent",
-                value=68,
-                detail="math and English",
-            ),
-            Kpi(
-                id="persistence",
-                label="Persistence rate",
-                unit="percent",
-                value=84,
-                detail="continuing anywhere",
-            ),
-            Kpi(
-                id="retention",
-                label="Retention rate",
-                unit="percent",
-                value=72,
-                detail="staying at the institution",
-            ),
-            Kpi(
-                id="female_male",
-                label="Female / Male",
-                unit="split",
-                value=64,
-                secondary_value=36,
-                detail="% of students",
-            ),
-            Kpi(
-                id="new_transfer",
-                label="New / Transfer",
-                unit="split",
-                value=71,
-                secondary_value=29,
-                detail="% of students",
-            ),
-            Kpi(
-                id="first_gen",
-                label="First-gen students",
-                unit="percent",
-                value=62,
-                detail="of new students",
-            ),
-            Kpi(
-                id="time_to_complete",
-                label="Time to complete",
-                unit="terms",
-                value=5.5,
-                detail="average, all entry terms",
-            ),
-        ],
-    )
 
 
 def get_gateway_completion() -> GatewayCompletionResponse:
@@ -238,5 +178,170 @@ def get_time_to_complete() -> TimeToCompleteResponse:
         rows=[
             TimeToCompleteRow(entry_term=entry_term, average_terms=average_terms)
             for entry_term, average_terms in average_terms_by_entry
+        ],
+    )
+
+
+def get_entry_status_share() -> EntryStatusShareResponse:
+    share_by_status = [
+        ("First-time", 46),
+        ("Transfer", 31),
+        ("Returning", 15),
+        ("Dual enrollment", 8),
+    ]
+    return EntryStatusShareResponse(
+        meta=ChartMeta(
+            title="Students by entry status",
+            description="Share of fall 2025 students by how they entered.",
+            takeaway="First-time and transfer students make up over three in four students.",
+            fields_used=["Enrollment type (PDP)"],
+            filters=["Fall 2025"],
+        ),
+        rows=[EntryStatusShareRow(status=status, share=share) for status, share in share_by_status],
+    )
+
+
+def get_gender_share() -> GenderShareResponse:
+    share_by_gender = [("Female", 62), ("Male", 34), ("Non-binary", 4)]
+    return GenderShareResponse(
+        meta=ChartMeta(
+            title="Students by gender",
+            description="Share of fall 2025 students by gender.",
+            takeaway="Women make up over six in ten students.",
+            fields_used=["Gender (PDP)"],
+            filters=["Fall 2025"],
+        ),
+        rows=[GenderShareRow(gender=gender, share=share) for gender, share in share_by_gender],
+    )
+
+
+def get_credit_load() -> CreditLoadResponse:
+    # (full-time, three-quarter, half-time or less), one row per cohort. Each row adds up to 100.
+    shares_by_cohort = [
+        (62, 22, 16),
+        (60, 22, 18),
+        (58, 23, 19),
+        (57, 24, 19),
+        (55, 24, 21),
+        (53, 25, 22),
+    ]
+    return CreditLoadResponse(
+        meta=ChartMeta(
+            title="Credit load by cohort",
+            description="How many credits students take in their first term, fall cohorts.",
+            takeaway="The full-time share fell 9 points across six cohorts.",
+            fields_used=["Cohort", "Enrollment intensity first term (PDP)"],
+            filters=COHORT_FILTERS,
+        ),
+        rows=[
+            CreditLoadRow(
+                cohort_year=cohort_year,
+                full_time=full_time,
+                three_quarter=three_quarter,
+                half_time_or_less=half_time_or_less,
+            )
+            for cohort_year, (full_time, three_quarter, half_time_or_less) in zip(
+                COHORT_YEARS, shares_by_cohort, strict=True
+            )
+        ],
+    )
+
+
+def get_headcount() -> HeadcountResponse:
+    students_by_term = [2310, 2140, 2390, 2210, 2480, 2295]
+    return HeadcountResponse(
+        meta=ChartMeta(
+            title="Students enrolled, term by term",
+            description="Total headcount, last six terms.",
+            takeaway="Fall headcount grew by 170 students in two years, and every spring dips.",
+            fields_used=["Term", "Enrollment (campus)"],
+        ),
+        rows=[
+            HeadcountRow(term=term, students=students)
+            for term, students in zip(TERMS, students_by_term, strict=True)
+        ],
+    )
+
+
+# Points each filter value adds to a rate, so filtering visibly changes the mock numbers.
+FILTER_ADJUSTMENTS = {
+    "New": 3,
+    "Transfer": -5,
+    "Female": 2,
+    "Male": -3,
+    "Non-binary": -1,
+    "First-gen": -2,
+    "Not first-gen": 1,
+    "Online": -6,
+    "On-campus": 3,
+}
+GATEWAY_RATES_BY_COHORT = {
+    2020: (70, 58),
+    2021: (72, 60),
+    2022: (71, 58),
+    2023: (74, 61),
+    2024: (73, 60),
+    2025: (74, 62),
+}
+GROUP_RATES = [("Female", 70), ("Male", 64), ("New", 72), ("Transfer", 58), ("First-gen", 66)]
+# Which filter each group belongs to: its own filter doesn't shift its bar.
+GROUP_FILTERS = {"Female": 1, "Male": 1, "New": 0, "Transfer": 0, "First-gen": 2}
+
+
+def _clamp_rate(rate: float) -> float:
+    return min(100, max(0, rate))
+
+
+def get_filtered_completion(
+    cohort_year: int,
+    enrollment_type: str | None,
+    gender: str | None,
+    first_gen: str | None,
+    course_modality: str | None,
+) -> FilteredCompletionResponse:
+    chosen = [enrollment_type, gender, first_gen, course_modality]
+    adjustment = sum(FILTER_ADJUSTMENTS[value] for value in chosen if value)
+    english, math = GATEWAY_RATES_BY_COHORT[cohort_year]
+    english_rate = _clamp_rate(english + adjustment)
+    math_rate = _clamp_rate(math + adjustment)
+    applied_filters = [str(cohort_year), *(value for value in chosen if value)]
+
+    return FilteredCompletionResponse(
+        meta=ChartMeta(
+            title="Gateway course completion",
+            description="Math and English, for the students these filters select.",
+            takeaway=(
+                f"For this selection, English completion runs "
+                f"{english_rate - math_rate:.0f} points above math."
+            ),
+            fields_used=["Cohort", "Enrollment type", "Gender", "First gen", "Course modality"],
+        ),
+        applied_filters=applied_filters,
+        kpis=FilteredKpis(
+            gateway_completion=round((english_rate + math_rate) / 2),
+            english=english_rate,
+            math=math_rate,
+        ),
+        trend=[
+            FilteredTrendRow(
+                cohort_year=year,
+                english=_clamp_rate(english_for_year + adjustment),
+                math=_clamp_rate(math_for_year + adjustment),
+            )
+            for year, (english_for_year, math_for_year) in GATEWAY_RATES_BY_COHORT.items()
+        ],
+        groups=[
+            FilteredGroupRow(
+                group=group,
+                rate=_clamp_rate(
+                    rate
+                    + sum(
+                        FILTER_ADJUSTMENTS[value]
+                        for index, value in enumerate(chosen)
+                        if value and index != GROUP_FILTERS[group]
+                    )
+                ),
+            )
+            for group, rate in GROUP_RATES
         ],
     )

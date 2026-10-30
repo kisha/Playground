@@ -35,7 +35,7 @@ export function HowToAddASandboxPage() {
           steps={clientSteps}
           check={
             <>
-              Open <code className="font-mono">http://localhost:3000/sandbox/&lt;topic&gt;</code>. Your charts load.
+              Open <code className="font-mono break-all">http://localhost:3000/sandbox/&lt;topic&gt;</code>. Your charts load.
             </>
           }
         />

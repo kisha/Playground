@@ -3,10 +3,14 @@
 import { Send } from "lucide-react";
 
 import { FlowConnector } from "@/components/flow-connector";
+import { ApiEndpointList } from "@/components/sandbox/api-endpoint-list";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Textarea } from "@/components/ui/textarea";
 import { presetRequests } from "@/content/sandbox-requests";
 import { useApiExplorer } from "@/hooks/use-api-explorer";
+import { type ApiEndpoint, sendsOnSelect } from "@/lib/api-endpoints";
 import { type ExplorerExchange, formatJson, isErrorStatus } from "@/lib/api-explorer";
 import { env } from "@/lib/env";
 import { cn } from "@/lib/utils";
@@ -16,7 +20,7 @@ const responseSkeletonWidths = [80, 60, 70, 40];
 function Panel({ title, aside, children }: { title: string; aside?: React.ReactNode; children: React.ReactNode }) {
   return (
     <div className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-xl border">
-      <div className="flex items-center justify-between gap-3 border-b bg-muted/50 px-4 py-2.5 text-xs">
+      <div className="flex min-h-11 items-center justify-between gap-3 border-b bg-muted/50 px-4 py-2.5 text-xs">
         <span className="font-medium tracking-wide uppercase">{title}</span>
         {aside}
       </div>
@@ -32,7 +36,7 @@ function JsonBlock({ value }: { value: unknown }) {
 /** "200 OK · 12 ms", underlined with dashes for errors. */
 function ResponseStatus({ exchange }: { exchange: ExplorerExchange }) {
   if (exchange.state === "sending") return <span className="text-muted-foreground">sending…</span>;
-  if (exchange.state === "unreachable") return null;
+  if (exchange.state !== "done") return null;
   const { status, statusText, durationMs } = exchange.response;
   return (
     <span className="font-mono tabular-nums">
@@ -44,20 +48,41 @@ function ResponseStatus({ exchange }: { exchange: ExplorerExchange }) {
   );
 }
 
-/** Send preset requests to the server application and show exactly what comes back. */
+/** Find an endpoint or use a quick pick, fill in what it needs, send it to the server and show what comes back. */
 export function ApiExplorer() {
-  const { selectedRequest, exchange, sendCount, sendAgain, selectAndSend } = useApiExplorer();
+  const {
+    selectedRequest,
+    paramValues,
+    setParamValue,
+    bodyText,
+    setBodyText,
+    hasBodyMistake,
+    canSend,
+    requestPath,
+    exchange,
+    sendCount,
+    sendSelected,
+    selectRequest,
+    selectAndSend,
+  } = useApiExplorer();
+
+  function chooseEndpoint(endpoint: ApiEndpoint) {
+    if (sendsOnSelect(endpoint)) selectAndSend(endpoint);
+    else selectRequest(endpoint);
+  }
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1" role="tablist" aria-label="Example requests">
+    <div className="@container flex flex-col gap-4">
+      <ApiEndpointList selectedId={selectedRequest.id} onSelect={chooseEndpoint} />
+
+      <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1" role="group" aria-label="Quick picks">
         {presetRequests.map((request) => {
           const isSelected = request.id === selectedRequest.id;
           return (
             <button
               key={request.id}
-              role="tab"
-              aria-selected={isSelected}
+              type="button"
+              aria-pressed={isSelected}
               onClick={() => selectAndSend(request)}
               className={cn(
                 "shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
@@ -76,8 +101,8 @@ export function ApiExplorer() {
         <Panel
           title="Request"
           aside={
-            <Button size="xs" variant="outline" onClick={sendAgain}>
-              <Send aria-hidden /> Send again
+            <Button size="xs" variant="outline" disabled={!canSend} onClick={sendSelected}>
+              <Send aria-hidden /> Send
             </Button>
           }
         >
@@ -86,12 +111,43 @@ export function ApiExplorer() {
               {selectedRequest.method}
             </span>
             {env.apiBaseUrl}
-            {selectedRequest.path}
+            {requestPath}
           </p>
+
+          {(selectedRequest.params ?? []).length > 0 && (
+            <div className="mt-4 flex flex-col gap-3">
+              {selectedRequest.params?.map((param) => (
+                <div key={param.name} className="flex flex-col gap-1.5">
+                  <label htmlFor={`api-param-${param.name}`} className="text-xs text-muted-foreground">
+                    <span className="font-mono text-foreground">{param.name}</span> ({param.location}
+                    {param.required ? ", required" : ""})
+                  </label>
+                  <Input
+                    id={`api-param-${param.name}`}
+                    value={paramValues[param.name] ?? ""}
+                    onChange={(event) => setParamValue(param.name, event.target.value)}
+                    className="font-mono text-xs md:text-xs"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+
           {selectedRequest.body !== undefined && (
-            <div className="mt-4">
-              <p className="mb-1.5 text-xs text-muted-foreground">Body</p>
-              <JsonBlock value={selectedRequest.body} />
+            <div className="mt-4 flex flex-col gap-1.5">
+              <label htmlFor="api-request-body" className="text-xs text-muted-foreground">
+                Body
+              </label>
+              <Textarea
+                id="api-request-body"
+                value={bodyText}
+                onChange={(event) => setBodyText(event.target.value)}
+                rows={6}
+                spellCheck={false}
+                aria-invalid={hasBodyMistake}
+                className="font-mono text-xs md:text-xs"
+              />
+              {hasBodyMistake && <p className="text-xs">This isn&apos;t valid JSON yet. Fix it to send.</p>}
             </div>
           )}
         </Panel>
@@ -99,6 +155,7 @@ export function ApiExplorer() {
         <FlowConnector direction="responsive" trigger={sendCount} className="lg:mt-5 lg:self-start" />
 
         <Panel title="Response" aside={<ResponseStatus exchange={exchange} />}>
+          {exchange.state === "idle" && <p className="text-sm text-muted-foreground">Press Send to try it.</p>}
           {exchange.state === "done" && <JsonBlock value={exchange.response.body} />}
           {exchange.state === "sending" && (
             <div className="flex flex-col gap-2" aria-busy="true">

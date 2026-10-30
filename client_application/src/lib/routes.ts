@@ -2,6 +2,10 @@
 export const routes = {
   home: "/",
   sandbox: "/sandbox",
-  sandboxCharts: "/sandbox#charts",
-  sandboxEnrollment: "/sandbox/enrollment",
+  sandboxChartExamples: "/sandbox/chart-examples",
+  sandboxFilters: "/sandbox/filters",
+  sandboxChatUi: "/sandbox/chat-ui",
+  sandboxApiRequests: "/sandbox/api-requests",
+  sandboxUpload: "/sandbox/upload",
+  sandboxAddASandboxPage: "/sandbox/add-a-sandbox-page",
 } as const;
