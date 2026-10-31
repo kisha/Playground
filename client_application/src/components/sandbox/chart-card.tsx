@@ -12,7 +12,7 @@ import { apiUrl } from "@/lib/links";
 import { cn } from "@/lib/utils";
 
 type ChartCardProps<Data extends { meta: ChartMeta }> = {
-  /** The endpoint to load. Its path is also where the "Mock data" badge links. */
+  /** The endpoint to load. Its path is also where the source badge links. */
   load: SandboxLoader<Data>;
   /** Draws the chart once the data has loaded. */
   children: (data: Data) => React.ReactNode;
@@ -50,7 +50,7 @@ function ChartSkeleton() {
   );
 }
 
-/** Title, description and filters. The "Mock data" badge opens the JSON the chart is drawn from. */
+/** Title, description and filters. The source badge opens the JSON the chart is drawn from. */
 function ChartHeader({ meta, payloadPath }: { meta: ChartMeta; payloadPath: string }) {
   return (
     <header className="flex flex-col gap-2">
@@ -63,7 +63,7 @@ function ChartHeader({ meta, payloadPath }: { meta: ChartMeta; payloadPath: stri
           title="Open the JSON this chart is drawn from"
           className="inline-flex shrink-0 items-center gap-0.5 rounded-full bg-foreground px-2 py-0.5 text-[10px] font-medium tracking-wide text-background uppercase transition-opacity hover:opacity-80"
         >
-          Mock data
+          {meta.source === "synthetic" ? "Synthetic data" : "Mock data"}
           <ArrowUpRight className="size-3" aria-hidden />
         </a>
       </div>

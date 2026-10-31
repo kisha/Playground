@@ -16,6 +16,7 @@ src/
 │           ├── api-requests/                               # /sandbox/api-requests: the API explorer
 │           ├── app-ui-frame/                               # /sandbox/app-ui-frame?app-frame=ui-frame-2: the frame's two styles
 │           ├── filters/                                    # /sandbox/filters: a filter panel, with filters in the URL
+│           ├── measures/                                   # /sandbox/measures: typed measure, cohort and grouping filters
 │           ├── chat-ui/                                    # /sandbox/chat-ui: two chat layouts, with canned replies
 │           ├── upload/                                     # /sandbox/upload: drop a CSV and preview it, in the browser
 │           └── add-a-sandbox-page/                         # /sandbox/add-a-sandbox-page: the same four files
@@ -101,6 +102,7 @@ is turned off in production (override with `NEXT_PUBLIC_SANDBOX_ENABLED`).
 | Credit load by cohort | Stacked bars | `/sandbox/chart-examples?charts=credit-load` |
 | Students enrolled, term by term | Area | `/sandbox/chart-examples?charts=headcount` |
 | Gateway completion, filtered | Filter panel, tiles, trend and bars | `/sandbox/filter-example?example=example-one` |
+| Explore a measure by student group | Typed filters, bars and suppressed values | `/sandbox/measures/by-group` |
 
 #### Add a sandbox page
 

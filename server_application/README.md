@@ -23,6 +23,7 @@ app/
     ├── shared.py         #   ChartMeta, ChartResponse: shared by every page
     ├── chart_examples/   #   /sandbox/chart-examples: the same three files
     ├── filter_example/   #   /sandbox/filter-example: routes.py, schemas.py, one file per example
+    ├── measures/         #   /sandbox/measures: routes.py, schemas.py, results.py
     └── add_a_sandbox_page/  #   /sandbox/add-a-sandbox-page: the same three files
 alembic/                  # Migrations (config in pyproject.toml [tool.alembic])
 tests/
@@ -94,6 +95,7 @@ All under `/api/v1`; try them at http://localhost:8000/docs.
 | `POST` | `/documents/search` | Most similar documents to a query, via pgvector cosine distance |
 | `GET` | `/sandbox/chart-examples` | The example charts named in `?charts=` (repeat it for several), or every chart |
 | `GET` | `/sandbox/filter-example` | The filter example named in `?example=`: `example-one`, a filtered view |
+| `GET` | `/sandbox/measures/by-group` | One measure, cohort and student grouping (`measure`, `cohort`, `group_by`), with small groups suppressed |
 
 ### Errors
 

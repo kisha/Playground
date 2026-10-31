@@ -3,6 +3,7 @@
 import {
   ChartColumnBig,
   FilePlus2,
+  ListFilter,
   type LucideIcon,
   MessageCircle,
   PanelsTopLeft,
@@ -26,6 +27,7 @@ export const sandboxExamples: SandboxExample[] = [
   { label: "App UI Frame", href: routes.sandboxAppUiFrame, icon: PanelsTopLeft },
   { label: "Chat UI", href: routes.sandboxChatUi, icon: MessageCircle },
   { label: "Filters", href: routes.sandboxFilters, icon: SlidersHorizontal },
+  { label: "Measures", href: routes.sandboxMeasures, icon: ListFilter },
   { label: "Uploads", href: routes.sandboxUpload, icon: Upload },
   { label: "API requests", href: routes.sandboxApiRequests, icon: Send },
   { label: "Add a Sandbox Example", href: routes.sandboxAddASandboxPage, icon: FilePlus2 },

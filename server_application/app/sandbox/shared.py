@@ -15,7 +15,7 @@ class ChartMeta(BaseModel):
     fields_used: list[str] = Field(description="AR file fields the numbers come from.")
     filters: list[str] = Field(default=[], description='Cohort filters, e.g. "Fall entry".')
     definitions: dict[str, str] = Field(default={}, description="How each measure is defined.")
-    source: Literal["mock"] = "mock"
+    source: Literal["mock", "synthetic"] = "mock"
 
 
 class ChartResponse[RowT: BaseModel](BaseModel):

@@ -103,3 +103,28 @@ def test_filtered_completion_rejects_an_unknown_filter_value(client: TestClient)
 def test_filter_example_needs_a_known_example(client: TestClient) -> None:
     assert client.get(FILTER_EXAMPLE).status_code == 422
     assert client.get(FILTER_EXAMPLE, params={"example": "not-an-example"}).status_code == 422
+
+
+def test_measures_by_group_returns_exact_fixture_rates_and_counts(client: TestClient) -> None:
+    body = client.get(
+        "/api/v1/sandbox/measures/by-group?measure=gateway_math&cohort=2022-23&group_by=gender"
+    ).json()
+
+    assert body["meta"]["source"] == "synthetic"
+    assert body["meta"]["filters"] == [
+        "Measure: Gateway math completion",
+        "Cohort: 2022-23",
+        "Group by: Gender",
+    ]
+    assert body["rows"] == [
+        {"group": "F", "rate": 26.1, "n": 620},
+        {"group": "M", "rate": 25.4, "n": 456},
+        {"group": "Unknown", "rate": 34.7, "n": 72},
+        {"group": "X", "rate": None, "n": None},
+    ]
+
+
+def test_measures_by_group_rejects_unknown_cohort(client: TestClient) -> None:
+    response = client.get("/api/v1/sandbox/measures/by-group?cohort=2020-21")
+
+    assert response.status_code == 422

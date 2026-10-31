@@ -9,7 +9,7 @@ export type ChartMeta = {
   fields_used: string[];
   filters: string[];
   definitions: Record<string, string>;
-  source: "mock";
+  source: "mock" | "synthetic";
 };
 
 /** Every chart answers with its meta plus one row per point or bar. */

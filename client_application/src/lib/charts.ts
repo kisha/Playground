@@ -13,12 +13,12 @@ export function monochromeChartConfig(series: ChartSeries[]): ChartConfig {
 }
 
 export function formatPercent(value: unknown): string {
-  return `${value}%`;
+  return typeof value === "number" ? `${value}%` : "—";
 }
 
 export type BarListItem = {
   label: string;
-  value: number;
+  value: number | null;
   /** The value as shown next to the bar, e.g. "78%" or "5.1 terms". */
   display: string;
 };
@@ -27,14 +27,18 @@ export type BarListItem = {
 export function toBarListItems<Row>(
   rows: Row[],
   labelOf: (row: Row) => string,
-  valueOf: (row: Row) => number,
-  formatValue: (value: number) => string,
+  valueOf: (row: Row) => number | null,
+  formatValue: (value: number | null, row: Row) => string,
 ): BarListItem[] {
-  return rows.map((row) => ({ label: labelOf(row), value: valueOf(row), display: formatValue(valueOf(row)) }));
+  return rows.map((row) => {
+    const value = valueOf(row);
+    return { label: labelOf(row), value, display: formatValue(value, row) };
+  });
 }
 
 /** A bar's width as a percent of the track, capped at 100. */
-export function barWidthPercent(value: number, max: number): number {
+export function barWidthPercent(value: number | null, max: number): number {
+  if (value === null) return 0;
   return Math.min((value / max) * 100, 100);
 }
 

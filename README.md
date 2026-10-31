@@ -239,6 +239,10 @@ In the sandbox (http://localhost:3000/sandbox) you can:
   ([`/sandbox/chart-examples`](http://localhost:3000/sandbox/chart-examples)).
 - **Filter a view:** Filters go in the address and the server answers with new numbers
   ([`/sandbox/filters`](http://localhost:3000/sandbox/filters)).
+- **Try dynamic filters:** [`/sandbox/measures`](http://localhost:3000/sandbox/measures) shows typed PDP-style
+  measure, cohort, and grouping selections becoming chart-endpoint query parameters. Its small fixture includes a
+  suppressed result so the chart can demonstrate safe display behavior. Built by
+  [Kavan Brandon](https://github.com/kavanbrandon).
 - **Upload a CSV:** Check its columns and rows, in the browser
   ([`/sandbox/upload`](http://localhost:3000/sandbox/upload)).
 - ✨ **Add your own:** New sandbox pages can show how other charts, trends and features could work.
