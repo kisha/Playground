@@ -3,6 +3,7 @@
 import {
   ChartColumnBig,
   FilePlus2,
+  Gauge,
   ListFilter,
   type LucideIcon,
   MessageCircle,
@@ -30,5 +31,6 @@ export const sandboxExamples: SandboxExample[] = [
   { label: "Charts with Filters", href: routes.sandboxFilters, icon: SlidersHorizontal },
   { label: "Uploads", href: routes.sandboxUpload, icon: Upload },
   { label: "API requests", href: routes.sandboxApiRequests, icon: Send },
+  { label: "KPI Examples", href: routes.sandboxKpiExamples, icon: Gauge },
   { label: "Add a Sandbox Example", href: routes.sandboxAddASandboxPage, icon: FilePlus2 },
 ];

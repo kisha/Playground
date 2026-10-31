@@ -10,7 +10,7 @@ src/
 ├── app/            # Pages: layout.tsx, page.tsx, not-found.tsx, error.tsx, globals.css
 │   └── (app)/      # Every page except /; layout.tsx adds the app frame. The folder name isn't in the address
 │       └── sandbox/    # One folder per sandbox page; layout.tsx adds the production 404
-│           ├── shared.ts                                   # ChartMeta, the loader: shared by every page
+│           ├── shared.ts                                   # ChartMeta, Kpi, the loader: shared by every page
 │           ├── page.tsx                                    # /sandbox: blank for now
 │           ├── chart-examples/                             # /sandbox/chart-examples: page.tsx, charts.tsx, chart-config.ts, data.ts
 │           ├── api-requests/                               # /sandbox/api-requests: the API explorer
@@ -19,12 +19,13 @@ src/
 │           ├── measures/                                   # /sandbox/measures: typed measure, cohort and grouping filters
 │           ├── chat-ui/                                    # /sandbox/chat-ui: two chat layouts, with canned replies
 │           ├── upload/                                     # /sandbox/upload: drop a CSV and preview it, in the browser
+│           ├── kpi-examples/                               # /sandbox/kpi-examples: the same four files
 │           └── add-a-sandbox-page/                         # /sandbox/add-a-sandbox-page: the same four files
 ├── components/     # Render only. Shared: site header/footer, external link, section heading, load error
 │   ├── landing/    # Live status, system diagram, tracker, sparkline, stack cards
 │   ├── chat/       # The chat layouts: side panel, messenger
 │   ├── upload/     # The CSV upload example
-│   ├── sandbox/    # Building blocks for every sandbox page: chart card, charts, filters, API explorer
+│   ├── sandbox/    # Building blocks for every sandbox page: chart card, charts, KPI cards, filters, API explorer
 │   └── ui/         # shadcn/ui components (button, card, chart, skeleton)
 ├── content/        # Words and settings shown on pages
 │   ├── brand.ts            # Name, tagline, logo, footer credit
@@ -102,6 +103,7 @@ is turned off in production (override with `NEXT_PUBLIC_SANDBOX_ENABLED`).
 | Credit load by cohort | Stacked bars | `/sandbox/chart-examples?charts=credit-load` |
 | Students enrolled, term by term | Area | `/sandbox/chart-examples?charts=headcount` |
 | Gateway completion, filtered | Filter panel, tiles, trend and bars | `/sandbox/filter-example?example=example-one` |
+| Headline numbers | KPI cards (percent, split, terms) | `/sandbox/kpi-examples` |
 | Explore a measure by student group | Typed filters, bars and suppressed values | `/sandbox/measures/by-group` |
 
 #### Add a sandbox page

@@ -6,6 +6,7 @@ export const routes = {
   sandboxAppUiFrame: "/sandbox/app-ui-frame",
   sandboxFilters: "/sandbox/filters",
   sandboxMeasures: "/sandbox/measures",
+  sandboxKpiExamples: "/sandbox/kpi-examples",
   sandboxChatUi: "/sandbox/chat-ui",
   sandboxApiRequests: "/sandbox/api-requests",
   sandboxUpload: "/sandbox/upload",

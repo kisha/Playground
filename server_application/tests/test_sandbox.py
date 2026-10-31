@@ -9,6 +9,27 @@ CHART_EXAMPLES = "/api/v1/sandbox/chart-examples"
 FILTER_EXAMPLE = "/api/v1/sandbox/filter-example"
 EXAMPLE_ONE = {"example": "example-one"}
 ADD_A_SANDBOX_PAGE = "/api/v1/sandbox/add-a-sandbox-page"
+KPI_EXAMPLES = "/api/v1/sandbox/kpi-examples"
+ENDPOINTS = [
+    CHART_EXAMPLES,
+    f"{FILTER_EXAMPLE}?example=example-one",
+    ADD_A_SANDBOX_PAGE,
+    "/api/v1/sandbox/measures/by-group",
+    KPI_EXAMPLES,
+]
+
+
+@pytest.mark.parametrize("path", ENDPOINTS)
+def test_sandbox_endpoints_return_labelled_data(client: TestClient, path: str) -> None:
+    response = client.get(path)
+
+    assert response.status_code == 200
+    body = response.json()
+    # An endpoint answers with one response, or with several by name.
+    for chart in [body] if "meta" in body else body.values():
+        assert chart["meta"]["source"] in {"mock", "synthetic"}
+        assert chart["meta"]["title"]
+        assert chart.get("rows") or chart.get("items") or chart.get("trend")
 
 
 def test_worked_example_answers_with_labelled_charts_by_name(client: TestClient) -> None:
@@ -57,6 +78,31 @@ def test_gateway_completion_has_both_series_for_six_terms(client: TestClient) ->
 
     assert len(rows) == 6
     assert all({"term", "english", "math"} <= row.keys() for row in rows)
+
+
+def test_kpi_examples_include_percent_split_and_terms_cards(client: TestClient) -> None:
+    groups = client.get(KPI_EXAMPLES).json()
+    progress = {item["id"]: item for item in groups["student-progress"]["items"]}
+    mix = {item["id"]: item for item in groups["student-mix"]["items"]}
+    time_to_complete = {item["id"]: item for item in groups["time-to-complete"]["items"]}
+
+    assert progress["first_year_credit_completion"] == {
+        "id": "first_year_credit_completion",
+        "label": "First-year credit completion",
+        "unit": "percent",
+        "value": 76.0,
+        "secondary_value": None,
+        "detail": "fall 2025 cohort",
+    }
+    assert (mix["female_male"]["value"], mix["female_male"]["secondary_value"]) == (64, 36)
+    assert time_to_complete["time_to_complete"]["unit"] == "terms"
+
+
+def test_kpi_examples_answers_with_only_the_groups_named(client: TestClient) -> None:
+    one = client.get(KPI_EXAMPLES, params={"charts": "student-mix"}).json()
+
+    assert one.keys() == {"student-mix"}
+    assert client.get(KPI_EXAMPLES, params={"charts": "not-a-group"}).status_code == 422
 
 
 def test_persistence_retention_carries_filters_and_definitions(client: TestClient) -> None:

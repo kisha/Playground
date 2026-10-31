@@ -1,3 +1,4 @@
+import type { Kpi } from "@/app/(app)/sandbox/shared";
 import type { ChartConfig } from "@/components/ui/chart";
 
 /** One line or bar series. Charts are black and white, so `dashed` tells the second one apart. */
@@ -42,6 +43,18 @@ export function barWidthPercent(value: number | null, max: number): number {
   return Math.min((value / max) * 100, 100);
 }
 
+
+/** A KPI's headline, e.g. "76%", "64 / 36" or "5.5" with the unit "terms" shown smaller. */
+export function formatKpi(kpi: Kpi): { headline: string; unitLabel: string | null } {
+  switch (kpi.unit) {
+    case "percent":
+      return { headline: formatPercent(kpi.value), unitLabel: null };
+    case "split":
+      return { headline: `${kpi.value} / ${kpi.secondary_value}`, unitLabel: null };
+    case "terms":
+      return { headline: `${kpi.value}`, unitLabel: "terms" };
+  }
+}
 
 /**
  * Whether a line chart point is drawn filled. By default the first series has hollow points and a
