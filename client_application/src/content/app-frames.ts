@@ -12,7 +12,7 @@ export const APP_FRAME_PARAM = "app-frame";
 export const appFrameStyles: AppFrameStyle[] = [
   {
     id: "ui-frame-1",
-    label: "UI Frame 1",
+    label: "UI Frame 1 (default)",
     description: "A collapsible sidebar on the left, the page in the middle, and a chat panel on the right.",
     hasChatPanel: true,
   },
