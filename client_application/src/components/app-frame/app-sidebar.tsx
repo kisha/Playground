@@ -71,7 +71,7 @@ export function AppSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>{SANDBOX_EXAMPLES_HEADING}</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-sm font-semibold">{SANDBOX_EXAMPLES_HEADING}</SidebarGroupLabel>
           <SidebarMenu className="gap-1">
             {sandboxExamples.map((example) => (
               <SidebarMenuItem key={example.href}>

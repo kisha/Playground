@@ -2,8 +2,6 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
-import { useChatPanelDocks } from "@/hooks/use-chat-panel-docks";
-
 type ChatPanelState = {
   /** False when the frame style has no chat panel: it stays closed and its controls are gone. */
   isChatPanelAvailable: boolean;
@@ -23,16 +21,14 @@ export function useChatPanel(): ChatPanelState {
 }
 
 /**
- * Whether the chat panel is open, with ⌘J to toggle it. Until someone chooses, it's open on a
- * desktop and closed on a phone, where it would cover the page.
+ * Whether the chat panel is open, with ⌘J to toggle it. It starts closed on every screen size.
  */
 export function useChatPanelState(): ChatPanelState {
-  const chatPanelDocks = useChatPanelDocks();
   const [isChatPanelAvailable, setChatPanelAvailable] = useState(true);
-  const [chosenOpen, setChosenOpen] = useState<boolean | null>(null);
-  const isChatPanelOpen = isChatPanelAvailable && (chosenOpen ?? chatPanelDocks);
+  const [isOpen, setChatPanelOpen] = useState(false);
+  const isChatPanelOpen = isChatPanelAvailable && isOpen;
 
-  const toggleChatPanel = useCallback(() => setChosenOpen(!isChatPanelOpen), [isChatPanelOpen]);
+  const toggleChatPanel = useCallback(() => setChatPanelOpen(!isChatPanelOpen), [isChatPanelOpen]);
 
   useEffect(() => {
     function toggleOnShortcut(event: KeyboardEvent) {
@@ -49,7 +45,7 @@ export function useChatPanelState(): ChatPanelState {
       isChatPanelAvailable,
       setChatPanelAvailable,
       isChatPanelOpen,
-      setChatPanelOpen: setChosenOpen,
+      setChatPanelOpen,
       toggleChatPanel,
     }),
     [isChatPanelAvailable, isChatPanelOpen, toggleChatPanel],
