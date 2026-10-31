@@ -6,13 +6,10 @@ from app.main import create_app
 from app.sandbox.chart_examples.schemas import ChartName
 
 CHART_EXAMPLES = "/api/v1/sandbox/chart-examples"
-FILTER_EXAMPLE = "/api/v1/sandbox/filter-example"
-EXAMPLE_ONE = {"example": "example-one"}
 ADD_A_SANDBOX_PAGE = "/api/v1/sandbox/add-a-sandbox-page"
 KPI_EXAMPLES = "/api/v1/sandbox/kpi-examples"
 ENDPOINTS = [
     CHART_EXAMPLES,
-    f"{FILTER_EXAMPLE}?example=example-one",
     ADD_A_SANDBOX_PAGE,
     "/api/v1/sandbox/measures/by-group",
     KPI_EXAMPLES,
@@ -29,7 +26,7 @@ def test_sandbox_endpoints_return_labelled_data(client: TestClient, path: str) -
     for chart in [body] if "meta" in body else body.values():
         assert chart["meta"]["source"] in {"mock", "synthetic"}
         assert chart["meta"]["title"]
-        assert chart.get("rows") or chart.get("items") or chart.get("trend")
+        assert chart.get("rows") or chart.get("items")
 
 
 def test_worked_example_answers_with_labelled_charts_by_name(client: TestClient) -> None:
@@ -121,34 +118,6 @@ def test_sandbox_is_not_mounted_when_disabled(monkeypatch: pytest.MonkeyPatch) -
         assert client.get(CHART_EXAMPLES).status_code == 404
         assert client.get(ADD_A_SANDBOX_PAGE).status_code == 404
         assert client.get("/api/v1/health").status_code == 200
-
-
-def test_filtered_completion_changes_with_its_filters(client: TestClient) -> None:
-    unfiltered = client.get(FILTER_EXAMPLE, params=EXAMPLE_ONE).json()
-    filtered = client.get(
-        FILTER_EXAMPLE,
-        params={
-            **EXAMPLE_ONE,
-            "cohort_year": 2023,
-            "gender": "Female",
-            "course_modality": "Online",
-        },
-    ).json()
-
-    assert unfiltered["kpis"] == {"gateway_completion": 68, "english": 74, "math": 62}
-    assert filtered["kpis"]["english"] == 70
-    assert filtered["applied_filters"] == ["2023", "Female", "Online"]
-
-
-def test_filtered_completion_rejects_an_unknown_filter_value(client: TestClient) -> None:
-    response = client.get(FILTER_EXAMPLE, params={**EXAMPLE_ONE, "gender": "Unknown"})
-
-    assert response.status_code == 422
-
-
-def test_filter_example_needs_a_known_example(client: TestClient) -> None:
-    assert client.get(FILTER_EXAMPLE).status_code == 422
-    assert client.get(FILTER_EXAMPLE, params={"example": "not-an-example"}).status_code == 422
 
 
 def test_measures_by_group_returns_exact_fixture_rates_and_counts(client: TestClient) -> None:

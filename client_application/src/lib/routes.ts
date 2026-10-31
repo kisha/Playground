@@ -4,11 +4,9 @@ export const routes = {
   sandbox: "/sandbox",
   sandboxChartExamples: "/sandbox/chart-examples",
   sandboxAppUiFrame: "/sandbox/app-ui-frame",
-  sandboxFilters: "/sandbox/filters",
   sandboxMeasures: "/sandbox/measures",
   sandboxKpiExamples: "/sandbox/kpi-examples",
   sandboxChatUi: "/sandbox/chat-ui",
   sandboxApiRequests: "/sandbox/api-requests",
-  sandboxUpload: "/sandbox/upload",
   sandboxAddASandboxPage: "/sandbox/add-a-sandbox-page",
 } as const;

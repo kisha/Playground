@@ -237,15 +237,11 @@ In the sandbox (http://localhost:3000/sandbox) you can:
   ([`/sandbox/api-requests`](http://localhost:3000/sandbox/api-requests)).
 - **Preview charts:** Each chart asks one endpoint for its data by name
   ([`/sandbox/chart-examples`](http://localhost:3000/sandbox/chart-examples)).
-- **Filter a view:** Filters go in the address and the server answers with new numbers
-  ([`/sandbox/filters`](http://localhost:3000/sandbox/filters)).
 - **Try dynamic filters:** [`/sandbox/measures`](http://localhost:3000/sandbox/measures) shows typed PDP-style
   measure, cohort, and grouping selections becoming chart-endpoint query parameters. Its small fixture includes a
   suppressed result so the chart can demonstrate safe display behavior.
 - **Show headline numbers:** KPI cards for percentages, splits and terms
   ([`/sandbox/kpi-examples`](http://localhost:3000/sandbox/kpi-examples)).
-- **Upload a CSV:** Check its columns and rows, in the browser
-  ([`/sandbox/upload`](http://localhost:3000/sandbox/upload)).
 - ✨ **Add your own:** New sandbox pages can show how other charts, trends and features could work.
 
 #### Add your own sandbox example

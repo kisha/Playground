@@ -40,10 +40,3 @@ export function chartLoader<Chart>(endpoint: string, chartName: string): Sandbox
   const load = sandboxLoader<Record<string, Chart>>(`${endpoint}?charts=${chartName}`);
   return Object.assign(() => load().then((charts) => charts[chartName]), { path: load.path });
 }
-
-/** Loads one filter example. `query` is its filters, e.g. "gender=Female", and can't change which example. */
-export function filterExampleLoader<T>(example: string, query = ""): SandboxLoader<T> {
-  const params = new URLSearchParams(query);
-  params.set("example", example);
-  return sandboxLoader<T>(`/filter-example?${params}`);
-}

@@ -15,16 +15,13 @@ src/
 │           ├── chart-examples/                             # /sandbox/chart-examples: page.tsx, charts.tsx, chart-config.ts, data.ts
 │           ├── api-requests/                               # /sandbox/api-requests: the API explorer
 │           ├── app-ui-frame/                               # /sandbox/app-ui-frame?app-frame=ui-frame-2: the frame's two styles
-│           ├── filters/                                    # /sandbox/filters: a filter panel, with filters in the URL
 │           ├── measures/                                   # /sandbox/measures: typed measure, cohort and grouping filters
 │           ├── chat-ui/                                    # /sandbox/chat-ui: two chat layouts, with canned replies
-│           ├── upload/                                     # /sandbox/upload: drop a CSV and preview it, in the browser
 │           ├── kpi-examples/                               # /sandbox/kpi-examples: the same four files
 │           └── add-a-sandbox-page/                         # /sandbox/add-a-sandbox-page: the same four files
 ├── components/     # Render only. Shared: site header/footer, external link, section heading, load error
 │   ├── landing/    # Live status, system diagram, tracker, sparkline, stack cards
 │   ├── chat/       # The chat layouts: side panel, messenger
-│   ├── upload/     # The CSV upload example
 │   ├── sandbox/    # Building blocks for every sandbox page: chart card, charts, KPI cards, filters, API explorer
 │   └── ui/         # shadcn/ui components (button, card, chart, skeleton)
 ├── content/        # Words and settings shown on pages
@@ -102,7 +99,6 @@ is turned off in production (override with `NEXT_PUBLIC_SANDBOX_ENABLED`).
 | Students by gender | Donut | `/sandbox/chart-examples?charts=gender-share` |
 | Credit load by cohort | Stacked bars | `/sandbox/chart-examples?charts=credit-load` |
 | Students enrolled, term by term | Area | `/sandbox/chart-examples?charts=headcount` |
-| Gateway completion, filtered | Filter panel, tiles, trend and bars | `/sandbox/filter-example?example=example-one` |
 | Headline numbers | KPI cards (percent, split, terms) | `/sandbox/kpi-examples` |
 | Explore a measure by student group | Typed filters, bars and suppressed values | `/sandbox/measures/by-group` |
 
