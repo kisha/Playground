@@ -8,7 +8,7 @@ import { env } from "@/lib/env";
 import { repositoryFolderUrl, serverRoutesFolder, serverSandboxFolder } from "@/lib/links";
 
 export const metadata: Metadata = {
-  title: "Api Requests",
+  title: "API requests",
   description: "Live requests to the server application.",
 };
 

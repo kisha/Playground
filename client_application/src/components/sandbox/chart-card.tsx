@@ -4,6 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 
 import type { ChartMeta, SandboxLoader } from "@/app/(app)/sandbox/shared";
 import { LoadError } from "@/components/load-error";
+import { AnswerNote } from "@/components/sandbox/answer-note";
 import { FilterChips } from "@/components/sandbox/filter-chips";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useApiResource } from "@/hooks/use-api-resource";
@@ -77,12 +78,7 @@ function ChartFooter({ meta }: { meta: ChartMeta }) {
   const definitions = Object.entries(meta.definitions);
   return (
     <>
-      {meta.takeaway && (
-        <div className="border-l-2 border-foreground bg-muted/60 px-4 py-3">
-          <p className="text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Answer</p>
-          <p className="mt-1 text-sm font-medium">{meta.takeaway}</p>
-        </div>
-      )}
+      {meta.takeaway && <AnswerNote takeaway={meta.takeaway} />}
 
       {definitions.length > 0 && (
         <dl className="grid gap-x-6 gap-y-1 text-xs sm:grid-cols-2">

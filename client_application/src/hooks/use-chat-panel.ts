@@ -4,7 +4,10 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 
 import { useChatPanelDocks } from "@/hooks/use-chat-panel-docks";
 
-export type ChatPanelState = {
+type ChatPanelState = {
+  /** False when the frame style has no chat panel: it stays closed and its controls are gone. */
+  isChatPanelAvailable: boolean;
+  setChatPanelAvailable: (available: boolean) => void;
   isChatPanelOpen: boolean;
   setChatPanelOpen: (open: boolean) => void;
   toggleChatPanel: () => void;
@@ -20,27 +23,35 @@ export function useChatPanel(): ChatPanelState {
 }
 
 /**
- * Whether the chat panel is open, with ⌘J to toggle it. Until someone chooses,  * desktop and closed on a phone, where it would cover the page.
+ * Whether the chat panel is open, with ⌘J to toggle it. Until someone chooses, it's open on a
+ * desktop and closed on a phone, where it would cover the page.
  */
 export function useChatPanelState(): ChatPanelState {
   const chatPanelDocks = useChatPanelDocks();
+  const [isChatPanelAvailable, setChatPanelAvailable] = useState(true);
   const [chosenOpen, setChosenOpen] = useState<boolean | null>(null);
-  const isChatPanelOpen = chosenOpen ?? chatPanelDocks;
+  const isChatPanelOpen = isChatPanelAvailable && (chosenOpen ?? chatPanelDocks);
 
   const toggleChatPanel = useCallback(() => setChosenOpen(!isChatPanelOpen), [isChatPanelOpen]);
 
   useEffect(() => {
     function toggleOnShortcut(event: KeyboardEvent) {
-      if (event.key !== "j" || !(event.metaKey || event.ctrlKey)) return;
+      if (!isChatPanelAvailable || event.key !== "j" || !(event.metaKey || event.ctrlKey)) return;
       event.preventDefault();
       toggleChatPanel();
     }
     window.addEventListener("keydown", toggleOnShortcut);
     return () => window.removeEventListener("keydown", toggleOnShortcut);
-  }, [toggleChatPanel]);
+  }, [isChatPanelAvailable, toggleChatPanel]);
 
   return useMemo(
-    () => ({ isChatPanelOpen, setChatPanelOpen: setChosenOpen, toggleChatPanel }),
-    [isChatPanelOpen, toggleChatPanel],
+    () => ({
+      isChatPanelAvailable,
+      setChatPanelAvailable,
+      isChatPanelOpen,
+      setChatPanelOpen: setChosenOpen,
+      toggleChatPanel,
+    }),
+    [isChatPanelAvailable, isChatPanelOpen, toggleChatPanel],
   );
 }

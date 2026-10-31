@@ -123,8 +123,8 @@ Choose one. How to choose: [Setup 2: Choose your database](#setup-2-choose-your-
 <details>
 <summary><strong>Tooling</strong></summary>
 
-- [mise](https://mise.jdx.dev): Installs and pins versions of almost any language or tool (e.g., Node,
-  Python, Rust, Ruby, Go, Java and more). Here it pins bun, Node, Python and uv, and runs every command
+- [mise](https://mise.jdx.dev): Installs and pins versions of almost any language or tool (e.g.,
+  Python, Rust, Ruby, Go, Java and more). Here it pins bun, Python and uv, and runs every command
   (see 👉🏾 [Commands](#commands)).
 - [bun](https://bun.sh): JavaScript runtime and package manager.
 - [Docker](https://www.docker.com/): Runs PostgreSQL locally.
@@ -153,7 +153,7 @@ cd Playground
 
 ### Step 1: Install the toolchain
 
-Install the pinned versions of bun, Node, Python and uv.
+Install the pinned versions of bun, Python and uv.
 
 ```bash
 mise trust && mise install
@@ -195,7 +195,7 @@ Check it: http://localhost:8000/api/v1/health
 Every endpoint, ready to try in the browser: http://localhost:8000/docs ·
 [code](server_application/app/api/v1/routes/)
 
-![Swagger UI showing the health, documents, sandbox and sandbox: enrollment endpoints](server_application/docs/swagger-endpoints.png)
+![Swagger UI showing the health, documents and sandbox endpoints](server_application/docs/swagger-endpoints.png)
 
 ### Step 5: Run the tests
 
@@ -235,7 +235,7 @@ In the sandbox (http://localhost:3000/sandbox) you can:
 
 - **Try the API:** Send real requests to the Server Application and see the responses
   ([`/sandbox/api-requests`](http://localhost:3000/sandbox/api-requests)).
-- **Preview charts:** Each chart loads its own `/api/v1/sandbox/...` endpoint
+- **Preview charts:** Each chart asks one endpoint for its data by name
   ([`/sandbox/chart-examples`](http://localhost:3000/sandbox/chart-examples)).
 - **Filter a view:** Filters go in the address and the server answers with new numbers
   ([`/sandbox/filters`](http://localhost:3000/sandbox/filters)).
@@ -246,7 +246,7 @@ In the sandbox (http://localhost:3000/sandbox) you can:
 #### Add your own sandbox example
 
 Everything in the sandbox is a reusable example. Add your own charts, filters or other UI on a new sandbox
-page, with its own endpoints. Start from **Add A Sandbox Page** in the sidebar:
+page, with its own endpoints. Start from **Add a Sandbox Example** in the sidebar:
 
 ![Add your own, at the top of the sandbox: a link to the worked example, How to add a sandbox page](client_application/docs/sandbox-add-your-own.png)
 
@@ -267,18 +267,18 @@ The worked example lists every file to change, on both sides:
 <details open>
 <summary>📊 <strong>See the example charts</strong> (trend lines, bar charts, pies and more)</summary>
 
-**Trend lines:** `/sandbox/gateway-completion` · `/sandbox/term-enrollment` ·
-`/sandbox/credit-completion` · `/sandbox/persistence-retention`
+One endpoint serves them all: `/sandbox/chart-examples`. Ask for one or several by name with
+`?charts=`, or leave it out for every chart.
+
+**Trend lines:** `gateway-completion` · `term-enrollment` · `credit-completion` · `persistence-retention`
 
 ![Trend charts: gateway completion, term-to-term enrollment, credit completion, persistence and retention](client_application/docs/sandbox-trend-charts.png)
 
-**Bar charts:** `/sandbox/completion-by-group` · `/sandbox/persistence-by-age` ·
-`/sandbox/time-to-complete`
+**Bar charts:** `completion-by-group` · `persistence-by-age` · `time-to-complete`
 
 ![Bar charts: completion by student group, persistence by age, time to complete](client_application/docs/sandbox-bar-charts.png)
 
-**Parts of a whole and amounts:** `/sandbox/entry-status-share` · `/sandbox/gender-share` ·
-`/sandbox/credit-load` · `/sandbox/headcount`
+**Parts of a whole and amounts:** `entry-status-share` · `gender-share` · `credit-load` · `headcount`
 
 </details>
 

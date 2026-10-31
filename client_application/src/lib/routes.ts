@@ -3,6 +3,7 @@ export const routes = {
   home: "/",
   sandbox: "/sandbox",
   sandboxChartExamples: "/sandbox/chart-examples",
+  sandboxAppUiFrame: "/sandbox/app-ui-frame",
   sandboxFilters: "/sandbox/filters",
   sandboxChatUi: "/sandbox/chat-ui",
   sandboxApiRequests: "/sandbox/api-requests",

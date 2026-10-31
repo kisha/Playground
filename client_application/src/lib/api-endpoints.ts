@@ -26,7 +26,7 @@ export type OpenApiDocument = {
 
 export type ApiEndpoint = ExplorerRequest & { group: string };
 
-export type EndpointGroup = { name: string; endpoints: ApiEndpoint[] };
+type EndpointGroup = { name: string; endpoints: ApiEndpoint[] };
 
 const HTTP_METHODS = new Set(["get", "post", "put", "patch", "delete"]);
 const UNGROUPED = "other";
@@ -37,7 +37,7 @@ function resolveSchema(schema: SchemaObject | undefined, document: OpenApiDocume
 }
 
 /** A starting body: the required fields and any with a default, ready to edit. */
-export function exampleBody(schema: SchemaObject | undefined): unknown {
+function exampleBody(schema: SchemaObject | undefined): unknown {
   if (!schema?.properties) return {};
   const fields = Object.entries(schema.properties).flatMap(([name, property]): [string, unknown][] => {
     if (property.default !== undefined) return [[name, property.default]];
@@ -61,7 +61,8 @@ function toParams(operation: OpenApiOperation): EndpointParam[] {
 }
 
 /** Every endpoint under the API base URL, with paths relative to it. */
-export function toApiEndpoints(document: OpenApiDocument, apiBasePath = new URL(env.apiBaseUrl).pathname): ApiEndpoint[] {
+export function toApiEndpoints(document: OpenApiDocument): ApiEndpoint[] {
+  const apiBasePath = new URL(env.apiBaseUrl).pathname;
   return Object.entries(document.paths).flatMap(([fullPath, operations]) =>
     Object.entries(operations)
       .filter(([method]) => HTTP_METHODS.has(method) && fullPath.startsWith(apiBasePath))

@@ -5,6 +5,7 @@ import {
   FilePlus2,
   type LucideIcon,
   MessageCircle,
+  PanelsTopLeft,
   Send,
   SlidersHorizontal,
   Upload,
@@ -12,7 +13,7 @@ import {
 
 import { routes } from "@/lib/routes";
 
-export type SandboxExample = {
+type SandboxExample = {
   label: string;
   href: string;
   icon: LucideIcon;
@@ -22,9 +23,10 @@ export const SANDBOX_EXAMPLES_HEADING = "Sandbox Examples";
 
 export const sandboxExamples: SandboxExample[] = [
   { label: "Charts", href: routes.sandboxChartExamples, icon: ChartColumnBig },
-  { label: "Filters", href: routes.sandboxFilters, icon: SlidersHorizontal },
+  { label: "App UI Frame", href: routes.sandboxAppUiFrame, icon: PanelsTopLeft },
   { label: "Chat UI", href: routes.sandboxChatUi, icon: MessageCircle },
-  { label: "Api Requests", href: routes.sandboxApiRequests, icon: Send },
-  { label: "Upload", href: routes.sandboxUpload, icon: Upload },
-  { label: "Add A Sandbox Page", href: routes.sandboxAddASandboxPage, icon: FilePlus2 },
+  { label: "Filters", href: routes.sandboxFilters, icon: SlidersHorizontal },
+  { label: "Uploads", href: routes.sandboxUpload, icon: Upload },
+  { label: "API requests", href: routes.sandboxApiRequests, icon: Send },
+  { label: "Add a Sandbox Example", href: routes.sandboxAddASandboxPage, icon: FilePlus2 },
 ];

@@ -1,13 +1,17 @@
-"""Mock data for the sandbox, shaped like PDP Analysis-Ready (AR) file outputs.
+"""Mock data for the example charts, shaped like PDP Analysis-Ready (AR) file outputs.
 
 Labels, filters and definitions follow the PDP measures used in the project briefs. The numbers are
 invented and contain no real institution or student data. Replace these functions with real
 queries when an instance has AR data of its own.
 """
 
+from collections.abc import Callable
+
 from app.sandbox.shared import COHORT_YEARS, TERMS, ChartMeta
 
 from .schemas import (
+    ChartExample,
+    ChartName,
     CompletionByGroupResponse,
     CompletionByGroupRow,
     CreditCompletionResponse,
@@ -16,10 +20,6 @@ from .schemas import (
     CreditLoadRow,
     EntryStatusShareResponse,
     EntryStatusShareRow,
-    FilteredCompletionResponse,
-    FilteredGroupRow,
-    FilteredKpis,
-    FilteredTrendRow,
     GatewayCompletionResponse,
     GatewayCompletionRow,
     GenderShareResponse,
@@ -263,85 +263,16 @@ def get_headcount() -> HeadcountResponse:
     )
 
 
-# Points each filter value adds to a rate, so filtering visibly changes the mock numbers.
-FILTER_ADJUSTMENTS = {
-    "New": 3,
-    "Transfer": -5,
-    "Female": 2,
-    "Male": -3,
-    "Non-binary": -1,
-    "First-gen": -2,
-    "Not first-gen": 1,
-    "Online": -6,
-    "On-campus": 3,
+CHART_LOADERS: dict[ChartName, Callable[[], ChartExample]] = {
+    ChartName.GATEWAY_COMPLETION: get_gateway_completion,
+    ChartName.TERM_ENROLLMENT: get_term_enrollment,
+    ChartName.CREDIT_COMPLETION: get_credit_completion,
+    ChartName.PERSISTENCE_RETENTION: get_persistence_retention,
+    ChartName.COMPLETION_BY_GROUP: get_completion_by_group,
+    ChartName.PERSISTENCE_BY_AGE: get_persistence_by_age,
+    ChartName.TIME_TO_COMPLETE: get_time_to_complete,
+    ChartName.ENTRY_STATUS_SHARE: get_entry_status_share,
+    ChartName.GENDER_SHARE: get_gender_share,
+    ChartName.CREDIT_LOAD: get_credit_load,
+    ChartName.HEADCOUNT: get_headcount,
 }
-GATEWAY_RATES_BY_COHORT = {
-    2020: (70, 58),
-    2021: (72, 60),
-    2022: (71, 58),
-    2023: (74, 61),
-    2024: (73, 60),
-    2025: (74, 62),
-}
-GROUP_RATES = [("Female", 70), ("Male", 64), ("New", 72), ("Transfer", 58), ("First-gen", 66)]
-# Which filter each group belongs to: its own filter doesn't shift its bar.
-GROUP_FILTERS = {"Female": 1, "Male": 1, "New": 0, "Transfer": 0, "First-gen": 2}
-
-
-def _clamp_rate(rate: float) -> float:
-    return min(100, max(0, rate))
-
-
-def get_filtered_completion(
-    cohort_year: int,
-    enrollment_type: str | None,
-    gender: str | None,
-    first_gen: str | None,
-    course_modality: str | None,
-) -> FilteredCompletionResponse:
-    chosen = [enrollment_type, gender, first_gen, course_modality]
-    adjustment = sum(FILTER_ADJUSTMENTS[value] for value in chosen if value)
-    english, math = GATEWAY_RATES_BY_COHORT[cohort_year]
-    english_rate = _clamp_rate(english + adjustment)
-    math_rate = _clamp_rate(math + adjustment)
-    applied_filters = [str(cohort_year), *(value for value in chosen if value)]
-
-    return FilteredCompletionResponse(
-        meta=ChartMeta(
-            title="Gateway course completion",
-            description="Math and English, for the students these filters select.",
-            takeaway=(
-                f"For this selection, English completion runs "
-                f"{english_rate - math_rate:.0f} points above math."
-            ),
-            fields_used=["Cohort", "Enrollment type", "Gender", "First gen", "Course modality"],
-        ),
-        applied_filters=applied_filters,
-        kpis=FilteredKpis(
-            gateway_completion=round((english_rate + math_rate) / 2),
-            english=english_rate,
-            math=math_rate,
-        ),
-        trend=[
-            FilteredTrendRow(
-                cohort_year=year,
-                english=_clamp_rate(english_for_year + adjustment),
-                math=_clamp_rate(math_for_year + adjustment),
-            )
-            for year, (english_for_year, math_for_year) in GATEWAY_RATES_BY_COHORT.items()
-        ],
-        groups=[
-            FilteredGroupRow(
-                group=group,
-                rate=_clamp_rate(
-                    rate
-                    + sum(
-                        FILTER_ADJUSTMENTS[value]
-                        for index, value in enumerate(chosen)
-                        if value and index != GROUP_FILTERS[group]
-                    )
-                ),
-            )
-            for group, rate in GROUP_RATES
-        ],
-    )

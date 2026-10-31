@@ -1,4 +1,4 @@
-import { type ChartMeta, sandboxLoader } from "@/app/(app)/sandbox/shared";
+import { type ChartMeta, filterExampleLoader } from "@/app/(app)/sandbox/shared";
 
 /** /sandbox/filters: one type and one loader. Mirrors FilteredCompletionResponse in server_application. */
 
@@ -12,5 +12,5 @@ export type FilteredCompletion = {
 
 /** The loader for one filtered view. `query` is what the URL's filters come to, e.g. "gender=Female". */
 export function filteredCompletionLoader(query: string) {
-  return sandboxLoader<FilteredCompletion>(`/filtered-completion${query ? `?${query}` : ""}`);
+  return filterExampleLoader<FilteredCompletion>("example-one", query);
 }

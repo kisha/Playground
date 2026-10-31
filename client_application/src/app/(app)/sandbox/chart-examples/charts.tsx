@@ -24,26 +24,26 @@ import {
   termEnrollmentSeries,
   timeToCompleteBars,
 } from "./chart-config";
-import { endpoints } from "./data";
+import { chartLoaders } from "./data";
 
-/** /sandbox/chart-examples' charts, each loading its own endpoint from the browser. */
+/** /sandbox/chart-examples' charts, each asking the one endpoint for its own data from the browser. */
 export function Charts() {
   return (
     <div className="flex flex-col gap-4">
       <div className="grid gap-4 lg:grid-cols-2">
-        <ChartCard load={endpoints.entryStatusShare}>
+        <ChartCard load={chartLoaders.entryStatusShare}>
           {(data) => <ShareChart slices={entryStatusSlices(data.rows)} />}
         </ChartCard>
 
-        <ChartCard load={endpoints.genderShare}>
+        <ChartCard load={chartLoaders.genderShare}>
           {(data) => <ShareChart slices={genderSlices(data.rows)} center={genderCenter} />}
         </ChartCard>
 
-        <ChartCard load={endpoints.gatewayCompletion}>
+        <ChartCard load={chartLoaders.gatewayCompletion}>
           {(data) => <TrendChart rows={data.rows} xKey="term" series={gatewayCompletionSeries} />}
         </ChartCard>
 
-        <ChartCard load={endpoints.termEnrollment}>
+        <ChartCard load={chartLoaders.termEnrollment}>
           {(data) => (
             <div className="flex flex-col gap-2">
               <TrendChart rows={data.rows} xKey="term" series={termEnrollmentSeries} isFilled={isIntoFall} />
@@ -52,31 +52,31 @@ export function Charts() {
           )}
         </ChartCard>
 
-        <ChartCard load={endpoints.creditCompletion}>
+        <ChartCard load={chartLoaders.creditCompletion}>
           {(data) => <TrendChart rows={data.rows} xKey="cohort_year" series={creditCompletionSeries} />}
         </ChartCard>
 
-        <ChartCard load={endpoints.persistenceRetention}>
+        <ChartCard load={chartLoaders.persistenceRetention}>
           {(data) => <TrendChart rows={data.rows} xKey="cohort_year" series={persistenceRetentionSeries} />}
         </ChartCard>
 
-        <ChartCard load={endpoints.completionByGroup}>
+        <ChartCard load={chartLoaders.completionByGroup}>
           {(data) => <BarList items={completionByGroupBars(data.rows)} />}
         </ChartCard>
 
-        <ChartCard load={endpoints.persistenceByAge}>
+        <ChartCard load={chartLoaders.persistenceByAge}>
           {(data) => <GroupedBarChart rows={data.rows} categoryKey="age_group" series={persistenceByAgeSeries} />}
         </ChartCard>
 
-        <ChartCard load={endpoints.creditLoad}>
+        <ChartCard load={chartLoaders.creditLoad}>
           {(data) => <StackedBarChart rows={data.rows} categoryKey="cohort_year" series={creditLoadSeries} />}
         </ChartCard>
 
-        <ChartCard load={endpoints.headcount}>
+        <ChartCard load={chartLoaders.headcount}>
           {(data) => <AreaTrendChart rows={data.rows} xKey="term" series={headcountSeries} />}
         </ChartCard>
 
-        <ChartCard load={endpoints.timeToComplete} className="lg:col-span-2">
+        <ChartCard load={chartLoaders.timeToComplete} className="lg:col-span-2">
           {(data) => <BarList max={TIME_TO_COMPLETE_MAX_TERMS} items={timeToCompleteBars(data.rows)} />}
         </ChartCard>
       </div>

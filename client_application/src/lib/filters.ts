@@ -10,7 +10,7 @@ export const ALL_FILTER_VALUE = "all";
 /** One value per filter key, "all" included, e.g. { gender: "Female", first_gen: "all" }. */
 export type FilterValues = Record<string, string>;
 
-export type ActiveFilter = { filter: FilterDefinition; option: FilterOption };
+type ActiveFilter = { filter: FilterDefinition; option: FilterOption };
 
 type ReadableSearchParams = Pick<URLSearchParams, "get">;
 
@@ -18,7 +18,7 @@ function findSelectedOption(filter: FilterDefinition, searchParams: ReadableSear
   return filter.options.find((option) => option.value === searchParams.get(filter.key));
 }
 
-function unsetValue(filter: FilterDefinition): string {
+export function unsetValue(filter: FilterDefinition): string {
   return filter.defaultValue ?? ALL_FILTER_VALUE;
 }
 

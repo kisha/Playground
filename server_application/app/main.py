@@ -25,6 +25,8 @@ def create_app() -> FastAPI:
         openapi_url=f"{settings.API_V1_PREFIX}/openapi.json",
         docs_url=settings.docs_path,
         redoc_url=None,
+        # Hides the docs page's long Schemas list. Each endpoint still shows its own shapes.
+        swagger_ui_parameters={"defaultModelsExpandDepth": -1},
         lifespan=lifespan,
     )
 

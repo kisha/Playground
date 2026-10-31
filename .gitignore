@@ -8,7 +8,7 @@
 .env
 .env*.local
 
-# Node / Next.js (client_application)
+# Next.js (client_application)
 node_modules/
 .next/
 out/

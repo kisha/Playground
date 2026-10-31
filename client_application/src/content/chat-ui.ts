@@ -20,7 +20,7 @@ export const cannedReplies: CannedReply[] = [
   },
   {
     keywords: ["api", "request", "endpoint"],
-    text: "Open Api Requests in the sidebar and pick a request. It goes to the Server Application, and you see the real response.",
+    text: "Open API requests in the sidebar and pick a request. It goes to the Server Application, and you see the real response.",
   },
   {
     keywords: ["sandbox"],

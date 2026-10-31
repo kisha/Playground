@@ -65,10 +65,6 @@ class Settings(BaseSettings):
     SANDBOX_ENABLED: bool = True
 
     @property
-    def is_development(self) -> bool:
-        return self.APP_ENV is Environment.DEVELOPMENT
-
-    @property
     def is_production(self) -> bool:
         return self.APP_ENV is Environment.PRODUCTION
 

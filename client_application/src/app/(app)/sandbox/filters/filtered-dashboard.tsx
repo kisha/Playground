@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 
 import { LoadError } from "@/components/load-error";
+import { AnswerNote } from "@/components/sandbox/answer-note";
 import { BarList } from "@/components/sandbox/bar-list";
 import { FilterChips } from "@/components/sandbox/filter-chips";
 import { FilterPanel, FilterSheet } from "@/components/sandbox/filter-controls";
@@ -78,12 +79,7 @@ function FilteredResults({ data }: { data: FilteredCompletion }) {
           <BarList items={groupBars} />
         </article>
       </div>
-      {data.meta.takeaway && (
-        <div className="border-l-2 border-foreground bg-muted/60 px-4 py-3">
-          <p className="text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Answer</p>
-          <p className="mt-1 text-sm font-medium">{data.meta.takeaway}</p>
-        </div>
-      )}
+      {data.meta.takeaway && <AnswerNote takeaway={data.meta.takeaway} />}
     </>
   );
 }

@@ -14,7 +14,7 @@ export type CsvPreview = {
 export type CsvResult = { preview: CsvPreview } | { problem: string };
 
 /** Split CSV text into rows of values. Handles quoted values, doubled quotes and line breaks inside quotes. */
-export function parseCsv(text: string): string[][] {
+function parseCsv(text: string): string[][] {
   const rows: string[][] = [];
   let row: string[] = [];
   let value = "";

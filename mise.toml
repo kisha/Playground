@@ -4,8 +4,7 @@
 #   mise run <task>   run one, e.g. `mise run db`
 
 [tools]
-bun = "1.4.3"      # client_application: package manager and script runner
-node = "24"        # client_application: runtime Next.js tooling expects alongside bun
+bun = "1.4.3"      # client_application: package manager and runtime (--bun on every task, no Node)
 python = "3.14"    # server_application: matches server_application/.python-version
 uv = "0.13"        # server_application: dependencies, virtualenv, lockfile
 
@@ -134,24 +133,24 @@ run = "bun install"
 [tasks."web:dev"]
 description = "Run the web app with hot reload on http://localhost:3000"
 dir = "client_application"
-run = "bun run dev"
+run = "bun run --bun dev"
 
 [tasks."web:build"]
 description = "Production build (use web:build-staging for staging)"
 dir = "client_application"
-run = "bun run build"
+run = "bun run --bun build"
 
 [tasks."web:build-staging"]
 description = "Staging build (NEXT_PUBLIC_APP_ENV=staging)"
 dir = "client_application"
-run = "bun run build:staging"
+run = "bun run --bun build:staging"
 
 [tasks."web:start"]
 description = "Serve the last build on http://localhost:3000"
 dir = "client_application"
-run = "bun run start"
+run = "bun run --bun start"
 
 [tasks."web:lint"]
 description = "Lint and type-check frontend code"
 dir = "client_application"
-run = ["bun run lint", "bun run typecheck"]
+run = ["bun run --bun lint", "bun run --bun typecheck"]

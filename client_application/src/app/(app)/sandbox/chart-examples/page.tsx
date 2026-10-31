@@ -6,7 +6,7 @@ import { Charts } from "./charts";
 
 export const metadata: Metadata = {
   title: "Chart Examples",
-  description: "Example charts, each built from its own mock-data endpoint.",
+  description: "Example charts, all served by one mock-data endpoint.",
 };
 
 export default function ChartExamplesPage() {
@@ -14,8 +14,8 @@ export default function ChartExamplesPage() {
     <>
       <PageIntro eyebrow="Sandbox" title="Chart Examples">
         <p>
-          Each chart loads its own endpoint under <code className="font-mono text-base">/api/v1/sandbox</code>, with the
-          answer and the AR fields it draws on.
+          Each chart asks <code className="font-mono text-base">/api/v1/sandbox/chart-examples</code> for its data by
+          name, with the answer and the AR fields it draws on.
         </p>
       </PageIntro>
       <Charts />

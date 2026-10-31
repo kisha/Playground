@@ -1,11 +1,13 @@
-import { type ChartResponse, sandboxLoader } from "@/app/(app)/sandbox/shared";
+import { type ChartResponse, chartLoader } from "@/app/(app)/sandbox/shared";
 
-/** /sandbox/add-a-sandbox-page: one type and one loader per endpoint. Mirrors its schemas.py on the server. */
+/** /sandbox/add-a-sandbox-page: one type and one loader per chart. Mirrors its schemas.py on the server. */
 
-export type EnrollmentByModality = ChartResponse<{ term: string; in_person: number; online: number }>;
+type EnrollmentByModality = ChartResponse<{ term: string; in_person: number; online: number }>;
 export type EnrollmentByProgram = ChartResponse<{ program: string; share: number }>;
 
-export const endpoints = {
-  byModality: sandboxLoader<EnrollmentByModality>("/add-a-sandbox-page/by-modality"),
-  byProgram: sandboxLoader<EnrollmentByProgram>("/add-a-sandbox-page/by-program"),
+const ENDPOINT = "/add-a-sandbox-page";
+
+export const chartLoaders = {
+  byModality: chartLoader<EnrollmentByModality>(ENDPOINT, "by-modality"),
+  byProgram: chartLoader<EnrollmentByProgram>(ENDPOINT, "by-program"),
 };

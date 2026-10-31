@@ -12,7 +12,7 @@ import { useChatPanelDocks } from "@/hooks/use-chat-panel-docks";
 /**
  * The app frame, like an editor: a collapsible sidebar on the left, the page in the middle, and the chat panel on
  * the right. On smaller screens the chat panel slides over the page, and on phones the sidebar does too. The chat
- * panel is empty for now.
+ * panel is empty for now, and a frame style can leave it out (see content/app-frames.ts).
  */
 export function AppFrame({ children }: { children: React.ReactNode }) {
   return (

@@ -3,6 +3,7 @@
 import { CloudUpload, FileText, X } from "lucide-react";
 import { useRef, useState } from "react";
 
+import { DataTable } from "@/components/data-table";
 import { Button } from "@/components/ui/button";
 import { MAX_UPLOAD_BYTES, PREVIEW_ROW_COUNT, UPLOAD_STEPS } from "@/content/sandbox-upload";
 import { useCsvUpload } from "@/hooks/use-csv-upload";
@@ -135,30 +136,7 @@ function CsvPreviewPanel({ preview, onClear }: { preview: CsvPreview; onClear: (
         <h3 id="csv-rows-heading" className="text-sm font-semibold">
           First {Math.min(PREVIEW_ROW_COUNT, preview.rowCount)} rows
         </h3>
-        <div className="overflow-x-auto rounded-xl border">
-          <table className="w-full text-xs tabular-nums">
-            <thead className="bg-muted/50">
-              <tr>
-                {preview.columns.map((column) => (
-                  <th key={column} scope="col" className="px-3 py-2 text-left font-medium whitespace-nowrap">
-                    {column}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {preview.rows.map((row, rowIndex) => (
-                <tr key={rowIndex} className="border-t">
-                  {preview.columns.map((column, columnIndex) => (
-                    <td key={column} className="px-3 py-2 whitespace-nowrap">
-                      {row[columnIndex] ?? ""}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <DataTable columns={preview.columns} rows={preview.rows} />
       </section>
     </div>
   );

@@ -25,6 +25,9 @@ import { useHealthMonitor } from "@/hooks/use-health-monitor";
 import { routes } from "@/lib/routes";
 import { toSystemStatus } from "@/lib/system-status";
 
+// The dot only needs to be roughly current, so it checks far less often than the landing page's tracker.
+const STATUS_DOT_INTERVAL_MS = 30_000;
+
 /** The left navigation. Collapses to icons with ⌘B or its edge; on a phone it slides over the page. */
 export function AppSidebar() {
   const pathname = usePathname();
@@ -95,9 +98,9 @@ export function AppSidebar() {
   );
 }
 
-/** "All systems connected", polling the server's /health as the landing page does. */
+/** "All systems connected", from polling the server's /health. */
 function ApiConnectionStatus() {
-  const { latest } = useHealthMonitor();
+  const { latest } = useHealthMonitor({ intervalMs: STATUS_DOT_INTERVAL_MS, historySize: 1 });
   const systemStatus = toSystemStatus(latest);
   return (
     <div className="flex items-center gap-2.5 px-2 py-1.5 text-xs text-muted-foreground" title={systemStatus.label}>

@@ -1,8 +1,17 @@
 """Response shapes for /sandbox/add-a-sandbox-page, built on the shared sandbox chart shape."""
 
+from enum import StrEnum
+
 from pydantic import BaseModel
 
 from app.sandbox.shared import ChartResponse
+
+
+class ChartName(StrEnum):
+    """Every chart on this page, by the name that ?charts= asks for it with."""
+
+    BY_MODALITY = "by-modality"
+    BY_PROGRAM = "by-program"
 
 
 class EnrollmentByModalityRow(BaseModel):
@@ -11,8 +20,7 @@ class EnrollmentByModalityRow(BaseModel):
     online: float
 
 
-class EnrollmentByModalityResponse(ChartResponse[EnrollmentByModalityRow]):
-    pass
+EnrollmentByModalityResponse = ChartResponse[EnrollmentByModalityRow]
 
 
 class EnrollmentByProgramRow(BaseModel):
@@ -20,5 +28,6 @@ class EnrollmentByProgramRow(BaseModel):
     share: float
 
 
-class EnrollmentByProgramResponse(ChartResponse[EnrollmentByProgramRow]):
-    pass
+EnrollmentByProgramResponse = ChartResponse[EnrollmentByProgramRow]
+
+ChartExample = EnrollmentByModalityResponse | EnrollmentByProgramResponse

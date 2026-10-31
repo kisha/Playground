@@ -1,23 +1,24 @@
 """/sandbox/add-a-sandbox-page: the worked example of adding a sandbox page.
 
+One page, one endpoint: each chart is asked for by name with ?charts=.
 Copy this folder to app/sandbox/<topic>/ to add your own, then add it to app/sandbox/router.py.
 """
 
-from fastapi import APIRouter
+from typing import Annotated
 
-from . import mock_data
-from .schemas import EnrollmentByModalityResponse, EnrollmentByProgramResponse
+from fastapi import APIRouter, Query
 
-router = APIRouter(prefix="/sandbox/add-a-sandbox-page", tags=["sandbox: add a sandbox page"])
+from .mock_data import CHART_LOADERS
+from .schemas import ChartExample, ChartName
 
-
-@router.get("/by-modality")
-async def by_modality() -> EnrollmentByModalityResponse:
-    """Share of credit hours in person vs online, last six terms."""
-    return mock_data.get_enrollment_by_modality()
+router = APIRouter(prefix="/sandbox/add-a-sandbox-page")
 
 
-@router.get("/by-program")
-async def by_program() -> EnrollmentByProgramResponse:
-    """Share of fall 2025 students per program area."""
-    return mock_data.get_enrollment_by_program()
+@router.get("")
+async def add_a_sandbox_page(
+    charts: Annotated[
+        list[ChartName] | None, Query(description="Leave out for every chart.")
+    ] = None,
+) -> dict[ChartName, ChartExample]:
+    """The charts named in ?charts=, each by its name. Repeat charts= to ask for several."""
+    return {chart_name: CHART_LOADERS[chart_name]() for chart_name in charts or ChartName}

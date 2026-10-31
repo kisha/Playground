@@ -31,8 +31,9 @@ export const presetRequests: ExplorerRequest[] = [
     id: "gateway",
     label: "Gateway completion",
     method: "GET",
-    path: "/sandbox/gateway-completion",
-    note: "A chart's data: meta (title, takeaway, fields used) plus rows.",
+    path: "/sandbox/chart-examples",
+    note: "A chart's data by name: meta (title, takeaway, fields used) plus rows.",
+    params: [{ name: "charts", location: "query", required: false, defaultValue: "gateway-completion" }],
   },
   {
     id: "search",

@@ -52,7 +52,7 @@ export function isPointFilled<Row>(series: ChartSeries, row: Row | undefined, is
  * Fills for the parts of a whole, in order. Charts are black and white, so parts step from solid to light, and the
  * fourth is striped. Pie, donut and stacked charts keep to four parts or fewer.
  */
-export const PART_FILLS = [
+const PART_FILLS = [
   "var(--foreground)",
   "color-mix(in oklab, var(--foreground) 62%, var(--background))",
   "color-mix(in oklab, var(--foreground) 30%, var(--background))",

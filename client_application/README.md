@@ -14,7 +14,7 @@ src/
 │           ├── page.tsx                                    # /sandbox: blank for now
 │           ├── chart-examples/                             # /sandbox/chart-examples: page.tsx, charts.tsx, chart-config.ts, data.ts
 │           ├── api-requests/                               # /sandbox/api-requests: the API explorer
-│           ├── app-ui-frame-1/                             # /sandbox/app-ui-frame-1
+│           ├── app-ui-frame/                               # /sandbox/app-ui-frame?app-frame=ui-frame-2: the frame's two styles
 │           ├── filters/                                    # /sandbox/filters: a filter panel, with filters in the URL
 │           ├── chat-ui/                                    # /sandbox/chat-ui: two chat layouts, with canned replies
 │           ├── upload/                                     # /sandbox/upload: drop a CSV and preview it, in the browser
@@ -89,18 +89,18 @@ is turned off in production (override with `NEXT_PUBLIC_SANDBOX_ENABLED`).
 
 | Chart | Type | Endpoint |
 |---|---|---|
-| Gateway course completion | Two lines, six terms | `/sandbox/gateway-completion` |
-| Students who stayed enrolled | One line, fall terms filled | `/sandbox/term-enrollment` |
-| First-year credit completion | Two lines, fall cohorts | `/sandbox/credit-completion` |
-| Persistence and retention | Two lines + definitions | `/sandbox/persistence-retention` |
-| Completion by student group | Horizontal bars | `/sandbox/completion-by-group` |
-| Persistence by age group | Grouped bars, solid vs striped | `/sandbox/persistence-by-age` |
-| Time to complete | Horizontal bars | `/sandbox/time-to-complete` |
-| Students by entry status | Pie | `/sandbox/entry-status-share` |
-| Students by gender | Donut | `/sandbox/gender-share` |
-| Credit load by cohort | Stacked bars | `/sandbox/credit-load` |
-| Students enrolled, term by term | Area | `/sandbox/headcount` |
-| Gateway completion, filtered | Filter panel, tiles, trend and bars | `/sandbox/filtered-completion` |
+| Gateway course completion | Two lines, six terms | `/sandbox/chart-examples?charts=gateway-completion` |
+| Students who stayed enrolled | One line, fall terms filled | `/sandbox/chart-examples?charts=term-enrollment` |
+| First-year credit completion | Two lines, fall cohorts | `/sandbox/chart-examples?charts=credit-completion` |
+| Persistence and retention | Two lines + definitions | `/sandbox/chart-examples?charts=persistence-retention` |
+| Completion by student group | Horizontal bars | `/sandbox/chart-examples?charts=completion-by-group` |
+| Persistence by age group | Grouped bars, solid vs striped | `/sandbox/chart-examples?charts=persistence-by-age` |
+| Time to complete | Horizontal bars | `/sandbox/chart-examples?charts=time-to-complete` |
+| Students by entry status | Pie | `/sandbox/chart-examples?charts=entry-status-share` |
+| Students by gender | Donut | `/sandbox/chart-examples?charts=gender-share` |
+| Credit load by cohort | Stacked bars | `/sandbox/chart-examples?charts=credit-load` |
+| Students enrolled, term by term | Area | `/sandbox/chart-examples?charts=headcount` |
+| Gateway completion, filtered | Filter panel, tiles, trend and bars | `/sandbox/filter-example?example=example-one` |
 
 #### Add a sandbox page
 
@@ -133,9 +133,9 @@ live in [`src/lib/env.ts`](src/lib/env.ts) and overrides in a git-ignored `.env.
 
 | Command | Environment | API base URL |
 |---|---|---|
-| `bun run dev` | `development` | `http://localhost:8000/api/v1` |
-| `bun run build:staging` | `staging` | placeholder: `https://api.staging.example.com/api/v1` |
-| `bun run build` | `production` | placeholder: `https://api.example.com/api/v1` |
+| `bun run --bun dev` | `development` | `http://localhost:8000/api/v1` |
+| `bun run --bun build:staging` | `staging` | placeholder: `https://api.staging.example.com/api/v1` |
+| `bun run --bun build` | `production` | placeholder: `https://api.example.com/api/v1` |
 
 ## Commands (from the repo root)
 
@@ -175,8 +175,8 @@ Click a layer to see the libraries.
 <summary><strong>Tooling</strong></summary>
 
 - [bun](https://bun.sh): JavaScript runtime and package manager.
-- [mise](https://mise.jdx.dev): Installs and pins versions of almost any language or tool (e.g., Node,
-  Python, Rust, Ruby, Go, Java and more). Here it pins bun and Node, and runs the `web:*` commands
+- [mise](https://mise.jdx.dev): Installs and pins versions of almost any language or tool (e.g.,
+  Python, Rust, Ruby, Go, Java and more). Here it pins bun, and runs the `web:*` commands
   (see 👉🏾 [Commands](#commands-from-the-repo-root)).
 
 </details>

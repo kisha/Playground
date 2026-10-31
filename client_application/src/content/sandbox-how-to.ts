@@ -18,8 +18,8 @@ export const sandboxPageParts: SandboxPagePart[] = [
     name: "Backend endpoint",
     framework: "FastAPI",
     does: "Returns the chart data as JSON.",
-    example: "/api/v1/sandbox/add-a-sandbox-page/by-program",
-    apiPath: "/sandbox/add-a-sandbox-page/by-program",
+    example: "/api/v1/sandbox/add-a-sandbox-page?charts=by-program",
+    apiPath: "/sandbox/add-a-sandbox-page?charts=by-program",
     docs: { label: "Add a sandbox endpoint", file: "server_application/README.md", section: "add-a-sandbox-endpoint" },
   },
   {
@@ -40,12 +40,12 @@ export const serverSteps: BuildStep[] = [
   { file: "app/sandbox/add_a_sandbox_page/", what: "Copy this folder to app/sandbox/<topic>/." },
   {
     file: "schemas.py",
-    what: "Define the rows each endpoint returns. Keep ChartResponse, so every endpoint returns meta and rows.",
+    what: "Define the rows each chart returns and name your charts in ChartName. Keep ChartResponse, so every chart returns meta and rows.",
   },
-  { file: "mock_data.py", what: "Return the mock data for each endpoint." },
+  { file: "mock_data.py", what: "Return the mock data for each chart, and list each one in CHART_LOADERS." },
   {
     file: "routes.py",
-    what: 'Set prefix="/sandbox/<topic>" and tags=["sandbox: <topic>"]. The prefix sets your endpoints\' URL.',
+    what: 'Set prefix="/sandbox/<topic>". That one endpoint serves your whole page, with ?charts= choosing what it returns.',
   },
   { file: "app/sandbox/router.py", what: "Add one line to mount your router. The sandbox is off in production." },
 ];
@@ -55,7 +55,7 @@ export const clientSteps: BuildStep[] = [
     file: "src/app/(app)/sandbox/add-a-sandbox-page/",
     what: "Copy this folder to src/app/(app)/sandbox/<topic>/. The folder name becomes the route: /sandbox/<topic>.",
   },
-  { file: "data.ts", what: "Add one type and one loader for each endpoint from step 1." },
+  { file: "data.ts", what: "Add one type and one loader for each chart from step 1." },
   { file: "chart-config.ts", what: "Choose which fields each chart draws, and their labels." },
   { file: "charts.tsx", what: "Build your charts from ChartCard, TrendChart, BarList and the other chart components." },
   { file: "page.tsx", what: "Set your title and text. Delete the <HowToAddASandboxPage /> line." },

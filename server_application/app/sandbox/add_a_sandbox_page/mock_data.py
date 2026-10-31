@@ -1,8 +1,12 @@
 """Mock data for /sandbox/add-a-sandbox-page. The numbers are invented."""
 
+from collections.abc import Callable
+
 from app.sandbox.shared import TERMS, ChartMeta
 
 from .schemas import (
+    ChartExample,
+    ChartName,
     EnrollmentByModalityResponse,
     EnrollmentByModalityRow,
     EnrollmentByProgramResponse,
@@ -49,3 +53,9 @@ def get_enrollment_by_program() -> EnrollmentByProgramResponse:
             for program, share in share_by_program
         ],
     )
+
+
+CHART_LOADERS: dict[ChartName, Callable[[], ChartExample]] = {
+    ChartName.BY_MODALITY: get_enrollment_by_modality,
+    ChartName.BY_PROGRAM: get_enrollment_by_program,
+}

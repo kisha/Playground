@@ -1,10 +1,10 @@
 "use client";
 
-import { ChevronDown, Search } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
 import { LoadError } from "@/components/load-error";
-import { Input } from "@/components/ui/input";
+import { SearchInput } from "@/components/search-input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useApiResource } from "@/hooks/use-api-resource";
 import { type ApiEndpoint, groupEndpoints } from "@/lib/api-endpoints";
@@ -35,11 +35,11 @@ export function ApiEndpointList({ selectedId, onSelect }: ApiEndpointListProps) 
         aria-expanded={isOpen}
         aria-controls="api-endpoint-list"
         onClick={() => setIsOpen((open) => !open)}
-        className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left text-sm font-medium transition-colors hover:bg-muted/50"
+        className="flex w-full items-center justify-between gap-3 bg-foreground px-4 py-3 text-left text-sm font-medium text-background transition-opacity hover:opacity-90"
       >
         <span>
           Available endpoints
-          {endpointCount !== null && <span className="ml-2 font-normal text-muted-foreground">{endpointCount}</span>}
+          {endpointCount !== null && <span className="ml-2 font-normal opacity-70">{endpointCount}</span>}
         </span>
         <ChevronDown aria-hidden className={cn("size-4 shrink-0 transition-transform", isOpen && "rotate-180")} />
       </button>
@@ -52,17 +52,12 @@ export function ApiEndpointList({ selectedId, onSelect }: ApiEndpointListProps) 
           )}
           {resource.status === "success" && (
             <>
-              <div className="relative">
-                <Search aria-hidden className="absolute top-2.5 left-3 size-4 text-muted-foreground" />
-                <Input
-                  id="api-endpoint-search"
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                  placeholder="Search by name, path or method"
-                  aria-label="Search endpoints"
-                  className="pl-9"
-                />
-              </div>
+              <SearchInput
+                value={search}
+                onChange={setSearch}
+                placeholder="Search by name, path or method"
+                label="Search endpoints"
+              />
               <EndpointGroups
                 endpoints={resource.data}
                 search={search}

@@ -21,7 +21,8 @@ app/
 └── sandbox/              # Mock-data endpoints, one folder per sandbox page
     ├── router.py         #   Mounts every sandbox page (off in production)
     ├── shared.py         #   ChartMeta, ChartResponse: shared by every page
-    ├── routes.py, schemas.py, mock_data.py   # /sandbox
+    ├── chart_examples/   #   /sandbox/chart-examples: the same three files
+    ├── filter_example/   #   /sandbox/filter-example: routes.py, schemas.py, one file per example
     └── add_a_sandbox_page/  #   /sandbox/add-a-sandbox-page: the same three files
 alembic/                  # Migrations (config in pyproject.toml [tool.alembic])
 tests/
@@ -91,18 +92,8 @@ All under `/api/v1`; try them at http://localhost:8000/docs.
 | `GET` | `/documents/{id}` | Fetch one document |
 | `DELETE` | `/documents/{id}` | Delete a document |
 | `POST` | `/documents/search` | Most similar documents to a query, via pgvector cosine distance |
-| `GET` | `/sandbox/gateway-completion` | Gateway English vs math, last six terms |
-| `GET` | `/sandbox/term-enrollment` | Term-to-term enrollment, last six terms |
-| `GET` | `/sandbox/credit-completion` | First-year credit completion, new vs transfer, fall cohorts 2020 to 2025 |
-| `GET` | `/sandbox/persistence-retention` | Persistence vs retention, fall cohorts, with definitions |
-| `GET` | `/sandbox/completion-by-group` | First-year credit completion per student group |
-| `GET` | `/sandbox/persistence-by-age` | Persistence and gateway completion per age group |
-| `GET` | `/sandbox/time-to-complete` | Average terms to completion per entry term |
-| `GET` | `/sandbox/entry-status-share` | Share of students by entry status |
-| `GET` | `/sandbox/gender-share` | Share of students by gender |
-| `GET` | `/sandbox/credit-load` | First-term credit load per fall cohort |
-| `GET` | `/sandbox/headcount` | Total students enrolled, last six terms |
-| `GET` | `/sandbox/filtered-completion` | Gateway completion for a filtered view: tiles, trend and group bars |
+| `GET` | `/sandbox/chart-examples` | The example charts named in `?charts=` (repeat it for several), or every chart |
+| `GET` | `/sandbox/filter-example` | The filter example named in `?example=`: `example-one`, a filtered view |
 
 ### Errors
 
@@ -129,24 +120,26 @@ answering with `meta` (title, takeaway, fields used) and `rows`, and are turned 
 `SANDBOX_ENABLED`. Code: [`app/sandbox/`](app/sandbox/), one folder per sandbox page.
 
 ```bash
-curl http://localhost:8000/api/v1/sandbox/gateway-completion
+curl "http://localhost:8000/api/v1/sandbox/chart-examples?charts=gateway-completion"
 ```
 
 ```json
 {
-  "meta": {
-    "title": "Gateway course completion, term by term",
-    "description": "Share of students completing gateway English and math, last six terms.",
-    "takeaway": "Gateway math completion trails English by 15 to 19 points every term.",
-    "fields_used": ["Gateway course", "Course completion"],
-    "filters": [],
-    "definitions": {},
-    "source": "mock"
-  },
-  "rows": [
-    { "term": "Fall 23", "english": 74.0, "math": 58.0 },
-    { "term": "Spr 24", "english": 76.0, "math": 61.0 }
-  ]
+  "gateway-completion": {
+    "meta": {
+      "title": "Gateway course completion, term by term",
+      "description": "Share of students completing gateway English and math, last six terms.",
+      "takeaway": "Gateway math completion trails English by 15 to 19 points every term.",
+      "fields_used": ["Gateway course", "Course completion"],
+      "filters": [],
+      "definitions": {},
+      "source": "mock"
+    },
+    "rows": [
+      { "term": "Fall 23", "english": 74.0, "math": 58.0 },
+      { "term": "Spr 24", "english": 76.0, "math": 61.0 }
+    ]
+  }
 }
 ```
 
@@ -159,13 +152,13 @@ Step 1 of 2 for a new sandbox page. Then [add the page](../client_application/RE
 Worked example: [`app/sandbox/add_a_sandbox_page/`](app/sandbox/add_a_sandbox_page/). Every sandbox page has the same three files.
 
 1. **Copy:** Copy `app/sandbox/add_a_sandbox_page/` to `app/sandbox/<topic>/`.
-2. **Schemas:** Define your rows in `schemas.py`. Reuse `ChartResponse`.
-3. **Data:** Return your mock data from `mock_data.py`.
-4. **Routes:** Set `prefix="/sandbox/<topic>"` and `tags=["sandbox: <topic>"]` in `routes.py`.
+2. **Schemas:** Define your rows and name your charts in `schemas.py`. Reuse `ChartResponse`.
+3. **Data:** Return your mock data from `mock_data.py`, and list each chart in `CHART_LOADERS`.
+4. **Routes:** Set `prefix="/sandbox/<topic>"` in `routes.py`.
 5. **Mount:** Add one line to [`app/sandbox/router.py`](app/sandbox/router.py). Production turns it off.
 
-Your endpoints answer at `/api/v1/sandbox/<topic>/...`, e.g. `/api/v1/sandbox/add-a-sandbox-page/by-modality`.
-Check them at http://localhost:8000/docs.
+One endpoint serves your whole page, with `?charts=` choosing what it returns, e.g. `/api/v1/sandbox/add-a-sandbox-page?charts=by-modality`.
+Check it at http://localhost:8000/docs.
 
 ## Libraries Included
 
