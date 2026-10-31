@@ -3,7 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 type ChatPanelState = {
-  /** False when the frame style has no chat panel: it stays closed and its controls are gone. */
+  /** False when the shell style has no chat panel: it stays closed and its controls are gone. */
   isChatPanelAvailable: boolean;
   setChatPanelAvailable: (available: boolean) => void;
   isChatPanelOpen: boolean;
@@ -13,7 +13,7 @@ type ChatPanelState = {
 
 export const ChatPanelContext = createContext<ChatPanelState | null>(null);
 
-/** The chat panel's state, for anything inside the app frame. */
+/** The chat panel's state, for anything inside the app shell. */
 export function useChatPanel(): ChatPanelState {
   const chatPanelState = useContext(ChatPanelContext);
   if (!chatPanelState) throw new Error("useChatPanel must be used inside ChatPanelProvider.");

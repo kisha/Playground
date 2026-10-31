@@ -1,6 +1,6 @@
-import { AppFrame } from "@/components/app-frame/app-frame";
+import { AppShell } from "@/components/app-shell/app-shell";
 
-/** Every page except the landing page at /: they all sit in the app frame. */
+/** Every page except the landing page at /: they all sit in the app shell. */
 export default function AppLayout({ children }: LayoutProps<"/">) {
-  return <AppFrame>{children}</AppFrame>;
+  return <AppShell>{children}</AppShell>;
 }

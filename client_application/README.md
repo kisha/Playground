@@ -8,13 +8,13 @@ The Next.js front end for Playground; it gets all of its data from the
 ```
 src/
 ├── app/            # Pages: layout.tsx, page.tsx, not-found.tsx, error.tsx, globals.css
-│   └── (app)/      # Every page except /; layout.tsx adds the app frame. The folder name isn't in the address
+│   └── (app)/      # Every page except /; layout.tsx adds the app shell. The folder name isn't in the address
 │       └── sandbox/    # One folder per sandbox page; layout.tsx adds the production 404
 │           ├── shared.ts                                   # ChartMeta, Kpi, the loader: shared by every page
 │           ├── page.tsx                                    # /sandbox: blank for now
 │           ├── chart-examples/                             # /sandbox/chart-examples: page.tsx, charts.tsx, chart-config.ts, data.ts
 │           ├── api-requests/                               # /sandbox/api-requests: the API explorer
-│           ├── app-ui-frame/                               # /sandbox/app-ui-frame?app-frame=ui-frame-2: the frame's two styles
+│           ├── app-shell/                               # /sandbox/app-shell?shell=shell-2: the shell's two styles
 │           ├── measures/                                   # /sandbox/measures: typed measure, cohort and grouping filters
 │           ├── chat-ui/                                    # /sandbox/chat-ui: two chat layouts, with canned replies
 │           ├── kpi-examples/                               # /sandbox/kpi-examples: the same four files
@@ -107,7 +107,7 @@ is turned off in production (override with `NEXT_PUBLIC_SANDBOX_ENABLED`).
 Step 2 of 2. [Add the endpoints](../server_application/README.md#add-a-sandbox-endpoint) first.
 
 Worked example: http://localhost:3000/sandbox/add-a-sandbox-page. Every sandbox page has the same four files. The
-app frame and the sandbox layout add everything around it, and the production check.
+app shell and the sandbox layout add everything around it, and the production check.
 
 1. **Copy:** Copy `src/app/(app)/sandbox/add-a-sandbox-page/` to `src/app/(app)/sandbox/<topic>/`.
 2. **Data:** Point the loaders in `data.ts` at the endpoints from step 1.

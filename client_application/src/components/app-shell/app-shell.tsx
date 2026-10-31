@@ -1,8 +1,8 @@
 "use client";
 
-import { AppSidebar } from "@/components/app-frame/app-sidebar";
-import { AppTopbar } from "@/components/app-frame/app-topbar";
-import { ChatPanelProvider } from "@/components/app-frame/chat-panel-provider";
+import { AppSidebar } from "@/components/app-shell/app-sidebar";
+import { AppTopbar } from "@/components/app-shell/app-topbar";
+import { ChatPanelProvider } from "@/components/app-shell/chat-panel-provider";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
@@ -10,24 +10,24 @@ import { useChatPanel } from "@/hooks/use-chat-panel";
 import { useChatPanelDocks } from "@/hooks/use-chat-panel-docks";
 
 /**
- * The app frame, like an editor: a collapsible sidebar on the left, the page in the middle, and the chat panel on
+ * The app shell, like an editor: a collapsible sidebar on the left, the page in the middle, and the chat panel on
  * the right. On smaller screens the chat panel slides over the page, and on phones the sidebar does too. The chat
- * panel is empty for now, and a frame style can leave it out (see content/app-frames.ts).
+ * panel is empty for now, and a shell style can leave it out (see content/app-shells.ts).
  */
-export function AppFrame({ children }: { children: React.ReactNode }) {
+export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <ChatPanelProvider>
       <SidebarProvider className="h-svh overflow-hidden">
         <AppSidebar />
         <SidebarInset className="min-w-0 overflow-hidden">
-          <AppFramePanels>{children}</AppFramePanels>
+          <AppShellPanels>{children}</AppShellPanels>
         </SidebarInset>
       </SidebarProvider>
     </ChatPanelProvider>
   );
 }
 
-function AppFramePanels({ children }: { children: React.ReactNode }) {
+function AppShellPanels({ children }: { children: React.ReactNode }) {
   const chatPanelDocks = useChatPanelDocks();
   const { isChatPanelOpen, setChatPanelOpen } = useChatPanel();
   const mainArea = <AppMainArea>{children}</AppMainArea>;
@@ -47,7 +47,7 @@ function AppFramePanels({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <ResizablePanelGroup orientation="horizontal" id="app-frame">
+    <ResizablePanelGroup orientation="horizontal" id="app-shell">
       <ResizablePanel id="main" minSize="40" className="min-w-0">
         {mainArea}
       </ResizablePanel>

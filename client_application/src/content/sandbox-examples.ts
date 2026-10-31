@@ -23,7 +23,7 @@ export const SANDBOX_EXAMPLES_HEADING = "Sandbox Examples";
 
 export const sandboxExamples: SandboxExample[] = [
   { label: "Charts", href: routes.sandboxChartExamples, icon: ChartColumnBig },
-  { label: "App UI Frame", href: routes.sandboxAppUiFrame, icon: PanelsTopLeft },
+  { label: "App Shell", href: routes.sandboxAppShell, icon: PanelsTopLeft },
   { label: "Chat UI", href: routes.sandboxChatUi, icon: MessageCircle },
   { label: "Measures", href: routes.sandboxMeasures, icon: ListFilter },
   { label: "API requests", href: routes.sandboxApiRequests, icon: Send },
