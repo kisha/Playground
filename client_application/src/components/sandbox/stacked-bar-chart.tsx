@@ -2,10 +2,10 @@
 
 import { Bar, BarChart, LabelList, XAxis, YAxis } from "recharts";
 
-import { PartStripes } from "@/components/sandbox/part-stripes";
-import { PartSwatch } from "@/components/sandbox/part-swatch";
+import { PartStripes, usePartStripesId } from "@/components/sandbox/part-stripes";
+import { PartLegend } from "@/components/sandbox/part-swatch";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { type ChartSeries, formatPercent, monochromeChartConfig, partFill } from "@/lib/charts";
+import { type ChartSeries, formatPercent, categoryAxisProps, monochromeChartConfig, partFill, stripesFor } from "@/lib/charts";
 
 type StackedBarChartProps = {
   rows: Record<string, string | number>[];
@@ -16,14 +16,16 @@ type StackedBarChartProps = {
 
 /** One column per category, split into its parts, in black and white. */
 export function StackedBarChart({ rows, categoryKey, series }: StackedBarChartProps) {
+  const stripesId = usePartStripesId();
+
   return (
     <div className="flex flex-col gap-3">
       <ChartContainer config={monochromeChartConfig(series)} className="aspect-auto h-56 w-full">
         <BarChart data={rows} margin={{ top: 4, right: 0, bottom: 0, left: 0 }}>
           <defs>
-            <PartStripes />
+            <PartStripes id={stripesId} />
           </defs>
-          <XAxis dataKey={categoryKey} tickLine={false} axisLine={false} tickMargin={8} interval={0} fontSize={11} />
+          <XAxis dataKey={categoryKey} {...categoryAxisProps} fontSize={11} />
           <YAxis hide domain={[0, 100]} />
           <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
           {series.map((part, index) => (
@@ -31,7 +33,7 @@ export function StackedBarChart({ rows, categoryKey, series }: StackedBarChartPr
               key={part.key}
               dataKey={part.key}
               stackId="parts"
-              fill={partFill(index).fill}
+              fill={stripesFor(partFill(index).fill, stripesId)}
               stroke="var(--background)"
               strokeWidth={2}
               isAnimationActive={false}
@@ -47,13 +49,7 @@ export function StackedBarChart({ rows, categoryKey, series }: StackedBarChartPr
           ))}
         </BarChart>
       </ChartContainer>
-      <ul className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-        {series.map((part, index) => (
-          <li key={part.key} className="flex items-center gap-1.5">
-            <PartSwatch {...partFill(index)} /> {part.label}
-          </li>
-        ))}
-      </ul>
+      <PartLegend parts={series.map((part, index) => ({ ...part, ...partFill(index) }))} />
     </div>
   );
 }

@@ -20,7 +20,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { brand } from "@/content/brand";
-import { SANDBOX_EXAMPLES_HEADING, sandboxExamples } from "@/content/sandbox-examples";
+import { SANDBOX_EXAMPLES_HEADING, sandboxNavItems } from "@/content/sandbox-examples";
 import { useHealthMonitor } from "@/hooks/use-health-monitor";
 import { routes } from "@/lib/routes";
 import { toSystemStatus } from "@/lib/system-status";
@@ -73,7 +73,7 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel className="text-sm font-semibold">{SANDBOX_EXAMPLES_HEADING}</SidebarGroupLabel>
           <SidebarMenu className="gap-1">
-            {sandboxExamples.map((example) => (
+            {sandboxNavItems.map((example) => (
               <SidebarMenuItem key={example.href}>
                 <SidebarMenuButton
                   className="h-10 rounded-xl"

@@ -3,7 +3,7 @@
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { type ChartSeries, formatCount, monochromeChartConfig } from "@/lib/charts";
+import { type ChartSeries, categoryAxisProps, formatCount, monochromeChartConfig } from "@/lib/charts";
 
 type AreaTrendChartProps = {
   rows: Record<string, string | number>[];
@@ -18,7 +18,7 @@ export function AreaTrendChart({ rows, xKey, series }: AreaTrendChartProps) {
     <ChartContainer config={monochromeChartConfig([series])} className="aspect-auto h-56 w-full">
       <AreaChart data={rows} margin={{ top: 12, right: 8, bottom: 0, left: 0 }}>
         <CartesianGrid vertical={false} strokeDasharray="2 4" />
-        <XAxis dataKey={xKey} tickLine={false} axisLine={false} tickMargin={8} interval={0} fontSize={11} />
+        <XAxis dataKey={xKey} {...categoryAxisProps} fontSize={11} />
         <YAxis domain={[0, "auto"]} tickLine={false} axisLine={false} width={44} fontSize={11} tickFormatter={formatCount} />
         <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} />
         <Area

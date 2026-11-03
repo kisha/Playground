@@ -5,6 +5,8 @@ type AppShellStyle = {
   label: string;
   description: string;
   hasChatPanel: boolean;
+  /** A colour and font look from globals.css. */
+  look?: string;
 };
 
 export const SHELL_PARAM = "shell";
@@ -21,6 +23,13 @@ export const appShellStyles: AppShellStyle[] = [
     label: "Shell 2",
     description: "A collapsible sidebar on the left and the page beside it, with no chat panel.",
     hasChatPanel: false,
+  },
+  {
+    id: "shell-tulip",
+    label: "Tulip",
+    description: "Shell 1's layout in TulipPlayground's colours and fonts.",
+    hasChatPanel: true,
+    look: "tulip",
   },
 ];
 

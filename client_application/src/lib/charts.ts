@@ -1,4 +1,4 @@
-import type { Kpi } from "@/app/(app)/sandbox/shared";
+import type { Kpi } from "@/lib/sandbox";
 import type { ChartConfig } from "@/components/ui/chart";
 
 /** One line or bar series. Charts are black and white, so `dashed` tells the second one apart. */
@@ -22,6 +22,8 @@ export type BarListItem = {
   value: number | null;
   /** The value as shown next to the bar, e.g. "78%" or "5.1 terms". */
   display: string;
+  /** A short caution beside the value, e.g. "few students". */
+  note?: string;
 };
 
 /** Turn chart rows into bars, given which field is the label and which is the value. */
@@ -67,19 +69,34 @@ export function isPointFilled<Row>(series: ChartSeries, row: Row | undefined, is
 
 /**
  * Fills for the parts of a whole, in order. Charts are black and white, so parts step from solid to light, and the
- * fourth is striped. Pie, donut and stacked charts keep to four parts or fewer.
+ * fourth is striped. From the fifth part on, the fills repeat.
  */
+/** Stands in for the striped pattern until a chart points it at its own pattern id (see stripesFor). */
+const STRIPES_FILL = "url(#part-stripes)";
+
 const PART_FILLS = [
   "var(--foreground)",
   "color-mix(in oklab, var(--foreground) 62%, var(--background))",
   "color-mix(in oklab, var(--foreground) 30%, var(--background))",
-  "url(#part-stripes)",
+  STRIPES_FILL,
 ];
 
 /** The fill for the part at `index`, and whether it's the striped one. */
 export function partFill(index: number): { fill: string; isStriped: boolean } {
-  return { fill: PART_FILLS[index], isStriped: index === PART_FILLS.length - 1 };
+  const cycled = index % PART_FILLS.length;
+  return { fill: PART_FILLS[cycled], isStriped: cycled === PART_FILLS.length - 1 };
 }
+
+/** Point a striped fill at one chart's own pattern, so two charts on a page don't share an SVG id. */
+export function stripesFor(fill: string, patternId: string): string {
+  return fill === STRIPES_FILL ? `url(#${patternId})` : fill;
+}
+
+/** The striped fill on its own, e.g. for the second bar of a pair. */
+export const stripedPartFill = partFill(PART_FILLS.length - 1);
+
+/** The category axis every chart shares: bare ticks, one per category. Spread onto <XAxis>. */
+export const categoryAxisProps = { tickLine: false, axisLine: false, tickMargin: 8, interval: 0 } as const;
 
 export type ShareSlice = { label: string; value: number; display: string; fill: string; isStriped: boolean };
 

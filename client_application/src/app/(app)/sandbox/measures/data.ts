@@ -1,4 +1,4 @@
-import { type ChartResponse, sandboxLoader } from "@/app/(app)/sandbox/shared";
+import { type ChartResponse, sandboxLoader } from "@/lib/sandbox";
 
 /** /sandbox/measures: typed query filters and their matching chart payload. */
 export const measures = ["retention", "persistence", "gateway_math", "gateway_english"] as const;

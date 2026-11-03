@@ -13,9 +13,9 @@
  * NEXT_PUBLIC_ variables are fixed at build time: rebuild after changing them.
  */
 
-export const ENVIRONMENTS = ["development", "staging", "production"] as const;
+const ENVIRONMENTS = ["development", "staging", "production"] as const;
 
-export type Environment = (typeof ENVIRONMENTS)[number];
+type Environment = (typeof ENVIRONMENTS)[number];
 
 type EnvironmentSettings = {
   apiBaseUrl: string;

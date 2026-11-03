@@ -3,7 +3,7 @@
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { type ChartSeries, isPointFilled, monochromeChartConfig } from "@/lib/charts";
+import { type ChartSeries, categoryAxisProps, isPointFilled, monochromeChartConfig } from "@/lib/charts";
 
 type ChartRow = Record<string, string | number | boolean>;
 
@@ -25,14 +25,7 @@ export function TrendChart<Row extends ChartRow>({ rows, xKey, series, unit = "%
       <ChartContainer config={monochromeChartConfig(series)} className="aspect-auto h-44 w-full">
         <LineChart data={rows} margin={{ top: 12, right: 8, bottom: 0, left: 8 }}>
           <CartesianGrid vertical={false} strokeDasharray="2 4" />
-          <XAxis
-            dataKey={xKey}
-            tickLine={false}
-            axisLine={false}
-            tickMargin={8}
-            interval={0}
-            padding={{ left: 12, right: 12 }}
-          />
+          <XAxis dataKey={xKey} {...categoryAxisProps} padding={{ left: 12, right: 12 }} />
           <YAxis hide domain={["dataMin - 8", "dataMax + 4"]} />
           <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} />
           {series.map((line) => (

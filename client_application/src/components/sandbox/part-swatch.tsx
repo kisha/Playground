@@ -10,3 +10,18 @@ export function PartSwatch({ fill, isStriped }: { fill: string; isStriped: boole
     />
   );
 }
+
+export type LegendPart = { key: string; label: string; fill: string; isStriped: boolean };
+
+/** A row of swatches naming each part of a chart, in the parts' own fills. */
+export function PartLegend({ parts }: { parts: LegendPart[] }) {
+  return (
+    <ul className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+      {parts.map((part) => (
+        <li key={part.key} className="flex items-center gap-1.5">
+          <PartSwatch fill={part.fill} isStriped={part.isStriped} /> {part.label}
+        </li>
+      ))}
+    </ul>
+  );
+}

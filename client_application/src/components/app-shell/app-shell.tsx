@@ -27,41 +27,41 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   );
 }
 
+/**
+ * The page and the chat panel. The panel group always renders, so the page keeps its place in the tree and doesn't
+ * remount (refetching charts, losing filters) when the screen crosses the docking width. Only the chat part switches
+ * between a docked panel and a Sheet.
+ */
 function AppShellPanels({ children }: { children: React.ReactNode }) {
   const chatPanelDocks = useChatPanelDocks();
   const { isChatPanelOpen, setChatPanelOpen } = useChatPanel();
-  const mainArea = <AppMainArea>{children}</AppMainArea>;
 
-  if (!chatPanelDocks) {
-    return (
-      <>
-        {mainArea}
+  return (
+    <>
+      <ResizablePanelGroup orientation="horizontal" id="app-shell">
+        <ResizablePanel id="main" minSize="40" className="min-w-0">
+          <AppMainArea>{children}</AppMainArea>
+        </ResizablePanel>
+        {chatPanelDocks && isChatPanelOpen && (
+          <>
+            <ResizableHandle withHandle />
+            <ResizablePanel id="chat" defaultSize="28" minSize="20" maxSize="50">
+              <div className="h-full p-2 pl-1">
+                <section aria-label="Chat" className="h-full rounded-2xl border bg-card shadow-sm" />
+              </div>
+            </ResizablePanel>
+          </>
+        )}
+      </ResizablePanelGroup>
+      {!chatPanelDocks && (
         <Sheet open={isChatPanelOpen} onOpenChange={setChatPanelOpen}>
           <SheetContent side="right" className="gap-0 p-0 data-[side=right]:w-full data-[side=right]:sm:max-w-md">
             <SheetTitle className="sr-only">Chat</SheetTitle>
             <SheetDescription className="sr-only">The chat panel, empty for now.</SheetDescription>
           </SheetContent>
         </Sheet>
-      </>
-    );
-  }
-
-  return (
-    <ResizablePanelGroup orientation="horizontal" id="app-shell">
-      <ResizablePanel id="main" minSize="40" className="min-w-0">
-        {mainArea}
-      </ResizablePanel>
-      {isChatPanelOpen && (
-        <>
-          <ResizableHandle withHandle />
-          <ResizablePanel id="chat" defaultSize="28" minSize="20" maxSize="50">
-            <div className="h-full p-2 pl-1">
-              <section aria-label="Chat" className="h-full rounded-2xl border bg-card shadow-sm" />
-            </div>
-          </ResizablePanel>
-        </>
       )}
-    </ResizablePanelGroup>
+    </>
   );
 }
 

@@ -2,10 +2,10 @@
 
 import { Pie, PieChart } from "recharts";
 
-import { PartStripes } from "@/components/sandbox/part-stripes";
+import { PartStripes, usePartStripesId } from "@/components/sandbox/part-stripes";
 import { PartSwatch } from "@/components/sandbox/part-swatch";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import type { ShareSlice } from "@/lib/charts";
+import { type ShareSlice, stripesFor } from "@/lib/charts";
 
 type ShareChartProps = {
   slices: ShareSlice[];
@@ -15,6 +15,9 @@ type ShareChartProps = {
 
 /** A pie or donut in black and white, with every part named and valued beside it. Use for a few clearly different parts. */
 export function ShareChart({ slices, center }: ShareChartProps) {
+  const stripesId = usePartStripesId();
+  const pieData = slices.map((slice) => ({ ...slice, fill: stripesFor(slice.fill, stripesId) }));
+
   return (
     <div className="@container">
       <div className="flex flex-col items-center gap-5 @md:flex-row @md:gap-8">
@@ -22,11 +25,11 @@ export function ShareChart({ slices, center }: ShareChartProps) {
         <ChartContainer config={{}} className="aspect-square h-44">
           <PieChart>
             <defs>
-              <PartStripes />
+              <PartStripes id={stripesId} />
             </defs>
             <ChartTooltip content={<ChartTooltipContent nameKey="label" hideLabel />} />
             <Pie
-              data={slices}
+              data={pieData}
               dataKey="value"
               nameKey="label"
               innerRadius={center ? "62%" : 0}

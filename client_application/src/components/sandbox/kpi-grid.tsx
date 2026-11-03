@@ -5,7 +5,7 @@ import { FilterChips } from "@/components/sandbox/filter-chips";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useApiResource } from "@/hooks/use-api-resource";
 import { formatKpi } from "@/lib/charts";
-import type { Kpi, KpiResponse } from "@/app/(app)/sandbox/shared";
+import type { Kpi, KpiResponse } from "@/lib/sandbox";
 
 const kpiTileClasses = "flex min-h-32 flex-col gap-1 rounded-2xl border p-4 sm:p-5";
 const kpiGridClasses = "grid grid-cols-2 gap-3 lg:grid-cols-4";

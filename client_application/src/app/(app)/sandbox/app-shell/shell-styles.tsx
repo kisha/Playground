@@ -16,7 +16,7 @@ export async function ShellStyles({ searchParams }: ShellStylesProps) {
 
   return (
     <>
-      <ApplyShellStyle hasChatPanel={selectedStyle.hasChatPanel} />
+      <ApplyShellStyle hasChatPanel={selectedStyle.hasChatPanel} look={selectedStyle.look} />
       <ul className="flex flex-col gap-2">
         {appShellStyles.map((style) => (
           <li key={style.id}>

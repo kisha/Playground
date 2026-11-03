@@ -2,7 +2,7 @@
 
 import { ArrowUpRight } from "lucide-react";
 
-import type { ChartMeta, SandboxLoader } from "@/app/(app)/sandbox/shared";
+import type { ChartMeta, SandboxLoader } from "@/lib/sandbox";
 import { LoadError } from "@/components/load-error";
 import { AnswerNote } from "@/components/sandbox/answer-note";
 import { FilterChips } from "@/components/sandbox/filter-chips";

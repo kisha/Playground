@@ -1,4 +1,4 @@
-import { chartLoader, type KpiResponse } from "@/app/(app)/sandbox/shared";
+import { chartLoader, type KpiResponse } from "@/lib/sandbox";
 
 /** /sandbox/kpi-examples: one loader per group of KPI cards. */
 

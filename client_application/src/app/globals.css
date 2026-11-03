@@ -19,6 +19,9 @@
     --color-chart-4: var(--chart-4);
     --color-chart-3: var(--chart-3);
     --color-chart-2: var(--chart-2);
+    /* The lime accent from the project briefs, used sparingly: filled chart points, answers, targets reached. */
+    --color-brand: var(--brand);
+    --color-brand-foreground: var(--brand-foreground);
     --color-chart-1: var(--chart-1);
     --color-ring: var(--ring);
     --color-input: var(--input);
@@ -55,6 +58,8 @@
     --popover: oklch(1 0 0);
     --popover-foreground: oklch(0.145 0 0);
     --primary: oklch(0.205 0 0);
+    --brand: oklch(0.8 0.17 125);
+    --brand-foreground: oklch(0.205 0 0);
     --primary-foreground: oklch(0.985 0 0);
     --secondary: oklch(0.97 0 0);
     --secondary-foreground: oklch(0.205 0 0);
@@ -71,6 +76,13 @@
     --chart-3: oklch(0.439 0 0);
     --chart-4: oklch(0.371 0 0);
     --chart-5: oklch(0.269 0 0);
+    /* Pie slices: categorical, checked with the dataviz palette validator. Each mode has its own steps. */
+    --series-1: #2a78d6;
+    --series-2: #eb6834;
+    --series-3: #1baf7a;
+    --series-4: #eda100;
+    --series-5: #e87ba4;
+    --series-6: #008300;
     --radius: 0.625rem;
     --sidebar: oklch(0.985 0 0);
     --sidebar-foreground: oklch(0.145 0 0);
@@ -90,6 +102,8 @@
     --popover: oklch(0.205 0 0);
     --popover-foreground: oklch(0.985 0 0);
     --primary: oklch(0.922 0 0);
+    --brand: oklch(0.82 0.17 125);
+    --brand-foreground: oklch(0.145 0 0);
     --primary-foreground: oklch(0.205 0 0);
     --secondary: oklch(0.269 0 0);
     --secondary-foreground: oklch(0.985 0 0);
@@ -106,6 +120,12 @@
     --chart-3: oklch(0.439 0 0);
     --chart-4: oklch(0.371 0 0);
     --chart-5: oklch(0.269 0 0);
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --series-3: #199e70;
+    --series-4: #c98500;
+    --series-5: #d55181;
+    --series-6: #008300;
     --sidebar: oklch(0.205 0 0);
     --sidebar-foreground: oklch(0.985 0 0);
     --sidebar-primary: oklch(0.922 0 0);
@@ -114,6 +134,71 @@
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
+}
+
+/* The Tulip style on /sandbox/app-shell: TulipPlayground's colours and fonts, by role. */
+html[data-shell-look="tulip"] {
+    --font-sans: var(--font-geist);
+    --font-mono: var(--font-geist-mono);
+    --background: #ffffff;
+    --foreground: #14062e;
+    --card: #ffffff;
+    --card-foreground: #14062e;
+    --popover: #ffffff;
+    --popover-foreground: #14062e;
+    --primary: #4a24a0;
+    --primary-foreground: #ffffff;
+    --brand: #4a24a0;
+    --brand-foreground: #ffffff;
+    --secondary: #f1eef8;
+    --secondary-foreground: #14062e;
+    --muted: #f4f2fa;
+    --muted-foreground: #5f5878;
+    --accent: #f1eef8;
+    --accent-foreground: #14062e;
+    --destructive: #c42b4b;
+    --border: #e4e0ef;
+    --input: #e4e0ef;
+    --ring: #4a24a0;
+    --sidebar: #faf9fd;
+    --sidebar-foreground: #14062e;
+    --sidebar-primary: #4a24a0;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #f1eef8;
+    --sidebar-accent-foreground: #14062e;
+    --sidebar-border: #e4e0ef;
+    --sidebar-ring: #4a24a0;
+}
+
+html.dark[data-shell-look="tulip"] {
+    --background: #14062e;
+    --foreground: #e8e6f2;
+    --card: #1b0b3b;
+    --card-foreground: #e8e6f2;
+    --popover: #1b0b3b;
+    --popover-foreground: #e8e6f2;
+    --primary: #a68bf0;
+    --primary-foreground: #14062e;
+    --brand: #a68bf0;
+    --brand-foreground: #14062e;
+    --secondary: #251548;
+    --secondary-foreground: #e8e6f2;
+    --muted: #221343;
+    --muted-foreground: #a9a1c6;
+    --accent: #251548;
+    --accent-foreground: #e8e6f2;
+    --destructive: #f0677f;
+    --border: #2e1e55;
+    --input: #33225c;
+    --ring: #a68bf0;
+    --sidebar: #10041f;
+    --sidebar-foreground: #e8e6f2;
+    --sidebar-primary: #a68bf0;
+    --sidebar-primary-foreground: #14062e;
+    --sidebar-accent: #251548;
+    --sidebar-accent-foreground: #e8e6f2;
+    --sidebar-border: #2e1e55;
+    --sidebar-ring: #a68bf0;
 }
 
 @layer base {

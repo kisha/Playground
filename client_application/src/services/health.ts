@@ -4,7 +4,7 @@ import { describeError } from "@/lib/errors";
 /** Mirrors HealthResponse in server_application/app/schemas/health.py. */
 export type DatabaseEngine = "postgresql" | "sqlite";
 
-export type HealthResponse = {
+type HealthResponse = {
   status: "ok" | "degraded";
   environment: "development" | "staging" | "production";
   version: string;

@@ -1,6 +1,6 @@
 import { apiRequest } from "@/lib/api-client";
 
-/** Shared by every sandbox page. Mirrors server_application/app/sandbox/shared.py. */
+/** Types and loaders shared by every sandbox page and chart component. Mirrors server_application/app/sandbox/shared.py. */
 
 export type ChartMeta = {
   title: string;

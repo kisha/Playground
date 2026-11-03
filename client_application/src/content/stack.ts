@@ -10,7 +10,7 @@ export type Library = {
   needsSetup?: boolean;
 };
 
-export type CardLink = { label: string; href: string };
+type CardLink = { label: string; href: string };
 
 export type Application = {
   name: string;

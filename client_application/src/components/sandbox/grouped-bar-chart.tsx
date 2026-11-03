@@ -2,8 +2,12 @@
 
 import { Bar, BarChart, LabelList, XAxis, YAxis } from "recharts";
 
+import { PartStripes, usePartStripesId } from "@/components/sandbox/part-stripes";
+import { PartLegend } from "@/components/sandbox/part-swatch";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { type ChartSeries, formatPercent, monochromeChartConfig } from "@/lib/charts";
+import { type ChartSeries, categoryAxisProps, formatPercent, monochromeChartConfig, partFill, stripedPartFill, stripesFor } from "@/lib/charts";
+
+const barLabelClass = "fill-foreground text-xs font-semibold";
 
 type GroupedBarChartProps = {
   rows: Record<string, string | number>[];
@@ -15,50 +19,34 @@ type GroupedBarChartProps = {
 /** Paired bars per category in black and white: solid vs diagonal stripes. */
 export function GroupedBarChart({ rows, categoryKey, series }: GroupedBarChartProps) {
   const [solid, striped] = series;
+  const stripesId = usePartStripesId();
 
   return (
     <div className="flex flex-col gap-3">
       <ChartContainer config={monochromeChartConfig(series)} className="aspect-auto h-56 w-full">
         <BarChart data={rows} margin={{ top: 22, right: 0, bottom: 0, left: 0 }} barGap={6}>
           <defs>
-            <pattern id="bar-stripes" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-              <rect width="6" height="6" fill="var(--background)" />
-              <line x1="0" y1="0" x2="0" y2="6" stroke="var(--foreground)" strokeWidth="3" />
-            </pattern>
+            <PartStripes id={stripesId} />
           </defs>
-          <XAxis
-            dataKey={categoryKey}
-            tickLine={false}
-            axisLine={false}
-            tickMargin={8}
-            interval={0}
-            fontSize={11}
-          />
+          <XAxis dataKey={categoryKey} {...categoryAxisProps} fontSize={11} />
           <YAxis hide domain={[0, 100]} />
           <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
           <Bar dataKey={solid.key} fill="var(--foreground)" radius={[6, 6, 0, 0]} isAnimationActive={false}>
-            <LabelList dataKey={solid.key} position="top" className="fill-foreground text-xs font-semibold" formatter={formatPercent} />
+            <LabelList dataKey={solid.key} position="top" className={barLabelClass} formatter={formatPercent} />
           </Bar>
           <Bar
             dataKey={striped.key}
-            fill="url(#bar-stripes)"
+            fill={stripesFor(stripedPartFill.fill, stripesId)}
             stroke="var(--foreground)"
             strokeWidth={1.25}
             radius={[6, 6, 0, 0]}
             isAnimationActive={false}
           >
-            <LabelList dataKey={striped.key} position="top" className="fill-foreground text-xs font-semibold" formatter={formatPercent} />
+            <LabelList dataKey={striped.key} position="top" className={barLabelClass} formatter={formatPercent} />
           </Bar>
         </BarChart>
       </ChartContainer>
-      <ul className="flex flex-wrap gap-4 text-xs text-muted-foreground">
-        <li className="flex items-center gap-1.5">
-          <span aria-hidden className="size-2.5 rounded-sm bg-foreground" /> {solid.label}
-        </li>
-        <li className="flex items-center gap-1.5">
-          <span aria-hidden className="stripes size-2.5 rounded-sm border border-foreground text-foreground" /> {striped.label}
-        </li>
-      </ul>
+      <PartLegend parts={[{ ...solid, ...partFill(0) }, { ...striped, ...stripedPartFill }]} />
     </div>
   );
 }

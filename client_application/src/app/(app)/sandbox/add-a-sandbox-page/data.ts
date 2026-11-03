@@ -1,4 +1,4 @@
-import { type ChartResponse, chartLoader } from "@/app/(app)/sandbox/shared";
+import { type ChartResponse, chartLoader } from "@/lib/sandbox";
 
 /** /sandbox/add-a-sandbox-page: one type and one loader per chart. Mirrors its schemas.py on the server. */
 

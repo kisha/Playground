@@ -1,6 +1,6 @@
 /** Name, wording and logo used across the site. Copies of Playground change them here. */
 
-export type Logo = {
+type Logo = {
   src: string;
   alt: string;
   width: number;
